@@ -1,163 +1,125 @@
 import { useState } from "react";
-import BeerCard from "../components/BeerCard";
-import { BEER_LIST, CATEGORIES } from "../data/beerData";
+import LevelCard from "../components/LevelCard";
+import NewsSlider from "../components/NewsSlider";
+import NewsDetailPage from "./NewsDetailPage";
+import NewsListPage from "./NewsListPage";
+import { BEER_LIST } from "../data/beerData";
 
-export default function HomePage({ onSelectBeer }) {
+export default function HomePage({ onSelectBeer, ratedCount = 3, onGoExplore }) {
   const [query, setQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState("전체");
+  const [showSearch, setShowSearch] = useState(false);
+  const [selectedNews, setSelectedNews] = useState(null);
+  const [showNewsList, setShowNewsList] = useState(false);
+  const recommended = BEER_LIST.slice(0, 6);
 
-  const allCategories = ["전체", ...CATEGORIES];
+  if (selectedNews) {
+    return <NewsDetailPage news={selectedNews} onBack={() => setSelectedNews(null)} />;
+  }
 
-  const filtered = BEER_LIST.filter((b) => {
-    const matchQuery =
-      !query ||
-      b.name.includes(query) ||
-      b.type.includes(query) ||
-      b.tags.some((t) => t.includes(query));
-    const matchCategory =
-      activeCategory === "전체" || b.category === activeCategory;
-    return matchQuery && matchCategory;
-  });
-
-  const grouped = CATEGORIES.reduce((acc, cat) => {
-    const beers = filtered.filter((b) => b.category === cat);
-    if (beers.length > 0) acc.push({ category: cat, beers });
-    return acc;
-  }, []);
-
-  const featured = BEER_LIST[0];
+  if (showNewsList) {
+    return (
+      <NewsListPage
+        onSelectNews={(news) => { setShowNewsList(false); setSelectedNews(news); }}
+        onBack={() => setShowNewsList(false)}
+      />
+    );
+  }
 
   return (
     <div className="home-page">
 
-      {/* ── 고정 헤더 ── */}
+      {/* 고정 헤더 */}
       <div className="home-sticky-header">
-        {/* 앱바 */}
         <div className="appbar">
           <span className="appbar-logo">오늘의 맥주</span>
-          <button className="appbar-icon">⚙︎</button>
-        </div>
-
-        {/* 검색 */}
-        <div className="home-search-wrap">
-          <div className="search-bar">
-            <span className="search-icon">🔍</span>
-            <input
-              type="text"
-              placeholder="맥주 이름 또는 스타일 검색"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="search-input"
-            />
-            {query && (
-              <button className="search-clear" onClick={() => setQuery("")}>✕</button>
-            )}
-          </div>
-        </div>
-
-        {/* 카테고리 필터 탭 */}
-        <div className="category-tabs-wrap">
-          <div className="category-tabs">
-            {allCategories.map((cat) => (
-            <button
-              key={cat}
-              className={`category-tab ${activeCategory === cat ? "active" : ""}`}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat}
+          <div className="appbar-actions">
+            <button className="appbar-icon" onClick={() => setShowSearch((v) => !v)}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                <circle cx="10.5" cy="10.5" r="6.5"/>
+                <line x1="15.5" y1="15.5" x2="21" y2="21"/>
+              </svg>
             </button>
-          ))}
+            <button className="appbar-icon barcode-btn" onClick={() => alert("바코드 스캔 기능 준비 중입니다 📷")}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                {/* 좌상단 */}
+                <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+                {/* 우상단 */}
+                <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+                {/* 우하단 */}
+                <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+                {/* 좌하단 */}
+                <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+                {/* 스캔 라인 */}
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
           </div>
         </div>
-      </div>{/* ── /고정 헤더 ── */}
 
-      {/* 스크롤 콘텐츠 */}
+        {/* 검색창 — 돋보기 클릭 시 토글 */}
+        {showSearch && (
+          <div className="home-search-wrap">
+            <div className="search-bar">
+              <span className="search-icon">🔍</span>
+              <input
+                type="text"
+                placeholder="맥주 이름 또는 스타일 검색"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="search-input"
+                autoFocus
+              />
+              {query && <button className="search-clear" onClick={() => setQuery("")}>✕</button>}
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="home-scroll-body">
 
-      {/* 오늘의 픽 — 검색/필터 없을 때만 */}
-      {!query && activeCategory === "전체" && (
+        {/* 게이미피케이션 레벨 카드 */}
         <div className="home-section">
-          <div className="home-section-header">
-            <p className="home-section-eyebrow">Today's Pick</p>
-            <h2 className="home-section-title">오늘 마시기 딱 좋은 맥주</h2>
+          <LevelCard ratedCount={ratedCount} />
+        </div>
+
+        {/* 새 소식 슬라이더 */}
+        <div className="home-section">
+          <div className="section-row-header">
+            <h2 className="home-section-title">새 소식 <span className="home-section-eyebrow-inline">Latest</span></h2>
           </div>
-          <div className="today-card" onClick={() => onSelectBeer(featured)}>
-            <div className="today-card-left">
-              <div className="today-card-img" style={{ background: featured.srmColor + "20" }}>
-                <span>🍺</span>
-              </div>
-            </div>
-            <div className="today-card-right">
-              <p className="today-card-type">{featured.type}</p>
-              <h3 className="today-card-name">{featured.name}</h3>
-              <p className="today-card-abv">ABV {featured.abv}</p>
-              <div className="today-card-tags">
-                {featured.tags.map((t) => (
-                  <span key={t} className="today-tag">{t}</span>
-                ))}
-              </div>
-            </div>
-            <div className="today-card-profile">
-              {Object.entries(featured.profile).map(([k, v]) => (
-                <div key={k} className="today-profile-row">
-                  <span className="today-profile-key">{k[0]}</span>
-                  <div className="today-profile-bar-track">
-                    <div className="today-profile-bar-fill" style={{ width: `${(v / 5) * 100}%` }} />
-                  </div>
+          <NewsSlider
+            onSelectNews={setSelectedNews}
+            onShowAll={() => setShowNewsList(true)}
+          />
+        </div>
+
+        {/* 추천 맥주 */}
+        <div className="home-section">
+          <div className="section-row-header">
+            <h2 className="home-section-title">추천 맥주 <span className="home-section-eyebrow-inline">For You</span></h2>
+            <button className="section-more-btn" onClick={onGoExplore}>더 알아보기 →</button>
+          </div>
+          <div className="horizontal-scroll">
+            {recommended.map((beer) => (
+              <div key={beer.id} className="rec-card" onClick={() => onSelectBeer(beer)}>
+                <div className="rec-card-img" style={{ background: beer.srmColor + "22" }}>
+                  <span>🍺</span>
+                  <div className="rec-card-srm" style={{ background: beer.srmColor }}/>
                 </div>
-              ))}
-            </div>
+                <p className="rec-card-category">{beer.category}</p>
+                <p className="rec-card-name">{beer.name}</p>
+                <p className="rec-card-abv">{beer.abv}</p>
+                <div className="rec-card-tags">
+                  {beer.tags.map((t) => <span key={t} className="rec-card-tag">{t}</span>)}
+                </div>
+                <button className="rec-card-btn">맛 보기</button>
+              </div>
+            ))}
           </div>
         </div>
-      )}
 
-      {/* 검색 결과 */}
-      {query && (
-        <div className="home-section">
-          <p className="search-result-label">"{query}" 검색 결과 {filtered.length}건</p>
-          <div className="beer-list">
-            {filtered.length === 0 ? (
-              <div className="empty-state">
-                <p className="empty-icon">🍺</p>
-                <p className="empty-msg">검색 결과가 없습니다</p>
-              </div>
-            ) : (
-              filtered.map((beer) => (
-                <BeerCard key={beer.id} beer={beer} onClick={onSelectBeer} />
-              ))
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* 카테고리별 그룹 목록 */}
-      {!query && (
-        grouped.length === 0 ? (
-          <div className="home-section">
-            <div className="empty-state">
-              <p className="empty-icon">🍺</p>
-              <p className="empty-msg">해당 카테고리의 맥주가 없습니다</p>
-            </div>
-          </div>
-        ) : (
-          grouped.map(({ category, beers }) => (
-            <div key={category} className="home-section">
-              <div className="home-section-header">
-                <p className="home-section-eyebrow">{category}</p>
-                <span className="category-count">{beers.length}종</span>
-              </div>
-              <div className="beer-list">
-                {beers.map((beer) => (
-                  <BeerCard key={beer.id} beer={beer} onClick={onSelectBeer} />
-                ))}
-              </div>
-            </div>
-          ))
-        )
-      )}
-
-      <div style={{ height: 48 }} />
-      </div>{/* ── /home-scroll-body ── */}
+        <div style={{ height: 100 }} />
+      </div>
     </div>
   );
 }
