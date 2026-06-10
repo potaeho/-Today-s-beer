@@ -2,23 +2,22 @@ import { useState } from "react";
 import BeerCard from "../components/BeerCard";
 import BeerRecommendSlider from "../components/BeerRecommendSlider";
 import { BEER_LIST, CATEGORIES } from "../data/beerData";
+import {
+  getPersonalizedRecommendations,
+  getMyRatedCount,
+} from "../utils/recommend";
 
-const CATEGORY_DESC = {
-  전체: "지금 가장 인기 있는 맥주",
-  라거: "깔끔하고 청량한 라거",
-  에일: "풍부한 홉 향의 에일",
-  IPA: "홉 향 가득한 IPA",
-  사워: "새콤달콤한 사워 에일",
-  스타우트: "깊고 진한 다크 맥주",
-};
+const PERSONALIZED_THRESHOLD = 5;
 
-const PERSONALIZED_THRESHOLD = 5; // 이 이상이면 개인화 추천으로 전환
-
-export default function ExplorePage({ onSelectBeer, ratedCount = 0, userName = "사용자" }) {
+export default function ExplorePage({ onSelectBeer, userName = "사용자" }) {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("전체");
 
   const allCategories = ["전체", ...CATEGORIES];
+
+  // 실제 리뷰 데이터에서 평가 수 계산
+  const ratedCount = getMyRatedCount();
+  const isPersonalized = ratedCount >= PERSONALIZED_THRESHOLD;
 
   const filtered = BEER_LIST.filter((b) => {
     const matchQuery =
@@ -36,14 +35,25 @@ export default function ExplorePage({ onSelectBeer, ratedCount = 0, userName = "
     return acc;
   }, []);
 
-  const isPersonalized = ratedCount >= PERSONALIZED_THRESHOLD;
-
-  // 추천: 개인화 모드면 뒤에서 뽑아 다양성 시뮬레이션, 기본은 상위 3종
-  const recommended = activeCategory === "전체"
-    ? isPersonalized
-      ? [...BEER_LIST].sort(() => 0.5 - Math.random()).slice(0, 3)
-      : BEER_LIST.slice(0, 3)
-    : BEER_LIST.filter((b) => b.category === activeCategory).slice(0, 3);
+  // ── 추천 아이템 계산 ──────────────────────────────
+  const recommendItems = (() => {
+    if (isPersonalized) {
+      // 개인화 추천 (카테고리 필터 고려)
+      const recs = getPersonalizedRecommendations(6); // 여유 있게 뽑고
+      if (activeCategory === "전체") return recs.slice(0, 3);
+      const filtered = recs.filter((r) => r.beer.category === activeCategory);
+      return filtered.length > 0
+        ? filtered.slice(0, 3)
+        : recs.slice(0, 3); // 해당 카테고리 없으면 전체에서
+    } else {
+      // MD 추천: 상위 3종 고정
+      const beers =
+        activeCategory === "전체"
+          ? BEER_LIST.slice(0, 3)
+          : BEER_LIST.filter((b) => b.category === activeCategory).slice(0, 3);
+      return beers.map((beer) => ({ beer, reason: null }));
+    }
+  })();
 
   return (
     <div className="home-page">
@@ -61,7 +71,11 @@ export default function ExplorePage({ onSelectBeer, ratedCount = 0, userName = "
               onChange={(e) => setQuery(e.target.value)}
               className="search-input"
             />
-            {query && <button className="search-clear" onClick={() => setQuery("")}>✕</button>}
+            {query && (
+              <button className="search-clear" onClick={() => setQuery("")}>
+                ✕
+              </button>
+            )}
           </div>
         </div>
         <div className="category-tabs-wrap">
@@ -80,7 +94,6 @@ export default function ExplorePage({ onSelectBeer, ratedCount = 0, userName = "
       </div>
 
       <div className="home-scroll-body">
-
         {/* 추천 슬라이더 — 검색 중엔 숨김 */}
         {!query && (
           <div className="home-section">
@@ -107,7 +120,7 @@ export default function ExplorePage({ onSelectBeer, ratedCount = 0, userName = "
                 리뷰 {ratedCount}/{PERSONALIZED_THRESHOLD}개 · {PERSONALIZED_THRESHOLD - ratedCount}개 더 남기면 맞춤 추천으로 전환돼요 ✨
               </p>
             )}
-            <BeerRecommendSlider beers={recommended} onSelect={onSelectBeer} />
+            <BeerRecommendSlider items={recommendItems} onSelect={onSelectBeer} />
           </div>
         )}
 
@@ -116,10 +129,16 @@ export default function ExplorePage({ onSelectBeer, ratedCount = 0, userName = "
           <div className="home-section">
             <p className="search-result-label">"{query}" 검색 결과 {filtered.length}건</p>
             <div className="beer-list">
-              {filtered.length === 0
-                ? <div className="empty-state"><p className="empty-icon">🍺</p><p className="empty-msg">검색 결과가 없습니다</p></div>
-                : filtered.map((beer) => <BeerCard key={beer.id} beer={beer} onClick={onSelectBeer} />)
-              }
+              {filtered.length === 0 ? (
+                <div className="empty-state">
+                  <p className="empty-icon">🍺</p>
+                  <p className="empty-msg">검색 결과가 없습니다</p>
+                </div>
+              ) : (
+                filtered.map((beer) => (
+                  <BeerCard key={beer.id} beer={beer} onClick={onSelectBeer} />
+                ))
+              )}
             </div>
           </div>
         ) : (
@@ -130,7 +149,9 @@ export default function ExplorePage({ onSelectBeer, ratedCount = 0, userName = "
                 <span className="category-count">{beers.length}종</span>
               </div>
               <div className="beer-list">
-                {beers.map((beer) => <BeerCard key={beer.id} beer={beer} onClick={onSelectBeer} />)}
+                {beers.map((beer) => (
+                  <BeerCard key={beer.id} beer={beer} onClick={onSelectBeer} />
+                ))}
               </div>
             </div>
           ))
