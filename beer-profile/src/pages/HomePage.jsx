@@ -4,15 +4,17 @@ import LevelJourneyModal from "../components/LevelJourneyModal";
 import NewsSlider from "../components/NewsSlider";
 import NewsDetailPage from "./NewsDetailPage";
 import NewsListPage from "./NewsListPage";
-import { BEER_LIST } from "../data/beerData";
+import { getPersonalizedRecommendations, getMyRatedCount } from "../utils/recommend";
 
-export default function HomePage({ onSelectBeer, ratedCount = 3, onGoExplore }) {
+export default function HomePage({ onSelectBeer, onGoExplore }) {
   const [query, setQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [selectedNews, setSelectedNews] = useState(null);
   const [showNewsList, setShowNewsList] = useState(false);
   const [showJourney, setShowJourney] = useState(false);
-  const recommended = BEER_LIST.slice(0, 6);
+
+  const ratedCount = getMyRatedCount();
+  const recommended = getPersonalizedRecommendations(6);
 
   if (selectedNews) {
     return <NewsDetailPage news={selectedNews} onBack={() => setSelectedNews(null)} />;
@@ -108,7 +110,7 @@ export default function HomePage({ onSelectBeer, ratedCount = 3, onGoExplore }) 
             <button className="section-more-btn" onClick={onGoExplore}>더 알아보기 →</button>
           </div>
           <div className="horizontal-scroll">
-            {recommended.map((beer) => (
+            {recommended.map(({ beer, reason }) => (
               <div key={beer.id} className="rec-card" onClick={() => onSelectBeer(beer)}>
                 <div className="rec-card-img" style={{ background: beer.srmColor + "22" }}>
                   <span>🍺</span>
@@ -117,6 +119,7 @@ export default function HomePage({ onSelectBeer, ratedCount = 3, onGoExplore }) 
                 <p className="rec-card-category">{beer.category}</p>
                 <p className="rec-card-name">{beer.name}</p>
                 <p className="rec-card-abv">{beer.abv}</p>
+                {reason && <p className="rec-card-reason">{reason}</p>}
                 <div className="rec-card-tags">
                   {beer.tags.map((t) => <span key={t} className="rec-card-tag">{t}</span>)}
                 </div>
