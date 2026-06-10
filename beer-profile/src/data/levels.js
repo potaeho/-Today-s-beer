@@ -1,7 +1,7 @@
 // 맥주 1잔 = 500ml 기준
 export const ML_PER_BEER = 500;
 
-// ml 기준으로 정렬 (오름차순)
+// ml 기준으로 정렬 (오름차순) — 9개 레벨
 export const LEVELS = [
   {
     level: 1,
@@ -14,15 +14,6 @@ export const LEVELS = [
   },
   {
     level: 2,
-    name: "표준 캔",
-    nameEn: "Standard Can",
-    minMl: 355,
-    icon: "🥫",
-    desc: "355ml · 전 세계 표준 캔 규격",
-    color: "#D1FAE5",
-  },
-  {
-    level: 3,
     name: "500ml 캔",
     nameEn: "Korean Pint",
     minMl: 500,
@@ -31,7 +22,7 @@ export const LEVELS = [
     color: "#FFEDD5",
   },
   {
-    level: 4,
+    level: 3,
     name: "마스 (Maß)",
     nameEn: "Oktoberfest Maß",
     minMl: 1000,
@@ -40,16 +31,7 @@ export const LEVELS = [
     color: "#FEF3C7",
   },
   {
-    level: 5,
-    name: "대용량 페트",
-    nameEn: "PET Bottle",
-    minMl: 1600,
-    icon: "🧴",
-    desc: "1.6L · 캠핑·홈파티용 마트 피처",
-    color: "#ECFDF5",
-  },
-  {
-    level: 6,
+    level: 4,
     name: "수제맥주 케그",
     nameEn: "Craft Keg",
     minMl: 20000,
@@ -58,7 +40,7 @@ export const LEVELS = [
     color: "#FFF7ED",
   },
   {
-    level: 7,
+    level: 5,
     name: "호프집 케그",
     nameEn: "Bar Keg",
     minMl: 30000,
@@ -67,7 +49,7 @@ export const LEVELS = [
     color: "#F0F9FF",
   },
   {
-    level: 8,
+    level: 6,
     name: "헥토리터",
     nameEn: "Hectoliter",
     minMl: 100000,
@@ -76,7 +58,7 @@ export const LEVELS = [
     color: "#F0FDF4",
   },
   {
-    level: 9,
+    level: 7,
     name: "양조 배럴",
     nameEn: "US Barrel",
     minMl: 117300,
@@ -85,7 +67,7 @@ export const LEVELS = [
     color: "#FDF4FF",
   },
   {
-    level: 10,
+    level: 8,
     name: "맥주 탱크로리",
     nameEn: "Tank Truck",
     minMl: 20000000,
@@ -94,7 +76,7 @@ export const LEVELS = [
     color: "#FFF1F2",
   },
   {
-    level: 11,
+    level: 9,
     name: "공장 저장 탱크",
     nameEn: "Factory Tank",
     minMl: 500000000,
@@ -128,14 +110,17 @@ export function getCurrentLevel(ratedCount) {
 }
 
 export function formatMl(ml) {
-  if (ml >= 1000000000) return `${(ml / 1000000000).toFixed(1)}kL`;
-  if (ml >= 1000000) return `${(ml / 1000000).toFixed(0)}kL`;
-  if (ml >= 1000) return `${(ml / 1000).toFixed(1)}L`;
+  if (ml >= 1000) {
+    const l = ml / 1000;
+    return `${l % 1 === 0 ? l.toLocaleString() : parseFloat(l.toFixed(1)).toLocaleString()}L`;
+  }
   return `${ml}ml`;
 }
 
 export function formatNextMl(ml) {
-  if (ml >= 1000000) return `${(ml / 1000000).toFixed(0)}kL`;
-  if (ml >= 1000) return `${(ml / 1000).toFixed(1)}L`;
+  if (ml >= 1000) {
+    const l = ml / 1000;
+    return `${l % 1 === 0 ? l.toLocaleString() : parseFloat(l.toFixed(1)).toLocaleString()}L`;
+  }
   return `${ml}ml`;
 }
