@@ -5,12 +5,16 @@ import InputPage from "./pages/InputPage";
 import DetailPage from "./pages/DetailPage";
 import ResultPage from "./pages/ResultPage";
 import BeerDetailPage from "./pages/BeerDetailPage";
+import CommunityPage from "./pages/CommunityPage";
+import SearchBeerModal from "./components/SearchBeerModal";
 import BottomTabBar from "./components/BottomTabBar";
 import "./App.css";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("home");
   const [screen, setScreen] = useState(null);
+  const [showSearchModal, setShowSearchModal] = useState(false);
+  const [communityComposeBeer, setCommunityComposeBeer] = useState(null);
   const [selectedBeer, setSelectedBeer] = useState(null);
   const [profile, setProfile] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
@@ -54,15 +58,17 @@ export default function App() {
 
   function handleTabChange(tab) {
     if (tab === "add") {
-      setSelectedBeer(null);
-      setProfile({ 단맛: 2.5, 신맛: 2.5, 쓴맛: 2.5, 몰티함: 2.5, 부드러움: 2.5 });
-      setSelectedTags([]);
-      setStarRating(0);
-      setScreen("input");
+      setShowSearchModal(true);
       return;
     }
     setScreen(null);
     setActiveTab(tab);
+  }
+
+  function handleSearchSelect(beer) {
+    setShowSearchModal(false);
+    setSelectedBeer(beer);
+    setScreen("beer-detail");
   }
 
   const showFlow = screen !== null;
@@ -116,12 +122,11 @@ export default function App() {
         {!showFlow && activeTab === "explore" && (
           <ExplorePage onSelectBeer={handleSelectBeer} />
         )}
-        {!showFlow && activeTab === "alarm" && (
-          <div className="placeholder-page">
-            <p className="placeholder-icon">🔔</p>
-            <p className="placeholder-text">알림</p>
-            <p className="placeholder-sub">새로운 알림이 없습니다</p>
-          </div>
+        {!showFlow && activeTab === "community" && (
+          <CommunityPage
+            composeBeer={communityComposeBeer}
+            onComposeClear={() => setCommunityComposeBeer(null)}
+          />
         )}
         {!showFlow && activeTab === "profile" && (
           <div className="placeholder-page">
@@ -134,6 +139,13 @@ export default function App() {
 
       {!showFlow && (
         <BottomTabBar activeTab={activeTab} onTabChange={handleTabChange} />
+      )}
+
+      {showSearchModal && (
+        <SearchBeerModal
+          onSelect={handleSearchSelect}
+          onClose={() => setShowSearchModal(false)}
+        />
       )}
     </div>
   );
