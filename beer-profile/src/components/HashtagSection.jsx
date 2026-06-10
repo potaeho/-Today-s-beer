@@ -16,7 +16,7 @@ export default function HashtagSection({ selected, onToggle }) {
                   onClick={() => onToggle(tag.id)}
                 >
                   <span className="chip-icon">{tag.icon}</span>
-                  <span className="chip-label">#{tag.label}</span>
+                  <span className="chip-label">{tag.label}</span>
                 </button>
               );
             })}

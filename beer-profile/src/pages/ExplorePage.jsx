@@ -12,7 +12,9 @@ const CATEGORY_DESC = {
   스타우트: "깊고 진한 다크 맥주",
 };
 
-export default function ExplorePage({ onSelectBeer }) {
+const PERSONALIZED_THRESHOLD = 5; // 이 이상이면 개인화 추천으로 전환
+
+export default function ExplorePage({ onSelectBeer, ratedCount = 0, userName = "사용자" }) {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("전체");
 
@@ -34,9 +36,13 @@ export default function ExplorePage({ onSelectBeer }) {
     return acc;
   }, []);
 
-  // 추천: 선택된 카테고리 기준 상위 3종
+  const isPersonalized = ratedCount >= PERSONALIZED_THRESHOLD;
+
+  // 추천: 개인화 모드면 뒤에서 뽑아 다양성 시뮬레이션, 기본은 상위 3종
   const recommended = activeCategory === "전체"
-    ? BEER_LIST.slice(0, 3)
+    ? isPersonalized
+      ? [...BEER_LIST].sort(() => 0.5 - Math.random()).slice(0, 3)
+      : BEER_LIST.slice(0, 3)
     : BEER_LIST.filter((b) => b.category === activeCategory).slice(0, 3);
 
   return (
@@ -79,10 +85,28 @@ export default function ExplorePage({ onSelectBeer }) {
         {!query && (
           <div className="home-section">
             <div className="section-row-header">
-              <h2 className="home-section-title">
-                이런 맥주 어때요? <span className="home-section-eyebrow-inline">Pick</span>
-              </h2>
+              {isPersonalized ? (
+                <div className="rec-header-personalized">
+                  <h2 className="home-section-title">
+                    <span className="rec-username">{userName}</span>님을 위한 추천
+                  </h2>
+                  <span className="rec-badge rec-badge--personal">AI 맞춤</span>
+                </div>
+              ) : (
+                <div className="rec-header-md">
+                  <h2 className="home-section-title">
+                    이런 맥주 어때요?&nbsp;
+                    <span className="home-section-eyebrow-inline">Pick</span>
+                  </h2>
+                  <span className="rec-badge rec-badge--md">MD 추천</span>
+                </div>
+              )}
             </div>
+            {!isPersonalized && (
+              <p className="rec-hint">
+                리뷰 {ratedCount}/{PERSONALIZED_THRESHOLD}개 · {PERSONALIZED_THRESHOLD - ratedCount}개 더 남기면 맞춤 추천으로 전환돼요 ✨
+              </p>
+            )}
             <BeerRecommendSlider beers={recommended} onSelect={onSelectBeer} />
           </div>
         )}
