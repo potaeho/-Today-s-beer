@@ -1,11 +1,11 @@
 import { REVIEWS } from "../data/reviewsData";
-import { BEER_LIST, HASHTAG_MAP } from "../data/beerData";
+import { HASHTAG_MAP } from "../data/beerData";
 
 /** isMe 리뷰 전체 수집 */
 export function getMyReviews() {
   return Object.entries(REVIEWS).flatMap(([beerId, reviews]) => {
     const mine = reviews.find((r) => r.isMe);
-    return mine ? [{ ...mine, beerId: Number(beerId) }] : [];
+    return mine ? [{ ...mine, beerId }] : [];
   });
 }
 
@@ -16,45 +16,51 @@ export function getMyRatedCount() {
 
 /**
  * 개인화 추천 — isMe 리뷰를 기반으로 취향 분석 후 상위 N개 반환
+ * @param {Array}  beerList  Supabase에서 받아온 맥주 목록
+ * @param {number} count     반환 개수
  * @returns Array<{ beer, score, reason }>
  */
-export function getPersonalizedRecommendations(count = 3) {
+export function getPersonalizedRecommendations(beerList = [], count = 3) {
+  if (beerList.length === 0) return [];
+
   const myReviews = getMyReviews();
 
   if (myReviews.length === 0) {
-    return BEER_LIST.slice(0, count).map((beer) => ({
+    return beerList.slice(0, count).map((beer) => ({
       beer,
       score: 0,
       reason: "지금 인기 맥주예요",
     }));
   }
 
-  const ratedIds = new Set(myReviews.map((r) => r.beerId));
-
-  // ── 취향 가중치 계산 (별점 반영) ──────────────────
-  const hashtagWeight = {};
+  // ── 취향 가중치 계산 (해시태그 + 카테고리 기반) ──────
+  const hashtagWeight  = {};
   const categoryWeight = {};
 
-  myReviews.forEach(({ beerId, hashtags, star }) => {
-    const beer = BEER_LIST.find((b) => b.id === beerId);
-    if (!beer) return;
+  myReviews.forEach(({ hashtags, star, beerId }) => {
+    // 리뷰의 beerId와 beer.id가 일치하는 맥주 찾기
+    const beer = beerList.find((b) => String(b.id) === String(beerId));
 
-    hashtags.forEach((tag) => {
-      hashtagWeight[tag] = (hashtagWeight[tag] || 0) + star;
+    (hashtags ?? []).forEach((tag) => {
+      hashtagWeight[tag] = (hashtagWeight[tag] || 0) + (star || 3);
     });
-    categoryWeight[beer.category] = (categoryWeight[beer.category] || 0) + star;
+    if (beer) {
+      categoryWeight[beer.category] =
+        (categoryWeight[beer.category] || 0) + (star || 3);
+    }
   });
 
-  // ── 평가 안 한 맥주만 추천 (전부 했으면 전체 대상) ──
-  const pool = BEER_LIST.filter((b) => !ratedIds.has(b.id));
-  const candidates = pool.length > 0 ? pool : BEER_LIST;
+  const ratedIds = new Set(myReviews.map((r) => String(r.beerId)));
 
-  // ── 각 맥주 점수 계산 ──────────────────────────────
+  const pool = beerList.filter((b) => !ratedIds.has(String(b.id)));
+  const candidates = pool.length > 0 ? pool : beerList;
+
+  // ── 점수 계산 ─────────────────────────────────────────
   const scored = candidates.map((beer) => {
     let score = 0;
     const matchedTags = [];
 
-    beer.hashtags.forEach((tag) => {
+    (beer.hashtags ?? []).forEach((tag) => {
       if (hashtagWeight[tag]) {
         score += hashtagWeight[tag] * 2;
         matchedTags.push(tag);
@@ -62,7 +68,6 @@ export function getPersonalizedRecommendations(count = 3) {
     });
     score += categoryWeight[beer.category] || 0;
 
-    // ── 추천 이유 문구 ─────────────────────────────
     let reason;
     if (matchedTags.length > 0) {
       const labels = matchedTags

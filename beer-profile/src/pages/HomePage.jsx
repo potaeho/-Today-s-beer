@@ -6,7 +6,7 @@ import NewsDetailPage from "./NewsDetailPage";
 import NewsListPage from "./NewsListPage";
 import { getPersonalizedRecommendations, getMyRatedCount } from "../utils/recommend";
 
-export default function HomePage({ onSelectBeer, onGoExplore }) {
+export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
   const [query, setQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [selectedNews, setSelectedNews] = useState(null);
@@ -14,7 +14,7 @@ export default function HomePage({ onSelectBeer, onGoExplore }) {
   const [showJourney, setShowJourney] = useState(false);
 
   const ratedCount = getMyRatedCount();
-  const recommended = getPersonalizedRecommendations(6);
+  const recommended = getPersonalizedRecommendations(beers, 6);
 
   if (selectedNews) {
     return <NewsDetailPage news={selectedNews} onBack={() => setSelectedNews(null)} />;

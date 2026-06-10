@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { POSTS } from "../data/communityData";
-import { BEER_LIST } from "../data/beerData";
 
-function BeerSearchComposeModal({ initialBeer, onClose, onPost }) {
+function BeerSearchComposeModal({ beers = [], initialBeer, onClose, onPost }) {
   const [step, setStep] = useState(initialBeer ? 2 : 1);
   const [query, setQuery] = useState("");
   const [selectedBeer, setSelectedBeer] = useState(initialBeer || null);
@@ -18,15 +17,17 @@ function BeerSearchComposeModal({ initialBeer, onClose, onPost }) {
     if (step === 2) textareaRef.current?.focus();
   }, [step]);
 
-  const filtered = query.trim()
-    ? BEER_LIST.filter(
+  const q = query.trim();
+  const filtered = q
+    ? beers.filter(
         (b) =>
-          b.name.includes(query) ||
-          b.type.includes(query) ||
-          b.category.includes(query) ||
-          b.tags.some((t) => t.includes(query))
+          b.name.includes(q) ||
+          (b.type ?? "").includes(q) ||
+          b.category.includes(q) ||
+          (b.tags ?? []).some((t) => t.includes(q)) ||
+          (b.brewery ?? "").includes(q)
       )
-    : BEER_LIST;
+    : beers;
 
   function handleSelectBeer(beer) {
     setSelectedBeer(beer);
@@ -343,7 +344,7 @@ function PostCard({ post, onLike }) {
   );
 }
 
-export default function CommunityPage({ composeBeer, onComposeClear }) {
+export default function CommunityPage({ beers = [], composeBeer, onComposeClear }) {
   const [posts, setPosts] = useState(POSTS);
   const [showCompose, setShowCompose] = useState(false);
   const [activeFilter, setActiveFilter] = useState("추천");
@@ -404,6 +405,7 @@ export default function CommunityPage({ composeBeer, onComposeClear }) {
 
       {showCompose && (
         <BeerSearchComposeModal
+          beers={beers}
           initialBeer={composeBeer}
           onClose={handleComposeClose}
           onPost={handlePost}

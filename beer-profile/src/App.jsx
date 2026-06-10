@@ -12,10 +12,24 @@ import ProfilePage from "./pages/ProfilePage";
 import SearchBeerModal from "./components/SearchBeerModal";
 import BeerActionSheet from "./components/BeerActionSheet";
 import BottomTabBar from "./components/BottomTabBar";
+import { BeerProvider, useBeers } from "./contexts/BeerContext";
 import { track } from "./utils/analytics";
 import "./App.css";
 
+function AppInner() {
+  const { beers, loading } = useBeers();
+  return <AppShell beers={beers} loadingBeers={loading} />;
+}
+
 export default function App() {
+  return (
+    <BeerProvider>
+      <AppInner />
+    </BeerProvider>
+  );
+}
+
+function AppShell({ beers, loadingBeers }) {
   const [activeTab, setActiveTab] = useState("home");
   const [screen, setScreen] = useState(null);
   const [showSearchModal, setShowSearchModal] = useState(false);
@@ -109,6 +123,18 @@ export default function App() {
 
   const showFlow = screen !== null;
 
+  // ── 맥주 DB 로딩 중 스피너 ───────────────────────────
+  if (loadingBeers) {
+    return (
+      <div className="app-shell" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center", color: "#9CA3AF" }}>
+          <div style={{ fontSize: 40, marginBottom: 12 }}>🍺</div>
+          <p style={{ fontSize: 14 }}>맥주 데이터 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="app-shell">
       <div className="app-content">
@@ -153,19 +179,33 @@ export default function App() {
 
         {/* 탭 화면 */}
         {!showFlow && activeTab === "home" && (
-          <HomePage onSelectBeer={handleSelectBeer} ratedCount={ratedCount} onGoExplore={() => setActiveTab("explore")} />
+          <HomePage
+            beers={beers}
+            onSelectBeer={handleSelectBeer}
+            ratedCount={ratedCount}
+            onGoExplore={() => setActiveTab("explore")}
+          />
         )}
         {!showFlow && activeTab === "explore" && (
-          <ExplorePage onSelectBeer={handleSelectBeer} userName={MY_USER} />
+          <ExplorePage
+            beers={beers}
+            onSelectBeer={handleSelectBeer}
+            userName={MY_USER}
+          />
         )}
         {!showFlow && activeTab === "community" && (
           <CommunityPage
+            beers={beers}
             composeBeer={communityComposeBeer}
             onComposeClear={() => setCommunityComposeBeer(null)}
           />
         )}
         {!showFlow && activeTab === "profile" && (
-          <ProfilePage onSelectBeer={handleSelectBeer} ratedCount={ratedCount} />
+          <ProfilePage
+            beers={beers}
+            onSelectBeer={handleSelectBeer}
+            ratedCount={ratedCount}
+          />
         )}
       </div>
 
@@ -175,6 +215,7 @@ export default function App() {
 
       {showSearchModal && (
         <SearchBeerModal
+          beers={beers}
           onSelect={handleSearchSelect}
           onClose={() => setShowSearchModal(false)}
         />

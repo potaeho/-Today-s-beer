@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { BEER_LIST } from "../data/beerData";
 
-export default function SearchBeerModal({ onSelect, onClose }) {
+export default function SearchBeerModal({ beers = [], onSelect, onClose }) {
   const [query, setQuery] = useState("");
   const inputRef = useRef(null);
 
@@ -9,15 +8,17 @@ export default function SearchBeerModal({ onSelect, onClose }) {
     inputRef.current?.focus();
   }, []);
 
-  const filtered = query.trim()
-    ? BEER_LIST.filter(
+  const q = query.trim();
+  const filtered = q
+    ? beers.filter(
         (b) =>
-          b.name.includes(query) ||
-          b.type.includes(query) ||
-          b.category.includes(query) ||
-          b.tags.some((t) => t.includes(query))
+          b.name.includes(q) ||
+          (b.type ?? "").includes(q) ||
+          b.category.includes(q) ||
+          (b.tags ?? []).some((t) => t.includes(q)) ||
+          (b.brewery ?? "").includes(q)
       )
-    : BEER_LIST;
+    : beers;
 
   return (
     <div className="search-modal-overlay" onClick={onClose}>

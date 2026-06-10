@@ -1,7 +1,7 @@
 import { useState } from "react";
 import BeerCard from "../components/BeerCard";
 import BeerRecommendSlider from "../components/BeerRecommendSlider";
-import { BEER_LIST, CATEGORIES } from "../data/beerData";
+import { CATEGORIES } from "../data/beerData";
 import {
   getPersonalizedRecommendations,
   getMyRatedCount,
@@ -9,49 +9,46 @@ import {
 
 const PERSONALIZED_THRESHOLD = 5;
 
-export default function ExplorePage({ onSelectBeer, userName = "사용자" }) {
+export default function ExplorePage({ beers = [], onSelectBeer, userName = "사용자" }) {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("전체");
 
   const allCategories = ["전체", ...CATEGORIES];
 
-  // 실제 리뷰 데이터에서 평가 수 계산
   const ratedCount = getMyRatedCount();
   const isPersonalized = ratedCount >= PERSONALIZED_THRESHOLD;
 
-  const filtered = BEER_LIST.filter((b) => {
+  const q = query.trim();
+  const filtered = beers.filter((b) => {
     const matchQuery =
-      !query ||
-      b.name.includes(query) ||
-      b.type.includes(query) ||
-      b.tags.some((t) => t.includes(query));
+      !q ||
+      b.name.includes(q) ||
+      (b.type ?? "").includes(q) ||
+      (b.tags ?? []).some((t) => t.includes(q)) ||
+      (b.brewery ?? "").includes(q);
     const matchCat = activeCategory === "전체" || b.category === activeCategory;
     return matchQuery && matchCat;
   });
 
   const grouped = CATEGORIES.reduce((acc, cat) => {
-    const beers = filtered.filter((b) => b.category === cat);
-    if (beers.length > 0) acc.push({ category: cat, beers });
+    const catBeers = filtered.filter((b) => b.category === cat);
+    if (catBeers.length > 0) acc.push({ category: cat, beers: catBeers });
     return acc;
   }, []);
 
   // ── 추천 아이템 계산 ──────────────────────────────
   const recommendItems = (() => {
     if (isPersonalized) {
-      // 개인화 추천 (카테고리 필터 고려)
-      const recs = getPersonalizedRecommendations(6); // 여유 있게 뽑고
+      const recs = getPersonalizedRecommendations(beers, 6);
       if (activeCategory === "전체") return recs.slice(0, 3);
-      const filtered = recs.filter((r) => r.beer.category === activeCategory);
-      return filtered.length > 0
-        ? filtered.slice(0, 3)
-        : recs.slice(0, 3); // 해당 카테고리 없으면 전체에서
+      const catRecs = recs.filter((r) => r.beer.category === activeCategory);
+      return catRecs.length > 0 ? catRecs.slice(0, 3) : recs.slice(0, 3);
     } else {
-      // MD 추천: 상위 3종 고정
-      const beers =
+      const pool =
         activeCategory === "전체"
-          ? BEER_LIST.slice(0, 3)
-          : BEER_LIST.filter((b) => b.category === activeCategory).slice(0, 3);
-      return beers.map((beer) => ({ beer, reason: null }));
+          ? beers.slice(0, 3)
+          : beers.filter((b) => b.category === activeCategory).slice(0, 3);
+      return pool.map((beer) => ({ beer, reason: null }));
     }
   })();
 

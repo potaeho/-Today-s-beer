@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { REVIEWS } from "../data/reviewsData";
-import { BEER_LIST, HASHTAG_MAP } from "../data/beerData";
+import { HASHTAG_MAP, BEER_LIST } from "../data/beerData";
 import { getCurrentLevel, formatMl } from "../data/levels";
 import { LEVEL_ICONS } from "../components/LevelIcons";
 import { POSTS } from "../data/communityData";
@@ -24,16 +24,21 @@ const FOLLOWING_DATA = [
   { id: 7, user: "위트에일팬", handle: "@wheat_fan", avatar: "🌾", bio: "벨기에 위트에일 최고 🌾", followers: 67, following: 145, reviews: 19, avgStar: "4.1" },
 ];
 
-function getMyReviews() {
+// beers: Supabase에서 받은 맥주 목록. REVIEWS의 beerId와 매칭 시도.
+// UUID 매칭 실패 시 BEER_LIST 숫자 ID로 폴백.
+function getMyReviews(beers = []) {
   const result = [];
   Object.entries(REVIEWS).forEach(([beerId, reviews]) => {
     const mine = reviews.find((r) => r.isMe);
     if (mine) {
-      const beer = BEER_LIST.find((b) => b.id === Number(beerId));
+      // 1) Supabase UUID 매칭 시도
+      let beer = beers.find((b) => String(b.id) === String(beerId));
+      // 2) 실패하면 BEER_LIST 숫자 ID로 폴백
+      if (!beer) beer = BEER_LIST.find((b) => b.id === Number(beerId));
       if (beer) result.push({ ...mine, beer });
     }
   });
-  return result.sort((a, b) => b.beer.id - a.beer.id);
+  return result;
 }
 
 // 선호 카테고리: [{category, count, pct}]
@@ -244,8 +249,8 @@ function UserListModal({ title, users, onClose, onSelectUser }) {
 }
 
 /* ── 메인 컴포넌트 ── */
-export default function ProfilePage({ onSelectBeer, ratedCount: ratedCountProp }) {
-  const myReviews = getMyReviews();
+export default function ProfilePage({ beers = [], onSelectBeer, ratedCount: ratedCountProp }) {
+  const myReviews = getMyReviews(beers);
   const reviewCount = myReviews.length;
   const topCategories = getTopCategories(myReviews);
   const topHashtags = getTopHashtags(myReviews);
