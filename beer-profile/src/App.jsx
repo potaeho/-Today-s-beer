@@ -9,16 +9,12 @@ import ResultPage from "./pages/ResultPage";
 import BeerDetailPage from "./pages/BeerDetailPage";
 import CommunityPage from "./pages/CommunityPage";
 import ProfilePage from "./pages/ProfilePage";
-import LoginPage from "./pages/LoginPage";
 import SearchBeerModal from "./components/SearchBeerModal";
 import BeerActionSheet from "./components/BeerActionSheet";
 import BottomTabBar from "./components/BottomTabBar";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import "./App.css";
 
-function AppInner() {
-  const { isLoggedIn } = useAuth();
-  const [showLoginPage, setShowLoginPage] = useState(false);
+export default function App() {
   const [activeTab, setActiveTab] = useState("home");
   const [screen, setScreen] = useState(null);
   const [showSearchModal, setShowSearchModal] = useState(false);
@@ -69,11 +65,6 @@ function AppInner() {
   function handleTabChange(tab) {
     if (tab === "add") {
       setShowSearchModal(true);
-      return;
-    }
-    // 프로필 탭 — 비로그인이면 로그인 유도
-    if (tab === "profile" && !isLoggedIn) {
-      setShowLoginPage(true);
       return;
     }
     setScreen(null);
@@ -183,19 +174,6 @@ function AppInner() {
           onClose={() => setShowActionSheet(false)}
         />
       )}
-
-      {/* 로그인 페이지 오버레이 */}
-      {showLoginPage && (
-        <LoginPage onClose={() => setShowLoginPage(false)} />
-      )}
     </div>
-  );
-}
-
-export default function App() {
-  return (
-    <AuthProvider>
-      <AppInner />
-    </AuthProvider>
   );
 }
