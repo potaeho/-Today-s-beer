@@ -117,7 +117,7 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
                           {myReview.profile[axis] ?? 0}
                         </span>
                       )}
-                      <span className="beer-detail-axis-val">{avg[axis]}</span>
+                      {/* 전체 평균 수치는 표시 안 함 */}
                     </div>
                   </div>
                 ))}
