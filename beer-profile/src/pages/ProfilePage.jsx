@@ -292,15 +292,8 @@ export default function ProfilePage({ onSelectBeer, ratedCount: ratedCountProp }
           </button>
         </div>
 
-        <div className="profile-photo-wrap" onClick={() => fileInputRef.current?.click()}>
+        <div className="profile-photo-wrap">
           <div className="profile-photo">🍺</div>
-          <div className="profile-photo-edit">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
-              <path d="M12 20h9"/>
-              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-            </svg>
-          </div>
-          <input ref={fileInputRef} type="file" accept="image/*" style={{ display: "none" }} />
         </div>
 
         <h2 className="profile-name">홉덕후</h2>
