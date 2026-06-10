@@ -1,8 +1,10 @@
 import { getCurrentLevel, formatMl } from "../data/levels";
+import { LEVEL_ICONS } from "./LevelIcons";
 
 export default function LevelCard({ ratedCount }) {
   const { current, next, progress, totalMl } = getCurrentLevel(ratedCount);
   const pct = Math.min(Math.round(progress * 100), 100);
+  const LevelIcon = LEVEL_ICONS[current.level - 1];
 
   return (
     <div className="level-card" style={{ background: current.color }}>
@@ -10,7 +12,9 @@ export default function LevelCard({ ratedCount }) {
 
       {/* 아이콘 + 이름 */}
       <div className="level-hero">
-        <span className="level-icon">{current.icon}</span>
+        <div className="level-icon">
+          {LevelIcon && <LevelIcon />}
+        </div>
         <div className="level-name-wrap">
           <p className="level-name">{current.name}</p>
           <p className="level-name-en">{current.nameEn}</p>

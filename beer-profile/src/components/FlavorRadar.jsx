@@ -6,10 +6,9 @@ import {
   PolarRadiusAxis,
   ResponsiveContainer,
 } from "recharts";
-import { AXES } from "../data/beerData";
 
-export default function FlavorRadar({ profile }) {
-  const data = AXES.map((axis) => ({
+export default function FlavorRadar({ profile, axes }) {
+  const data = axes.map((axis) => ({
     subject: axis,
     value: profile[axis] ?? 0,
     fullMark: 5,

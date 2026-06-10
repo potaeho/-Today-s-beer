@@ -4,9 +4,10 @@ import FlavorRadar from "../components/FlavorRadar";
 import HashtagSection from "../components/HashtagSection";
 import ConfirmModal from "../components/ConfirmModal";
 import StarRating from "../components/StarRating";
-import { HASHTAG_MAP } from "../data/beerData";
+import { HASHTAG_MAP, PROFILE_AXES } from "../data/beerData";
 
 export default function DetailPage({ beer, profile, selected, onToggle, onBack, onSave }) {
+  const axes = PROFILE_AXES[beer?.category] || PROFILE_AXES["에일"];
   const [showModal, setShowModal] = useState(false);
   const [starRating, setStarRating] = useState(0);
 
@@ -22,7 +23,7 @@ export default function DetailPage({ beer, profile, selected, onToggle, onBack, 
       <div className="detail-sticky-top">
         <button className="back-btn" onClick={onBack}>← 수정하기</button>
         <BeerHeader beer={beer} />
-        <FlavorRadar profile={profile} />
+        <FlavorRadar profile={profile} axes={axes} />
         <div className="divider" />
       </div>
 
@@ -39,7 +40,7 @@ export default function DetailPage({ beer, profile, selected, onToggle, onBack, 
           <div className="detail-selected-tags">
             {resolvedTags.map((tag) => (
               <span key={tag.id} className="detail-selected-chip" onClick={() => onToggle(tag.id)}>
-                {tag.icon} #{tag.label} ✕
+                {tag.icon} {tag.label} ✕
               </span>
             ))}
           </div>

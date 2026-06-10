@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { AXES } from "../data/beerData";
 
-export default function FlavorSliders({ profile, onChange }) {
+export default function FlavorSliders({ profile, onChange, axes }) {
   const [editing, setEditing] = useState(null);
   const [draft, setDraft] = useState("");
 
@@ -29,7 +28,7 @@ export default function FlavorSliders({ profile, onChange }) {
 
   return (
     <div className="sliders-section">
-      {AXES.map((axis) => (
+      {axes.map((axis) => (
         <div key={axis} className="slider-row">
           <span className="slider-label">{axis}</span>
           <input

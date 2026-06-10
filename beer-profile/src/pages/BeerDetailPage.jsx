@@ -1,5 +1,5 @@
 import FlavorRadar from "../components/FlavorRadar";
-import { HASHTAG_MAP, AXES } from "../data/beerData";
+import { HASHTAG_MAP, PROFILE_AXES } from "../data/beerData";
 import { REVIEWS } from "../data/reviewsData";
 
 function StarRow({ value }) {
@@ -12,18 +12,20 @@ function StarRow({ value }) {
   );
 }
 
-function avgProfile(reviews) {
+function avgProfile(reviews, axes) {
   if (!reviews || reviews.length === 0) return null;
-  const sum = { 단맛: 0, 신맛: 0, 쓴맛: 0, 몰티함: 0, 부드러움: 0 };
-  reviews.forEach((r) => AXES.forEach((a) => { sum[a] += r.profile[a]; }));
+  const sum = {};
+  axes.forEach((a) => { sum[a] = 0; });
+  reviews.forEach((r) => axes.forEach((a) => { sum[a] += r.profile[a] ?? 0; }));
   const result = {};
-  AXES.forEach((a) => { result[a] = Math.round((sum[a] / reviews.length) * 10) / 10; });
+  axes.forEach((a) => { result[a] = Math.round((sum[a] / reviews.length) * 10) / 10; });
   return result;
 }
 
 export default function BeerDetailPage({ beer, onBack, onRate }) {
+  const axes = PROFILE_AXES[beer.category] || PROFILE_AXES["에일"];
   const reviews = REVIEWS[beer.id] || [];
-  const avg = avgProfile(reviews);
+  const avg = avgProfile(reviews, axes);
   const avgStar = reviews.length
     ? Math.round((reviews.reduce((s, r) => s + r.star, 0) / reviews.length) * 10) / 10
     : null;
@@ -32,7 +34,7 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
     <div className="detail-page-wrap">
       {/* 헤더 */}
       <div className="input-header">
-        <button className="back-btn" onClick={onBack}>←</button>
+        <button className="back-btn" onClick={onBack}>← 맥주 탐색</button>
         <span className="input-header-title">{beer.name}</span>
         <span style={{ width: 36 }} />
       </div>
@@ -70,10 +72,10 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
                   <span style={{ color: "#F59E0B", fontSize: 18 }}>★</span>
                 </div>
               </div>
-              {avg && <FlavorRadar profile={avg} />}
+              {avg && <FlavorRadar profile={avg} axes={axes} />}
               {/* 축별 평균 바 */}
               <div className="beer-detail-axis-bars">
-                {AXES.map((axis) => (
+                {axes.map((axis) => (
                   <div key={axis} className="beer-detail-axis-row">
                     <span className="beer-detail-axis-label">{axis}</span>
                     <div className="beer-detail-axis-bar-bg">
