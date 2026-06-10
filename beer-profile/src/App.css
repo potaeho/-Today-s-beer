@@ -1347,6 +1347,279 @@ body {
 .placeholder-text { font-size: 18px; font-weight: 700; color: var(--text-dark); }
 .placeholder-sub { font-size: 13px; color: var(--text-muted); }
 
+/* ════════════════════════════════
+   프로필 페이지
+════════════════════════════════ */
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.profile-header-bg {
+  background: linear-gradient(160deg, #1C1C1E 0%, #2D2A24 100%);
+  padding: 32px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.profile-avatar-wrap {
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.profile-avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  border: 3px solid rgba(255,255,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+}
+
+.profile-edit-btn {
+  position: absolute;
+  bottom: -2px;
+  right: -4px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.profile-name {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.profile-handle {
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+  margin: 0;
+}
+
+.profile-bio {
+  color: rgba(255,255,255,0.75);
+  font-size: 13px;
+  text-align: center;
+  margin: 4px 0 8px;
+  line-height: 1.5;
+}
+
+.profile-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 12px 20px;
+  width: 100%;
+  max-width: 340px;
+  justify-content: space-around;
+}
+
+.profile-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.profile-stat-num {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.profile-stat-label {
+  color: rgba(255,255,255,0.5);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.profile-stat-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(255,255,255,0.15);
+}
+
+/* 스크롤 영역 */
+.profile-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 16px 0;
+}
+
+.profile-section {
+  margin-bottom: 20px;
+}
+
+.profile-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 12px;
+}
+
+/* 선호 카테고리 */
+.profile-category-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.profile-category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  background: #F3F4F6;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.profile-category-chip--top {
+  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  border: 1.5px solid #F59E0B;
+}
+
+.profile-category-crown { font-size: 12px; }
+
+.profile-category-badge {
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 8px;
+  margin-left: 2px;
+}
+
+/* 맛 취향 태그 */
+.profile-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.profile-taste-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #FFF7ED;
+  border: 1px solid #FDE68A;
+  font-size: 13px;
+  font-weight: 600;
+  color: #92400E;
+}
+
+/* 평가한 맥주 리스트 */
+.profile-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-review-card {
+  display: flex;
+  gap: 12px;
+  background: #FAFAFA;
+  border: 1px solid #F3F4F6;
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.profile-review-img {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.profile-review-srm {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.7);
+}
+
+.profile-review-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-review-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.profile-review-category {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-hover);
+  text-transform: uppercase;
+}
+
+.profile-review-date {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.profile-review-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-review-comment {
+  font-size: 12px;
+  color: var(--text-mid);
+  margin: 4px 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.profile-review-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
 /* ── 탐색 추천 슬라이더 ── */
 .beer-rec-slider {
   display: flex;
@@ -1435,6 +1708,50 @@ body {
   font-size: 11px;
   font-weight: 700;
   color: rgba(0,0,0,0.35);
+}
+
+/* ── 탐색 추천 헤더 ── */
+.rec-header-md,
+.rec-header-personalized {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rec-username {
+  color: var(--accent-hover);
+}
+
+.rec-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 20px;
+  padding: 3px 9px;
+  flex-shrink: 0;
+}
+
+.rec-badge--md {
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.rec-badge--personal {
+  background: linear-gradient(135deg, #F59E0B22, #6366F122);
+  color: #6366F1;
+  border: 1px solid #6366F144;
+}
+
+.rec-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: -6px;
+  margin-bottom: 10px;
 }
 
 /* ── 탐색 추천 ── */

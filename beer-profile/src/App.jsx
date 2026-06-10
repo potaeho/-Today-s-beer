@@ -6,6 +6,7 @@ import DetailPage from "./pages/DetailPage";
 import ResultPage from "./pages/ResultPage";
 import BeerDetailPage from "./pages/BeerDetailPage";
 import CommunityPage from "./pages/CommunityPage";
+import ProfilePage from "./pages/ProfilePage";
 import SearchBeerModal from "./components/SearchBeerModal";
 import BeerActionSheet from "./components/BeerActionSheet";
 import BottomTabBar from "./components/BottomTabBar";
@@ -139,7 +140,7 @@ export default function App() {
           <HomePage onSelectBeer={handleSelectBeer} ratedCount={ratedCount} onGoExplore={() => setActiveTab("explore")} />
         )}
         {!showFlow && activeTab === "explore" && (
-          <ExplorePage onSelectBeer={handleSelectBeer} />
+          <ExplorePage onSelectBeer={handleSelectBeer} ratedCount={ratedCount} userName="태호" />
         )}
         {!showFlow && activeTab === "community" && (
           <CommunityPage
@@ -148,11 +149,7 @@ export default function App() {
           />
         )}
         {!showFlow && activeTab === "profile" && (
-          <div className="placeholder-page">
-            <p className="placeholder-icon">👤</p>
-            <p className="placeholder-text">프로필</p>
-            <p className="placeholder-sub">준비 중입니다</p>
-          </div>
+          <ProfilePage ratedCount={ratedCount} />
         )}
       </div>
 
