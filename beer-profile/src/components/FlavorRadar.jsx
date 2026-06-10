@@ -21,12 +21,12 @@ export default function FlavorRadar({ profile, axes, myProfile }) {
       {myProfile && (
         <div style={{ display: "flex", gap: 16, justifyContent: "center", marginBottom: 8 }}>
           <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "#6B7280" }}>
-            <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#F59E0B", display: "inline-block" }} />
-            전체 평균
-          </span>
-          <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "#6B7280" }}>
             <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#6366F1", display: "inline-block" }} />
             내 평가
+          </span>
+          <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "#6B7280" }}>
+            <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#F59E0B", display: "inline-block" }} />
+            전체 평균
           </span>
         </div>
       )}
