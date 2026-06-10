@@ -44,16 +44,27 @@ export function BeerProvider({ children }) {
 
     async function fetchBeers() {
       try {
-        const { data, error } = await supabase
-          .from("beers")
-          .select("*")
-          .order("category")
-          .order("name");
+        // PostgREST max_rows 제한을 피하기 위해 range로 전체 fetch
+        let allData = [];
+        const PAGE = 500;
+        let from = 0;
+        while (true) {
+          const { data: chunk, error: chunkErr } = await supabase
+            .from("beers")
+            .select("*")
+            .order("category")
+            .order("name")
+            .range(from, from + PAGE - 1);
 
+          if (chunkErr) throw chunkErr;
+          if (!chunk || chunk.length === 0) break;
+          allData = allData.concat(chunk);
+          if (chunk.length < PAGE) break;
+          from += PAGE;
+        }
         if (cancelled) return;
-        if (error) throw error;
 
-        const normalized = (data ?? []).map(normalizeBeer);
+        const normalized = allData.map(normalizeBeer);
         // DB가 비어 있으면 기본 데이터 사용
         setBeers(normalized.length > 0 ? normalized : BEER_LIST);
       } catch (err) {
