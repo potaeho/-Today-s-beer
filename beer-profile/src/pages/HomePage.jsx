@@ -113,7 +113,7 @@ export default function HomePage({ onSelectBeer, ratedCount = 3, onGoExplore }) 
                 <div className="rec-card-tags">
                   {beer.tags.map((t) => <span key={t} className="rec-card-tag">{t}</span>)}
                 </div>
-                <button className="rec-card-btn">맛 보기</button>
+                <button className="rec-card-btn">마셔보기</button>
               </div>
             ))}
           </div>
