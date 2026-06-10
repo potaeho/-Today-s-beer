@@ -12,6 +12,7 @@ import ProfilePage from "./pages/ProfilePage";
 import SearchBeerModal from "./components/SearchBeerModal";
 import BeerActionSheet from "./components/BeerActionSheet";
 import BottomTabBar from "./components/BottomTabBar";
+import { track } from "./utils/analytics";
 import "./App.css";
 
 export default function App() {
@@ -31,6 +32,7 @@ export default function App() {
   function handleSelectBeer(beer) {
     setSelectedBeer(beer);
     setScreen("beer-detail");
+    track.beerDetailView(beer);
   }
 
   // 상세 페이지에서 "나도 평가하기" 클릭
@@ -39,6 +41,8 @@ export default function App() {
     setSelectedTags([]);
     setStarRating(0);
     setScreen("input");
+    track.tapStartRating(selectedBeer);
+    track.ratingStepEnter("input", selectedBeer);
   }
 
   function handleProfileChange(axis, value) {
@@ -55,6 +59,8 @@ export default function App() {
     setStarRating(rating);
     setRatedCount((c) => c + 1);
     setScreen("result");
+    track.ratingStepEnter("result", selectedBeer);
+    track.ratingComplete(selectedBeer, rating, selectedTags);
   }
 
   function handleHome() {
@@ -65,16 +71,21 @@ export default function App() {
   function handleTabChange(tab) {
     if (tab === "add") {
       setShowSearchModal(true);
+      track.tapSearchIcon();
       return;
     }
     setScreen(null);
     setActiveTab(tab);
+    track.tabChange(tab);
+    track.screenView(tab);
   }
 
   function handleSearchSelect(beer) {
     setShowSearchModal(false);
     setActionBeer(beer);
     setShowActionSheet(true);
+    track.searchSelect(beer);
+    track.actionSheetOpen(beer);
   }
 
   function handleActionReview() {
@@ -84,6 +95,8 @@ export default function App() {
     setSelectedTags([]);
     setStarRating(0);
     setScreen("input");
+    track.actionSheetChooseReview(actionBeer);
+    track.ratingStepEnter("input", actionBeer);
   }
 
   function handleActionPost() {
@@ -91,6 +104,7 @@ export default function App() {
     setScreen(null);
     setActiveTab("community");
     setCommunityComposeBeer(actionBeer);
+    track.actionSheetChoosePost(actionBeer);
   }
 
   const showFlow = screen !== null;
