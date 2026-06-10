@@ -388,19 +388,19 @@ export default function CommunityPage({ composeBeer, onComposeClear }) {
         </div>
       </div>
 
+      {/* 글쓰기 입력창 */}
+      <button className="community-compose-bar" onClick={() => setShowCompose(true)}>
+        <div className="community-compose-avatar">😄</div>
+        <span className="community-compose-placeholder">지금 어떤 맥주 마시고 있나요?</span>
+        <span className="community-compose-btn">게시</span>
+      </button>
+
       <div className="community-feed">
         {posts.map((post) => (
           <PostCard key={post.id} post={post} onLike={handleLike} />
         ))}
         <div style={{ height: 100 }} />
       </div>
-
-      <button className="compose-fab" onClick={() => setShowCompose(true)}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 20h9"/>
-          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-        </svg>
-      </button>
 
       {showCompose && (
         <BeerSearchComposeModal
