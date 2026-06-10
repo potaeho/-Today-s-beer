@@ -68,10 +68,30 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
                 <span className="beer-detail-review-count">{reviews.length}명 평가</span>
               </div>
               <div className="beer-detail-avg-row">
-                <div className="beer-detail-avg-star">
-                  <span className="beer-detail-avg-star-num">{avgStar}</span>
-                  <span style={{ color: "#F59E0B", fontSize: 18 }}>★</span>
-                </div>
+                {myReview ? (
+                  <>
+                    <div className="beer-detail-star-col">
+                      <span className="beer-detail-star-label">내 평점</span>
+                      <div className="beer-detail-avg-star beer-detail-avg-star--mine">
+                        <span className="beer-detail-avg-star-num">{myReview.star}</span>
+                        <span style={{ color: "#F59E0B", fontSize: 18 }}>★</span>
+                      </div>
+                    </div>
+                    <div className="beer-detail-star-divider" />
+                    <div className="beer-detail-star-col">
+                      <span className="beer-detail-star-label">전체 평균</span>
+                      <div className="beer-detail-avg-star">
+                        <span className="beer-detail-avg-star-num">{avgStar}</span>
+                        <span style={{ color: "#6366F1", fontSize: 18 }}>★</span>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="beer-detail-avg-star">
+                    <span className="beer-detail-avg-star-num">{avgStar}</span>
+                    <span style={{ color: "#F59E0B", fontSize: 18 }}>★</span>
+                  </div>
+                )}
               </div>
               {avg && (
                 <FlavorRadar
