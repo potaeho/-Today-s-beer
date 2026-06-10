@@ -2009,10 +2009,10 @@ body {
   background: none;
   border: none;
   color: var(--accent-hover);
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 600;
   cursor: pointer;
-  padding: 0 0 16px;
+  padding: 8px 0 16px;
   text-align: left;
 }
 
