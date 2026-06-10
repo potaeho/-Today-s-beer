@@ -1,7 +1,8 @@
-import { HASHTAG_MAP, AXES } from "../data/beerData";
+import { HASHTAG_MAP, PROFILE_AXES } from "../data/beerData";
 
 export default function ConfirmModal({ beer, profile, selected, starRating, onConfirm, onCancel }) {
   const resolvedTags = selected.map((id) => HASHTAG_MAP[id]).filter(Boolean);
+  const axes = PROFILE_AXES[beer?.category] || PROFILE_AXES["에일"];
 
   return (
     <div className="modal-overlay" onClick={onCancel}>
@@ -14,13 +15,13 @@ export default function ConfirmModal({ beer, profile, selected, starRating, onCo
 
         {/* 수치 요약 */}
         <div className="modal-profile">
-          {AXES.map((axis) => (
+          {axes.map((axis) => (
             <div key={axis} className="modal-profile-row">
               <span className="modal-profile-label">{axis}</span>
               <div className="modal-profile-track">
-                <div className="modal-profile-fill" style={{ width: `${(profile[axis] / 5) * 100}%` }} />
+                <div className="modal-profile-fill" style={{ width: `${((profile[axis] ?? 0) / 5) * 100}%` }} />
               </div>
-              <span className="modal-profile-value">{profile[axis].toFixed(1)}</span>
+              <span className="modal-profile-value">{(profile[axis] ?? 0).toFixed(1)}</span>
             </div>
           ))}
         </div>
@@ -44,7 +45,7 @@ export default function ConfirmModal({ beer, profile, selected, starRating, onCo
             <div className="modal-tags">
               {resolvedTags.map((tag) => (
                 <span key={tag.id} className="modal-tag">
-                  {tag.icon} #{tag.label}
+                  {tag.icon} {tag.label}
                 </span>
               ))}
             </div>

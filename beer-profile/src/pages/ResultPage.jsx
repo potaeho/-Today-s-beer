@@ -49,9 +49,9 @@ export default function ResultPage({ beer, profile, selected, starRating, onHome
             <div key={axis} className="result-axis-row">
               <span className="result-axis-name">{axis}</span>
               <div className="result-axis-track">
-                <div className="result-axis-fill" style={{ width: `${(profile[axis] / 5) * 100}%` }} />
+                <div className="result-axis-fill" style={{ width: `${((profile[axis] ?? 0) / 5) * 100}%` }} />
               </div>
-              <span className="result-axis-value">{profile[axis].toFixed(1)}</span>
+              <span className="result-axis-value">{(profile[axis] ?? 0).toFixed(1)}</span>
             </div>
           ))}
         </div>
@@ -87,7 +87,7 @@ export default function ResultPage({ beer, profile, selected, starRating, onHome
                 <div className="result-tag-chips">
                   {tags.map((tag) => (
                     <span key={tag.id} className="result-tag-chip">
-                      {tag.icon} #{tag.label}
+                      {tag.icon} {tag.label}
                     </span>
                   ))}
                 </div>

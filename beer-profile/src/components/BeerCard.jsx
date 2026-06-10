@@ -25,7 +25,7 @@ export default function BeerCard({ beer, onClick }) {
           <div className="beer-card-hashtags">
             {resolvedHashtags.map((tag) => (
               <span key={tag.id} className="beer-card-hashtag">
-                {tag.icon} #{tag.label}
+                {tag.icon} {tag.label}
               </span>
             ))}
           </div>
