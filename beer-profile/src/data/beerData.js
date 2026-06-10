@@ -1,43 +1,62 @@
 export const HASHTAGS = {
   단맛: [
-    { id: "sweet_pineapple", label: "파인애플", icon: "🍍" },
-    { id: "sweet_mango", label: "망고", icon: "🥭" },
     { id: "sweet_honey", label: "꿀", icon: "🍯" },
     { id: "sweet_caramel", label: "캐러멜", icon: "🍮" },
-    { id: "sweet_chocolate", label: "다크초콜릿", icon: "🍫" },
     { id: "sweet_vanilla", label: "바닐라", icon: "🌼" },
+    { id: "sweet_tropical", label: "열대과일", icon: "🍍" },
+    { id: "sweet_darkchoco", label: "다크초콜릿", icon: "🍫" },
   ],
-  신맛: [
-    { id: "sour_lemon", label: "레몬", icon: "🍋" },
+  산미: [
+    { id: "sour_citrus", label: "시트러스", icon: "🍋" },
     { id: "sour_grape", label: "청포도", icon: "🍇" },
-    { id: "sour_yogurt", label: "요거트", icon: "🥛" },
-    { id: "sour_vinegar", label: "식초", icon: "🧪" },
     { id: "sour_berry", label: "베리", icon: "🫐" },
+    { id: "sour_yogurt", label: "요거트", icon: "🥛" },
   ],
-  쓴맛: [
-    { id: "bitter_herb", label: "허브", icon: "🌿" },
-    { id: "bitter_resin", label: "레진", icon: "🪵" },
-    { id: "bitter_citrus", label: "시트러스 껍질", icon: "🍊" },
-    { id: "bitter_roast", label: "로스티드", icon: "☕" },
-    { id: "bitter_pine", label: "솔잎", icon: "🌲" },
+  홉향: [
+    { id: "hop_herb", label: "허브", icon: "🌿" },
+    { id: "hop_flower", label: "꽃", icon: "🌸" },
+    { id: "hop_resin", label: "레진", icon: "🪵" },
+    { id: "hop_pine", label: "솔잎", icon: "🌲" },
+    { id: "hop_grass", label: "풀향", icon: "🌱" },
   ],
-  몰티함: [
-    { id: "malty_toast", label: "토스트", icon: "🍞" },
-    { id: "malty_bread", label: "오븐에구운빵", icon: "🥖" },
-    { id: "malty_grain", label: "곡물", icon: "🌾" },
-    { id: "malty_smoke", label: "흑연/스모크", icon: "🔥" },
-    { id: "malty_caramel", label: "캐러멜몰트", icon: "🍯" },
+  몰트: [
+    { id: "malt_grain", label: "곡물", icon: "🌾" },
+    { id: "malt_toast", label: "토스트", icon: "🍞" },
+    { id: "malt_bread", label: "구운빵", icon: "🥖" },
+    { id: "malt_caramel", label: "캐러멜몰트", icon: "🍮" },
+    { id: "malt_biscuit", label: "비스킷", icon: "🍪" },
   ],
-  부드러움: [
-    { id: "smooth_creamy", label: "크리미", icon: "🥂" },
-    { id: "smooth_silky", label: "실키", icon: "✨" },
-    { id: "smooth_dry", label: "드라이", icon: "🏜️" },
-    { id: "smooth_watery", label: "워터리", icon: "💧" },
-    { id: "smooth_thick", label: "두툼한", icon: "🧁" },
+  로스팅: [
+    { id: "roast_coffee", label: "커피", icon: "☕" },
+    { id: "roast_darkchoco", label: "다크초콜릿", icon: "🍫" },
+    { id: "roast_smoke", label: "훈연", icon: "🔥" },
+    { id: "roast_char", label: "탄맛", icon: "⬛" },
+  ],
+  발효: [
+    { id: "ferment_banana", label: "바나나", icon: "🍌" },
+    { id: "ferment_apple", label: "사과·배", icon: "🍎" },
+    { id: "ferment_spice", label: "향신료", icon: "🌶️" },
+    { id: "ferment_wine", label: "와인", icon: "🍷" },
+    { id: "ferment_funky", label: "펑키", icon: "🤘" },
+  ],
+  질감: [
+    { id: "tex_watery", label: "워터리", icon: "💧" },
+    { id: "tex_silky", label: "실키", icon: "✨" },
+    { id: "tex_creamy", label: "크리미", icon: "🥂" },
+    { id: "tex_dry", label: "드라이", icon: "🏜️" },
+    { id: "tex_heavy", label: "묵직함", icon: "⚓" },
   ],
 };
 
-export const AXES = ["단맛", "신맛", "쓴맛", "몰티함", "부드러움"];
+export const AXES = ["단맛", "산미", "홉향", "몰트", "로스팅", "발효", "질감"];
+
+export const PROFILE_AXES = {
+  라거: ["단맛", "신맛", "쓴맛", "몰티함", "아로마"],
+  에일: ["단맛", "신맛", "쓴맛", "아로마", "부드러움"],
+  IPA: ["단맛", "신맛", "쓴맛", "아로마", "부드러움"],
+  사워: ["단맛", "신맛", "쓴맛", "아로마", "부드러움"],
+  스타우트: ["단맛", "탄맛", "몰티함", "바디감", "아로마"],
+};
 
 export const CATEGORIES = ["라거", "에일", "IPA", "사워", "스타우트"];
 
@@ -52,8 +71,8 @@ export const BEER_LIST = [
     srmColor: "#C9A227",
     image: null,
     tags: ["#시트러스", "#홉향"],
-    hashtags: ["bitter_citrus", "bitter_pine", "sweet_pineapple", "smooth_dry"],
-    profile: { 단맛: 3.8, 신맛: 1.2, 쓴맛: 3.5, 몰티함: 2.4, 부드러움: 3.0 },
+    hashtags: ["sour_citrus", "hop_pine", "sweet_tropical", "tex_dry"],
+    profile: { 단맛: 3.8, 신맛: 1.2, 쓴맛: 3.5, 아로마: 4.0, 부드러움: 3.0 },
   },
   {
     id: 2,
@@ -65,8 +84,8 @@ export const BEER_LIST = [
     srmColor: "#F0D060",
     image: null,
     tags: ["#청량함", "#가벼운"],
-    hashtags: ["smooth_silky", "smooth_watery", "malty_grain"],
-    profile: { 단맛: 1.5, 신맛: 0.8, 쓴맛: 1.2, 몰티함: 2.0, 부드러움: 4.5 },
+    hashtags: ["tex_silky", "tex_watery", "malt_grain"],
+    profile: { 단맛: 1.5, 신맛: 0.8, 쓴맛: 1.2, 몰티함: 2.0, 아로마: 1.5 },
   },
   {
     id: 3,
@@ -78,8 +97,8 @@ export const BEER_LIST = [
     srmColor: "#E8C84A",
     image: null,
     tags: ["#오렌지필", "#바나나"],
-    hashtags: ["sweet_vanilla", "sour_lemon", "malty_bread", "smooth_creamy"],
-    profile: { 단맛: 2.5, 신맛: 2.0, 쓴맛: 1.0, 몰티함: 2.5, 부드러움: 4.0 },
+    hashtags: ["sweet_vanilla", "sour_citrus", "malt_bread", "tex_creamy"],
+    profile: { 단맛: 2.5, 신맛: 2.0, 쓴맛: 1.0, 아로마: 3.5, 부드러움: 4.0 },
   },
   {
     id: 4,
@@ -91,8 +110,8 @@ export const BEER_LIST = [
     srmColor: "#1A0505",
     image: null,
     tags: ["#다크초콜릿", "#로스티드"],
-    hashtags: ["sweet_chocolate", "bitter_roast", "malty_smoke", "malty_toast"],
-    profile: { 단맛: 3.0, 신맛: 0.5, 쓴맛: 4.5, 몰티함: 4.8, 부드러움: 3.5 },
+    hashtags: ["sweet_darkchoco", "roast_coffee", "roast_smoke", "malt_toast"],
+    profile: { 단맛: 3.0, 탄맛: 4.5, 몰티함: 4.8, 바디감: 3.5, 아로마: 4.0 },
   },
   {
     id: 5,
@@ -104,8 +123,8 @@ export const BEER_LIST = [
     srmColor: "#D4A835",
     image: null,
     tags: ["#망고", "#새콤달콤"],
-    hashtags: ["sweet_mango", "sour_berry", "sour_lemon"],
-    profile: { 단맛: 4.0, 신맛: 4.5, 쓴맛: 0.5, 몰티함: 1.0, 부드러움: 3.0 },
+    hashtags: ["sweet_tropical", "sour_berry", "sour_citrus"],
+    profile: { 단맛: 4.0, 신맛: 4.5, 쓴맛: 0.5, 아로마: 3.5, 부드러움: 3.0 },
   },
   {
     id: 6,
@@ -117,8 +136,8 @@ export const BEER_LIST = [
     srmColor: "#F5E27A",
     image: null,
     tags: ["#깔끔함", "#홉쓴맛"],
-    hashtags: ["bitter_herb", "malty_grain", "smooth_dry", "smooth_watery"],
-    profile: { 단맛: 1.2, 신맛: 0.5, 쓴맛: 2.5, 몰티함: 1.8, 부드러움: 4.8 },
+    hashtags: ["hop_herb", "malt_grain", "tex_dry", "tex_watery"],
+    profile: { 단맛: 1.2, 신맛: 0.5, 쓴맛: 2.5, 몰티함: 1.8, 아로마: 2.5 },
   },
   {
     id: 7,
@@ -130,8 +149,8 @@ export const BEER_LIST = [
     srmColor: "#B87333",
     image: null,
     tags: ["#체리", "#와인향"],
-    hashtags: ["sweet_vanilla", "sour_berry", "sour_vinegar"],
-    profile: { 단맛: 2.5, 신맛: 4.8, 쓴맛: 0.3, 몰티함: 1.2, 부드러움: 2.5 },
+    hashtags: ["sweet_vanilla", "sour_berry", "sour_citrus"],
+    profile: { 단맛: 2.5, 신맛: 4.8, 쓴맛: 0.3, 아로마: 3.8, 부드러움: 2.5 },
   },
   {
     id: 8,
@@ -143,8 +162,8 @@ export const BEER_LIST = [
     srmColor: "#C47A2A",
     image: null,
     tags: ["#풀향", "#라이트홉"],
-    hashtags: ["bitter_herb", "malty_toast", "smooth_dry"],
-    profile: { 단맛: 2.0, 신맛: 1.0, 쓴맛: 2.8, 몰티함: 2.8, 부드러움: 3.8 },
+    hashtags: ["hop_herb", "malt_toast", "tex_dry"],
+    profile: { 단맛: 2.0, 신맛: 1.0, 쓴맛: 2.8, 아로마: 2.5, 부드러움: 3.8 },
   },
   {
     id: 9,
@@ -156,8 +175,8 @@ export const BEER_LIST = [
     srmColor: "#D4A835",
     image: null,
     tags: ["#열대과일", "#헤이지"],
-    hashtags: ["sweet_mango", "sweet_pineapple", "bitter_resin", "smooth_creamy"],
-    profile: { 단맛: 3.2, 신맛: 1.8, 쓴맛: 3.0, 몰티함: 2.0, 부드러움: 3.5 },
+    hashtags: ["sweet_tropical", "hop_resin", "tex_creamy"],
+    profile: { 단맛: 3.2, 신맛: 1.8, 쓴맛: 3.0, 아로마: 4.5, 부드러움: 3.5 },
   },
   {
     id: 10,
@@ -169,8 +188,8 @@ export const BEER_LIST = [
     srmColor: "#2C0A0A",
     image: null,
     tags: ["#크리미", "#커피"],
-    hashtags: ["sweet_chocolate", "bitter_roast", "malty_caramel", "smooth_creamy", "smooth_thick"],
-    profile: { 단맛: 2.8, 신맛: 0.3, 쓴맛: 3.8, 몰티함: 4.5, 부드러움: 4.5 },
+    hashtags: ["sweet_darkchoco", "roast_coffee", "malt_caramel", "tex_creamy", "tex_heavy"],
+    profile: { 단맛: 2.8, 탄맛: 3.8, 몰티함: 4.5, 바디감: 4.5, 아로마: 3.5 },
   },
 ];
 

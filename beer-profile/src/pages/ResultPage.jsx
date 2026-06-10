@@ -1,16 +1,18 @@
 import FlavorRadar from "../components/FlavorRadar";
-import { HASHTAG_MAP, AXES } from "../data/beerData";
+import { HASHTAG_MAP, AXES, PROFILE_AXES } from "../data/beerData";
+
+const TAG_PREFIX = {
+  단맛: "sweet_", 산미: "sour_", 홉향: "hop_", 몰트: "malt_",
+  로스팅: "roast_", 발효: "ferment_", 질감: "tex_",
+};
 
 export default function ResultPage({ beer, profile, selected, starRating, onHome }) {
   const resolvedTags = selected.map((id) => HASHTAG_MAP[id]).filter(Boolean);
+  const profileAxes = PROFILE_AXES[beer?.category] || PROFILE_AXES["에일"];
 
   const tagsByAxis = AXES.reduce((acc, axis) => {
-    const axisTags = resolvedTags.filter((tag) => {
-      const prefix = {
-        단맛: "sweet_", 신맛: "sour_", 쓴맛: "bitter_", 몰티함: "malty_", 부드러움: "smooth_",
-      }[axis];
-      return tag.id.startsWith(prefix);
-    });
+    const prefix = TAG_PREFIX[axis];
+    const axisTags = resolvedTags.filter((tag) => tag.id.startsWith(prefix));
     if (axisTags.length > 0) acc.push({ axis, tags: axisTags });
     return acc;
   }, []);
@@ -41,9 +43,9 @@ export default function ResultPage({ beer, profile, selected, starRating, onHome
       {/* 레이더 차트 */}
       <div className="result-section">
         <p className="result-section-label">맛 프로파일</p>
-        <FlavorRadar profile={profile} />
+        <FlavorRadar profile={profile} axes={profileAxes} />
         <div className="result-axis-values">
-          {AXES.map((axis) => (
+          {profileAxes.map((axis) => (
             <div key={axis} className="result-axis-row">
               <span className="result-axis-name">{axis}</span>
               <div className="result-axis-track">

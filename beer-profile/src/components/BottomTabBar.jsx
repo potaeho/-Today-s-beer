@@ -27,17 +27,15 @@ function IconExplore({ active }) {
   );
 }
 
-function IconAlarm({ active }) {
+function IconCommunity({ active }) {
   return active ? (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" fill="currentColor" fillOpacity="0.15"/>
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="currentColor" fillOpacity="0.15"/>
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
     </svg>
   ) : (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
     </svg>
   );
 }
@@ -62,7 +60,7 @@ export default function BottomTabBar({ activeTab, onTabChange }) {
     { id: "home",    Icon: IconHome,    label: "홈" },
     { id: "explore", Icon: IconExplore, label: "탐색" },
     { id: "add",     Icon: null,        label: "평가" },
-    { id: "alarm",   Icon: IconAlarm,   label: "알림" },
+    { id: "community", Icon: IconCommunity, label: "커뮤니티" },
     { id: "profile", Icon: IconProfile, label: "프로필" },
   ];
 
@@ -70,12 +68,9 @@ export default function BottomTabBar({ activeTab, onTabChange }) {
     <div className="bottom-tab-bar">
       {tabs.map((tab) =>
         tab.id === "add" ? (
-          <div key={tab.id} className="tab-add-wrap">
-            <button className="tab-add-btn" onClick={() => onTabChange(tab.id)}>
-              <span className="tab-add-icon">＋</span>
-            </button>
-            <span className="tab-add-label">평가</span>
-          </div>
+          <button key={tab.id} className="tab-add-btn" onClick={() => onTabChange(tab.id)}>
+            <span className="tab-add-icon">＋</span>
+          </button>
         ) : (
           <button
             key={tab.id}

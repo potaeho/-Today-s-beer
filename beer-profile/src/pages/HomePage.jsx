@@ -39,17 +39,18 @@ export default function HomePage({ onSelectBeer, ratedCount = 3, onGoExplore }) 
                 <line x1="15.5" y1="15.5" x2="21" y2="21"/>
               </svg>
             </button>
-            <button className="appbar-icon barcode-btn" onClick={() => alert("바코드 스캔 기능 준비 중입니다 📷")}>
+            <button className="appbar-icon" onClick={() => alert("알림 기능 준비 중입니다 🔔")}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+            </button>
+            <button className="appbar-icon" onClick={() => alert("바코드 스캔 기능 준비 중입니다 📷")}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                {/* 좌상단 */}
                 <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
-                {/* 우상단 */}
                 <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
-                {/* 우하단 */}
                 <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
-                {/* 좌하단 */}
                 <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
-                {/* 스캔 라인 */}
                 <line x1="5" y1="12" x2="19" y2="12"/>
               </svg>
             </button>

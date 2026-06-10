@@ -7,6 +7,7 @@ import ResultPage from "./pages/ResultPage";
 import BeerDetailPage from "./pages/BeerDetailPage";
 import CommunityPage from "./pages/CommunityPage";
 import SearchBeerModal from "./components/SearchBeerModal";
+import BeerActionSheet from "./components/BeerActionSheet";
 import BottomTabBar from "./components/BottomTabBar";
 import "./App.css";
 
@@ -14,6 +15,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState("home");
   const [screen, setScreen] = useState(null);
   const [showSearchModal, setShowSearchModal] = useState(false);
+  const [showActionSheet, setShowActionSheet] = useState(false);
+  const [actionBeer, setActionBeer] = useState(null);
   const [communityComposeBeer, setCommunityComposeBeer] = useState(null);
   const [selectedBeer, setSelectedBeer] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -67,8 +70,24 @@ export default function App() {
 
   function handleSearchSelect(beer) {
     setShowSearchModal(false);
-    setSelectedBeer(beer);
-    setScreen("beer-detail");
+    setActionBeer(beer);
+    setShowActionSheet(true);
+  }
+
+  function handleActionReview() {
+    setShowActionSheet(false);
+    setSelectedBeer(actionBeer);
+    setProfile({ ...actionBeer.profile });
+    setSelectedTags([]);
+    setStarRating(0);
+    setScreen("input");
+  }
+
+  function handleActionPost() {
+    setShowActionSheet(false);
+    setScreen(null);
+    setActiveTab("community");
+    setCommunityComposeBeer(actionBeer);
   }
 
   const showFlow = screen !== null;
@@ -145,6 +164,15 @@ export default function App() {
         <SearchBeerModal
           onSelect={handleSearchSelect}
           onClose={() => setShowSearchModal(false)}
+        />
+      )}
+
+      {showActionSheet && actionBeer && (
+        <BeerActionSheet
+          beer={actionBeer}
+          onReview={handleActionReview}
+          onPost={handleActionPost}
+          onClose={() => setShowActionSheet(false)}
         />
       )}
     </div>
