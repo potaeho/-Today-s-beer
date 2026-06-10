@@ -66,55 +66,66 @@ export default function LevelJourneyModal({ ratedCount, onClose }) {
                   )}
                 </div>
 
-                {/* 카드 */}
-                <div
-                  className={`journey-card ${isCurrent ? "journey-card--current" : ""} ${
-                    !isUnlocked ? "journey-card--locked" : ""
-                  }`}
-                  style={isCurrent ? { background: lv.color } : {}}
-                >
-                  <div className="journey-card-icon-wrap">
-                    {Icon && (
-                      <div className={!isUnlocked ? "journey-icon-dim" : ""}>
-                        <Icon />
-                      </div>
-                    )}
-                  </div>
-                  <div className="journey-card-content">
-                    <div className="journey-card-top">
-                      <div className="journey-card-badges">
-                        <span className={`journey-lv-badge ${isCurrent ? "journey-lv-badge--current" : isUnlocked ? "journey-lv-badge--done" : "journey-lv-badge--locked"}`}>
+                {/* ── 잠긴 레벨: ? + 용량만 표시 ── */}
+                {!isUnlocked ? (
+                  <div className="journey-card journey-card--locked">
+                    <div className="journey-card-icon-wrap">
+                      <div className="journey-lock-placeholder">?</div>
+                    </div>
+                    <div className="journey-card-content">
+                      <div className="journey-card-top">
+                        <span className="journey-lv-badge journey-lv-badge--locked">
                           Lv.{lv.level}
                         </span>
-                        {isCurrent && <span className="journey-now-badge">현재</span>}
-                        {isUnlocked && !isCurrent && <span className="journey-done-badge">달성 ✓</span>}
+                        <span className="journey-lock-icon">🔒</span>
                       </div>
-                      {!isUnlocked && <span className="journey-lock-icon">🔒</span>}
+                      <p className="journey-card-name journey-card-name--hidden">???</p>
+                      <p className="journey-card-unlock-hint">
+                        {formatMl(lv.minMl)} 달성 시 해제
+                      </p>
                     </div>
-                    <p className="journey-card-name">{lv.name}</p>
-                    <p className="journey-card-name-en">{lv.nameEn}</p>
-                    <p className="journey-card-desc">{lv.desc}</p>
-
-                    {/* 현재 레벨 진행 바 */}
-                    {isCurrent && next && (
-                      <div className="journey-progress-wrap">
-                        <div className="journey-progress-track">
-                          <div
-                            className="journey-progress-fill"
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
-                        <div className="journey-progress-labels">
-                          <span>다음: {next.name}</span>
-                          <span className="journey-progress-pct">{pct}%</span>
+                  </div>
+                ) : (
+                  /* ── 해제된 레벨 (달성 or 현재) ── */
+                  <div
+                    className={`journey-card ${isCurrent ? "journey-card--current" : ""}`}
+                    style={isCurrent ? { background: lv.color } : {}}
+                  >
+                    <div className="journey-card-icon-wrap">
+                      {Icon && <Icon />}
+                    </div>
+                    <div className="journey-card-content">
+                      <div className="journey-card-top">
+                        <div className="journey-card-badges">
+                          <span className={`journey-lv-badge ${isCurrent ? "journey-lv-badge--current" : "journey-lv-badge--done"}`}>
+                            Lv.{lv.level}
+                          </span>
+                          {isCurrent && <span className="journey-now-badge">현재</span>}
+                          {!isCurrent && <span className="journey-done-badge">달성 ✓</span>}
                         </div>
                       </div>
-                    )}
-                    {isCurrent && !next && (
-                      <p className="journey-max-label">🎉 최고 레벨 달성!</p>
-                    )}
+                      <p className="journey-card-name">{lv.name}</p>
+                      <p className="journey-card-name-en">{lv.nameEn}</p>
+                      <p className="journey-card-desc">{lv.desc}</p>
+
+                      {/* 현재 레벨 진행 바 */}
+                      {isCurrent && next && (
+                        <div className="journey-progress-wrap">
+                          <div className="journey-progress-track">
+                            <div className="journey-progress-fill" style={{ width: `${pct}%` }} />
+                          </div>
+                          <div className="journey-progress-labels">
+                            <span>다음까지</span>
+                            <span className="journey-progress-pct">{pct}%</span>
+                          </div>
+                        </div>
+                      )}
+                      {isCurrent && !next && (
+                        <p className="journey-max-label">🎉 최고 레벨 달성!</p>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             );
           })}
