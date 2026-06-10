@@ -36,6 +36,25 @@ function getMyReviews() {
   return result.sort((a, b) => b.beer.id - a.beer.id);
 }
 
+// 선호 카테고리: [{category, count, pct}]
+function getTopCategories(myReviews) {
+  const count = {};
+  myReviews.forEach((r) => { count[r.beer.category] = (count[r.beer.category] || 0) + 1; });
+  const sorted = Object.entries(count).sort((a, b) => b[1] - a[1]);
+  const max = sorted[0]?.[1] || 1;
+  return sorted.map(([category, cnt]) => ({ category, count: cnt, pct: Math.round((cnt / max) * 100) }));
+}
+
+// 자주 쓴 해시태그: [{id, count}]
+function getTopHashtags(myReviews, limit = 8) {
+  const count = {};
+  myReviews.forEach((r) => r.hashtags.forEach((h) => { count[h] = (count[h] || 0) + 1; }));
+  return Object.entries(count)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([id, cnt]) => ({ id, count: cnt }));
+}
+
 function StarRow({ value }) {
   return (
     <span>
@@ -228,6 +247,8 @@ function UserListModal({ title, users, onClose, onSelectUser }) {
 export default function ProfilePage({ onSelectBeer, ratedCount: ratedCountProp }) {
   const myReviews = getMyReviews();
   const reviewCount = myReviews.length;
+  const topCategories = getTopCategories(myReviews);
+  const topHashtags = getTopHashtags(myReviews);
   // ratedCount prop이 있으면 사용 (홈과 레벨 일치), 없으면 reviewCount 폴백
   const ratedCount = ratedCountProp ?? reviewCount;
   const avgStar = reviewCount
@@ -361,6 +382,49 @@ export default function ProfilePage({ onSelectBeer, ratedCount: ratedCountProp }
             {LevelIcon && <LevelIcon />}
           </div>
         </div>
+
+        {/* 선호 맥주 종류 */}
+        <div className="profile-section">
+          <h3 className="profile-section-title">🍺 선호 맥주 종류</h3>
+          <div className="profile-category-list">
+            {topCategories.map(({ category, count, pct }, i) => (
+              <div key={category} className="profile-cat-row">
+                <div className="profile-cat-label-wrap">
+                  {i === 0 && <span className="profile-cat-crown">👑</span>}
+                  <span className="profile-cat-name">{category}</span>
+                  <span className="profile-cat-count">{count}회</span>
+                </div>
+                <div className="profile-cat-bar-bg">
+                  <div
+                    className="profile-cat-bar-fill"
+                    style={{
+                      width: `${pct}%`,
+                      background: i === 0 ? "var(--accent)" : "#D1D5DB",
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 자주 쓴 맛 태그 */}
+        {topHashtags.length > 0 && (
+          <div className="profile-section">
+            <h3 className="profile-section-title">🏷 나의 맛 취향</h3>
+            <div className="profile-tag-row">
+              {topHashtags.map(({ id, count }) => {
+                const tag = HASHTAG_MAP[id];
+                return tag ? (
+                  <span key={id} className="profile-taste-tag">
+                    {tag.icon} {tag.label}
+                    <span className="profile-taste-tag-count">{count}</span>
+                  </span>
+                ) : null;
+              })}
+            </div>
+          </div>
+        )}
 
         {/* 최근 리뷰 */}
         <div className="profile-section">
