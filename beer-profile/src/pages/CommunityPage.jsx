@@ -7,8 +7,11 @@ function BeerSearchComposeModal({ initialBeer, onClose, onPost }) {
   const [query, setQuery] = useState("");
   const [selectedBeer, setSelectedBeer] = useState(initialBeer || null);
   const [text, setText] = useState("");
+  const [mediaFiles, setMediaFiles] = useState([]); // { url, type: 'image'|'video', name }
   const textareaRef = useRef(null);
   const searchRef = useRef(null);
+  const imageInputRef = useRef(null);
+  const videoInputRef = useRef(null);
 
   useEffect(() => {
     if (step === 1) searchRef.current?.focus();
@@ -40,8 +43,23 @@ function BeerSearchComposeModal({ initialBeer, onClose, onPost }) {
     if (step === 2) setStep(1);
   }
 
+  function handleMediaAdd(e, type) {
+    const files = Array.from(e.target.files);
+    const newMedia = files.map((f) => ({
+      url: URL.createObjectURL(f),
+      type,
+      name: f.name,
+    }));
+    setMediaFiles((prev) => [...prev, ...newMedia].slice(0, 4)); // 최대 4개
+    e.target.value = "";
+  }
+
+  function handleMediaRemove(idx) {
+    setMediaFiles((prev) => prev.filter((_, i) => i !== idx));
+  }
+
   function handleSubmit() {
-    if (!text.trim()) return;
+    if (!text.trim() && mediaFiles.length === 0) return;
     onPost({
       id: Date.now(),
       user: "나",
@@ -50,6 +68,7 @@ function BeerSearchComposeModal({ initialBeer, onClose, onPost }) {
       time: "방금",
       content: text.trim(),
       beerTag: selectedBeer?.name || null,
+      media: mediaFiles,
       likes: 0,
       comments: 0,
       reposts: 0,
@@ -176,10 +195,72 @@ function BeerSearchComposeModal({ initialBeer, onClose, onPost }) {
                   onChange={(e) => setText(e.target.value)}
                   maxLength={280}
                 />
+                {/* 미디어 미리보기 */}
+                {mediaFiles.length > 0 && (
+                  <div className={`compose-media-grid compose-media-grid--${Math.min(mediaFiles.length, 2)}`}>
+                    {mediaFiles.map((m, i) => (
+                      <div key={i} className="compose-media-item">
+                        {m.type === "image" ? (
+                          <img src={m.url} alt="" className="compose-media-thumb" />
+                        ) : (
+                          <video src={m.url} className="compose-media-thumb" muted />
+                        )}
+                        <button
+                          className="compose-media-remove"
+                          onClick={() => handleMediaRemove(i)}
+                        >✕</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
+            {/* hidden file inputs */}
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              style={{ display: "none" }}
+              onChange={(e) => handleMediaAdd(e, "image")}
+            />
+            <input
+              ref={videoInputRef}
+              type="file"
+              accept="video/*"
+              style={{ display: "none" }}
+              onChange={(e) => handleMediaAdd(e, "video")}
+            />
+
             <div className="compose-footer">
+              <div className="compose-media-btns">
+                {/* 사진 */}
+                <button
+                  className="compose-media-btn"
+                  onClick={() => imageInputRef.current?.click()}
+                  disabled={mediaFiles.length >= 4}
+                  title="사진 추가"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                  </svg>
+                </button>
+                {/* 동영상 */}
+                <button
+                  className="compose-media-btn"
+                  onClick={() => videoInputRef.current?.click()}
+                  disabled={mediaFiles.length >= 4}
+                  title="동영상 추가"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="23 7 16 12 23 17 23 7"/>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                  </svg>
+                </button>
+              </div>
               <span className="compose-count">{text.length} / 280</span>
             </div>
           </>
@@ -203,7 +284,21 @@ function PostCard({ post, onLike }) {
           <span className="post-dot">·</span>
           <span className="post-time">{post.time}</span>
         </div>
-        <p className="post-content">{post.content}</p>
+        {post.content && <p className="post-content">{post.content}</p>}
+        {/* 미디어 */}
+        {post.media && post.media.length > 0 && (
+          <div className={`post-media-grid post-media-grid--${Math.min(post.media.length, 2)}`}>
+            {post.media.map((m, i) => (
+              <div key={i} className="post-media-item">
+                {m.type === "image" ? (
+                  <img src={m.url} alt="" className="post-media-thumb" />
+                ) : (
+                  <video src={m.url} className="post-media-thumb" controls muted />
+                )}
+              </div>
+            ))}
+          </div>
+        )}
         {post.beerTag && (
           <div className="post-beer-tag">
             <span className="post-beer-tag-icon">🍺</span>
