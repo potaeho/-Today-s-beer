@@ -149,7 +149,7 @@ export default function App() {
           />
         )}
         {!showFlow && activeTab === "profile" && (
-          <ProfilePage ratedCount={ratedCount} />
+          <ProfilePage onSelectBeer={handleSelectBeer} />
         )}
       </div>
 

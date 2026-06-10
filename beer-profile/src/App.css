@@ -278,8 +278,8 @@ body {
   text-align: center;
 }
 
-.beer-detail-axis-legend-avg { color: var(--accent); }
-.beer-detail-axis-legend-mine { color: #6366F1; }
+.beer-detail-axis-legend-avg { color: #6366F1; }
+.beer-detail-axis-legend-mine { color: var(--accent); }
 
 .beer-detail-axis-row {
   display: flex;
@@ -313,13 +313,13 @@ body {
 
 .beer-detail-axis-bar-fill {
   height: 100%;
-  background: var(--accent);
+  background: #6366F1;
   border-radius: 3px;
   transition: width 0.4s ease;
 }
 
 .beer-detail-axis-bar-mine {
-  background: #6366F1;
+  background: var(--accent);
 }
 
 .beer-detail-axis-vals {
@@ -339,7 +339,7 @@ body {
 }
 
 .beer-detail-axis-val-mine {
-  color: #6366F1;
+  color: var(--accent);
 }
 
 .beer-detail-reviews {
@@ -1665,6 +1665,278 @@ body {
   flex-wrap: wrap;
   gap: 4px;
   margin-top: 4px;
+}
+
+/* 평균 별점 행 */
+.profile-avg-star {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+}
+.profile-avg-star-num {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+.profile-avg-star-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* 섹션 헤더 */
+.profile-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.profile-section-count {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* 리뷰 카드를 버튼으로 */
+.profile-review-card {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.profile-review-card:active { background: #F3F4F6; }
+
+/* 팔로워/팔로잉 버튼 */
+.profile-stat--btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.profile-stat--btn:active { background: rgba(0,0,0,0.05); }
+
+/* 전체보기 버튼 */
+.profile-show-all-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 8px;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 14px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.15s;
+}
+.profile-show-all-btn:active { background: #F9FAFB; }
+.profile-show-all-arrow { font-size: 12px; }
+
+/* ── 팔로워/팔로잉 목록 모달 ── */
+.modal-dim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 300;
+}
+
+.user-list-modal {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 301;
+  background: #fff;
+  border-radius: 20px 20px 0 0;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.22s ease;
+}
+
+.user-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 12px;
+  border-bottom: 1px solid #F3F4F6;
+  flex-shrink: 0;
+}
+
+.user-list-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.user-list-close {
+  background: none;
+  border: none;
+  color: var(--text-mid);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.user-list-body {
+  overflow-y: auto;
+  padding: 8px 0 32px;
+}
+
+.user-list-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.user-list-item:active { background: #F9FAFB; }
+
+.user-list-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #FEF3C7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.user-list-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-list-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.user-list-handle {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.user-list-bio {
+  font-size: 12px;
+  color: var(--text-mid);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── 다른 유저 프로필 오버레이 ── */
+.other-profile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  animation: slideInRight 0.22s ease;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.other-profile-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.other-profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.other-profile-back {
+  background: none;
+  border: none;
+  color: var(--text-dark);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.other-profile-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-mid);
+}
+
+.other-profile-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.other-profile-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #FEF3C7;
+  border: 3px solid #FDE68A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin-bottom: 4px;
+}
+
+.other-profile-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.other-profile-handle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.other-profile-bio {
+  font-size: 13px;
+  color: var(--text-mid);
+  text-align: center;
+  line-height: 1.5;
+  margin: 4px 0 0;
+}
+
+.other-profile-follow-btn {
+  margin-top: 20px;
+  padding: 12px 40px;
+  border-radius: 24px;
+  background: var(--text-dark);
+  color: #fff;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 /* ── 탐색 추천 슬라이더 ── */
