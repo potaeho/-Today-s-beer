@@ -4,9 +4,11 @@ import { BEER_LIST, HASHTAG_MAP } from "../data/beerData";
 import { getCurrentLevel, formatMl } from "../data/levels";
 import { LEVEL_ICONS } from "../components/LevelIcons";
 import { POSTS } from "../data/communityData";
+import LevelJourneyModal from "../components/LevelJourneyModal";
 
 const MY_HANDLE = "@hop_lover";
-const POSTING_COUNT = POSTS.filter((p) => p.handle === MY_HANDLE).length + 2;
+const MY_POSTS = POSTS.filter((p) => p.handle === MY_HANDLE);
+const POSTING_COUNT = MY_POSTS.length;
 
 const FOLLOWERS_DATA = [
   { id: 1, user: "맥주여행자", handle: "@beer_traveler", avatar: "✈️", bio: "맥주 마시러 세계 여행 중 🌍", followers: 342, following: 89, reviews: 28, avgStar: "4.2" },
@@ -41,6 +43,100 @@ function StarRow({ value }) {
         <span key={s} style={{ color: s <= value ? "#F59E0B" : "#E5E7EB", fontSize: 13 }}>★</span>
       ))}
     </span>
+  );
+}
+
+/* ── 내 게시물 목록 오버레이 ── */
+function PostItem({ post, onLike }) {
+  return (
+    <div className="post-card">
+      <div className="post-left">
+        <div className="post-avatar">{post.avatar}</div>
+        <div className="post-thread-line" />
+      </div>
+      <div className="post-body">
+        <div className="post-header">
+          <span className="post-username">{post.user}</span>
+          <span className="post-handle">{post.handle}</span>
+          <span className="post-dot">·</span>
+          <span className="post-time">{post.time}</span>
+        </div>
+        {post.content && <p className="post-content">{post.content}</p>}
+        {post.beerTag && (
+          <div className="post-beer-tag">
+            <span className="post-beer-tag-icon">🍺</span>
+            <span className="post-beer-tag-name">{post.beerTag}</span>
+          </div>
+        )}
+        <div className="post-actions">
+          <button className="post-action-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span>{post.comments}</span>
+          </button>
+          <button className="post-action-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="17 1 21 5 17 9"/>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+              <polyline points="7 23 3 19 7 15"/>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+            <span>{post.reposts}</span>
+          </button>
+          <button
+            className={`post-action-btn like-btn ${post.liked ? "liked" : ""}`}
+            onClick={() => onLike?.(post.id)}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill={post.liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <span>{post.likes}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MyPostsModal({ onClose }) {
+  const [posts, setPosts] = useState(MY_POSTS);
+
+  function handleLike(id) {
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === id ? { ...p, liked: !p.liked, likes: p.liked ? p.likes - 1 : p.likes + 1 } : p
+      )
+    );
+  }
+
+  return (
+    <div className="other-profile-overlay">
+      <div className="other-profile-page">
+        <div className="other-profile-header">
+          <button className="other-profile-back" onClick={onClose}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
+          <span className="other-profile-title">내 게시물</span>
+          <span style={{ width: 36 }} />
+        </div>
+        <div className="my-posts-feed">
+          {posts.length === 0 ? (
+            <div className="my-posts-empty">
+              <p style={{ fontSize: 32 }}>🍺</p>
+              <p style={{ color: "var(--text-muted)", fontSize: 14, marginTop: 8 }}>아직 게시물이 없어요</p>
+            </div>
+          ) : (
+            posts.map((post) => (
+              <PostItem key={post.id} post={post} onLike={handleLike} />
+            ))
+          )}
+          <div style={{ height: 80 }} />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -129,14 +225,16 @@ function UserListModal({ title, users, onClose, onSelectUser }) {
 }
 
 /* ── 메인 컴포넌트 ── */
-export default function ProfilePage({ onSelectBeer }) {
+export default function ProfilePage({ onSelectBeer, ratedCount: ratedCountProp }) {
   const myReviews = getMyReviews();
   const reviewCount = myReviews.length;
+  // ratedCount prop이 있으면 사용 (홈과 레벨 일치), 없으면 reviewCount 폴백
+  const ratedCount = ratedCountProp ?? reviewCount;
   const avgStar = reviewCount
     ? (myReviews.reduce((s, r) => s + r.star, 0) / reviewCount).toFixed(1)
     : "-";
 
-  const { current, next, progress, totalMl } = getCurrentLevel(reviewCount);
+  const { current, next, progress, totalMl } = getCurrentLevel(ratedCount);
   const LevelIcon = LEVEL_ICONS[current.level - 1];
   const pct = Math.min(Math.round(progress * 100), 100);
 
@@ -144,6 +242,8 @@ export default function ProfilePage({ onSelectBeer }) {
   const [showAll, setShowAll] = useState(false);
   const [userListModal, setUserListModal] = useState(null); // null | "followers" | "following"
   const [selectedUser, setSelectedUser] = useState(null);
+  const [showPostingModal, setShowPostingModal] = useState(false);
+  const [showJourney, setShowJourney] = useState(false);
 
   const visibleReviews = showAll ? myReviews : myReviews.slice(0, 3);
 
@@ -154,6 +254,16 @@ export default function ProfilePage({ onSelectBeer }) {
 
   return (
     <div className="profile-page">
+
+      {/* 레벨 여정 오버레이 */}
+      {showJourney && (
+        <LevelJourneyModal ratedCount={ratedCount} onClose={() => setShowJourney(false)} />
+      )}
+
+      {/* 내 게시물 오버레이 */}
+      {showPostingModal && (
+        <MyPostsModal onClose={() => setShowPostingModal(false)} />
+      )}
 
       {/* 다른 유저 프로필 오버레이 */}
       {selectedUser && (
@@ -172,6 +282,16 @@ export default function ProfilePage({ onSelectBeer }) {
 
       {/* ── 상단 헤더 ── */}
       <div className="profile-header">
+        {/* 우측 상단 프로필 수정 버튼 */}
+        <div className="profile-appbar">
+          <button className="profile-edit-btn" onClick={() => alert("프로필 수정 기능 준비 중입니다 ✏️")}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+          </button>
+        </div>
+
         <div className="profile-photo-wrap" onClick={() => fileInputRef.current?.click()}>
           <div className="profile-photo">🍺</div>
           <div className="profile-photo-edit">
@@ -192,10 +312,10 @@ export default function ProfilePage({ onSelectBeer }) {
             <span className="profile-stat-label">리뷰</span>
           </div>
           <div className="profile-stat-div" />
-          <div className="profile-stat">
+          <button className="profile-stat profile-stat--btn" onClick={() => setShowPostingModal(true)}>
             <span className="profile-stat-num">{POSTING_COUNT}</span>
             <span className="profile-stat-label">포스팅</span>
-          </div>
+          </button>
           <div className="profile-stat-div" />
           <button className="profile-stat profile-stat--btn" onClick={() => setUserListModal("followers")}>
             <span className="profile-stat-num">{FOLLOWERS_DATA.length}</span>
@@ -220,7 +340,7 @@ export default function ProfilePage({ onSelectBeer }) {
       <div className="profile-scroll">
 
         {/* 레벨 카드 */}
-        <div className="profile-level-card" style={{ background: current.color }}>
+        <div className="profile-level-card" style={{ background: current.color, cursor: "pointer" }} onClick={() => setShowJourney(true)}>
           <div className="profile-level-left">
             <div className="profile-level-badge">Lv.{current.level}</div>
             <p className="profile-level-name">{current.name}</p>

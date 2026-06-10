@@ -1,13 +1,13 @@
 import { getCurrentLevel, formatMl } from "../data/levels";
 import { LEVEL_ICONS } from "./LevelIcons";
 
-export default function LevelCard({ ratedCount }) {
+export default function LevelCard({ ratedCount, onClick }) {
   const { current, next, progress, totalMl } = getCurrentLevel(ratedCount);
   const pct = Math.min(Math.round(progress * 100), 100);
   const LevelIcon = LEVEL_ICONS[current.level - 1];
 
   return (
-    <div className="level-card" style={{ background: current.color }}>
+    <div className="level-card" style={{ background: current.color, cursor: onClick ? "pointer" : "default" }} onClick={onClick}>
       <div className="level-badge">Lv.{current.level}</div>
 
       {/* 아이콘 + 이름 */}

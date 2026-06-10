@@ -1,5 +1,6 @@
 import { useState } from "react";
 import LevelCard from "../components/LevelCard";
+import LevelJourneyModal from "../components/LevelJourneyModal";
 import NewsSlider from "../components/NewsSlider";
 import NewsDetailPage from "./NewsDetailPage";
 import NewsListPage from "./NewsListPage";
@@ -10,6 +11,7 @@ export default function HomePage({ onSelectBeer, ratedCount = 3, onGoExplore }) 
   const [showSearch, setShowSearch] = useState(false);
   const [selectedNews, setSelectedNews] = useState(null);
   const [showNewsList, setShowNewsList] = useState(false);
+  const [showJourney, setShowJourney] = useState(false);
   const recommended = BEER_LIST.slice(0, 6);
 
   if (selectedNews) {
@@ -80,8 +82,13 @@ export default function HomePage({ onSelectBeer, ratedCount = 3, onGoExplore }) 
 
         {/* 게이미피케이션 레벨 카드 */}
         <div className="home-section">
-          <LevelCard ratedCount={ratedCount} />
+          <LevelCard ratedCount={ratedCount} onClick={() => setShowJourney(true)} />
         </div>
+
+        {/* 레벨 여정 모달 */}
+        {showJourney && (
+          <LevelJourneyModal ratedCount={ratedCount} onClose={() => setShowJourney(false)} />
+        )}
 
         {/* 새 소식 슬라이더 */}
         <div className="home-section">
