@@ -35,7 +35,6 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
       {/* 헤더 */}
       <div className="input-header">
         <button className="back-btn" onClick={onBack}>← 맥주 탐색</button>
-        <span className="input-header-title">{beer.name}</span>
         <span style={{ width: 36 }} />
       </div>
 
