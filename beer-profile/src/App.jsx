@@ -1,6 +1,8 @@
 import { useState } from "react";
 import HomePage from "./pages/HomePage";
 import ExplorePage from "./pages/ExplorePage";
+import { getMyRatedCount } from "./utils/recommend";
+import { MY_USER } from "./data/reviewsData";
 import InputPage from "./pages/InputPage";
 import DetailPage from "./pages/DetailPage";
 import ResultPage from "./pages/ResultPage";
@@ -23,7 +25,7 @@ export default function App() {
   const [profile, setProfile] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
   const [starRating, setStarRating] = useState(0);
-  const [ratedCount, setRatedCount] = useState(3);
+  const [ratedCount, setRatedCount] = useState(() => getMyRatedCount());
 
   // 카드 클릭 → 상세 페이지
   function handleSelectBeer(beer) {
@@ -140,7 +142,7 @@ export default function App() {
           <HomePage onSelectBeer={handleSelectBeer} ratedCount={ratedCount} onGoExplore={() => setActiveTab("explore")} />
         )}
         {!showFlow && activeTab === "explore" && (
-          <ExplorePage onSelectBeer={handleSelectBeer} ratedCount={ratedCount} userName="태호" />
+          <ExplorePage onSelectBeer={handleSelectBeer} userName={MY_USER} />
         )}
         {!showFlow && activeTab === "community" && (
           <CommunityPage
