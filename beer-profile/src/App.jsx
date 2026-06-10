@@ -4,6 +4,7 @@ import ExplorePage from "./pages/ExplorePage";
 import InputPage from "./pages/InputPage";
 import DetailPage from "./pages/DetailPage";
 import ResultPage from "./pages/ResultPage";
+import BeerDetailPage from "./pages/BeerDetailPage";
 import BottomTabBar from "./components/BottomTabBar";
 import "./App.css";
 
@@ -16,9 +17,15 @@ export default function App() {
   const [starRating, setStarRating] = useState(0);
   const [ratedCount, setRatedCount] = useState(3);
 
+  // 카드 클릭 → 상세 페이지
   function handleSelectBeer(beer) {
     setSelectedBeer(beer);
-    setProfile({ ...beer.profile });
+    setScreen("beer-detail");
+  }
+
+  // 상세 페이지에서 "나도 평가하기" 클릭
+  function handleStartRating() {
+    setProfile({ ...selectedBeer.profile });
     setSelectedTags([]);
     setStarRating(0);
     setScreen("input");
@@ -63,14 +70,23 @@ export default function App() {
   return (
     <div className="app-shell">
       <div className="app-content">
-        {/* 플로우 화면 */}
+        {/* 맥주 상세 */}
+        {screen === "beer-detail" && (
+          <BeerDetailPage
+            beer={selectedBeer}
+            onBack={() => setScreen(null)}
+            onRate={handleStartRating}
+          />
+        )}
+
+        {/* 평가 플로우 */}
         {screen === "input" && (
           <InputPage
             beer={selectedBeer || { name: "새 맥주 평가", type: "-", abv: "-", image: null }}
             profile={profile}
             onProfileChange={handleProfileChange}
             onConfirm={() => setScreen("detail")}
-            onBack={() => setScreen(null)}
+            onBack={() => selectedBeer ? setScreen("beer-detail") : setScreen(null)}
           />
         )}
         {screen === "detail" && (
