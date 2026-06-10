@@ -87,10 +87,22 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
                     </div>
                   </>
                 ) : (
-                  <div className="beer-detail-avg-star">
-                    <span className="beer-detail-avg-star-num">{avgStar}</span>
-                    <span style={{ color: "#F59E0B", fontSize: 18 }}>★</span>
-                  </div>
+                  <>
+                    <div className="beer-detail-star-col">
+                      <span className="beer-detail-star-label">내 평점</span>
+                      <button className="beer-detail-star-rate-btn" onClick={onRate}>
+                        + 평가하기
+                      </button>
+                    </div>
+                    <div className="beer-detail-star-divider" />
+                    <div className="beer-detail-star-col">
+                      <span className="beer-detail-star-label">전체 평균</span>
+                      <div className="beer-detail-avg-star">
+                        <span className="beer-detail-avg-star-num">{avgStar}</span>
+                        <span style={{ color: "#6366F1", fontSize: 18 }}>★</span>
+                      </div>
+                    </div>
+                  </>
                 )}
               </div>
               {avg && (
