@@ -24,7 +24,9 @@ function avgProfile(reviews, axes) {
 
 export default function BeerDetailPage({ beer, onBack, onRate }) {
   const axes = PROFILE_AXES[beer.category] || PROFILE_AXES["에일"];
-  const reviews = REVIEWS[beer.id] || [];
+  const allReviews = REVIEWS[beer.id] || [];
+  const myReview = allReviews.find((r) => r.isMe) || null;
+  const reviews = allReviews;
   const avg = avgProfile(reviews, axes);
   const avgStar = reviews.length
     ? Math.round((reviews.reduce((s, r) => s + r.star, 0) / reviews.length) * 10) / 10
@@ -71,19 +73,52 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
                   <span style={{ color: "#F59E0B", fontSize: 18 }}>★</span>
                 </div>
               </div>
-              {avg && <FlavorRadar profile={avg} axes={axes} />}
-              {/* 축별 평균 바 */}
+              {avg && (
+                <FlavorRadar
+                  profile={avg}
+                  axes={axes}
+                  myProfile={myReview ? myReview.profile : null}
+                />
+              )}
+              {/* 축별 비교 바 */}
               <div className="beer-detail-axis-bars">
+                {/* 헤더 */}
+                {myReview && (
+                  <div className="beer-detail-axis-legend">
+                    <span />
+                    <span className="beer-detail-axis-legend-avg">전체 평균</span>
+                    <span className="beer-detail-axis-legend-mine">내 평가</span>
+                  </div>
+                )}
                 {axes.map((axis) => (
                   <div key={axis} className="beer-detail-axis-row">
                     <span className="beer-detail-axis-label">{axis}</span>
-                    <div className="beer-detail-axis-bar-bg">
-                      <div
-                        className="beer-detail-axis-bar-fill"
-                        style={{ width: `${(avg[axis] / 5) * 100}%` }}
-                      />
+                    <div className="beer-detail-axis-bars-col">
+                      {/* 전체 평균 바 */}
+                      <div className="beer-detail-axis-bar-bg">
+                        <div
+                          className="beer-detail-axis-bar-fill"
+                          style={{ width: `${(avg[axis] / 5) * 100}%` }}
+                        />
+                      </div>
+                      {/* 내 평가 바 */}
+                      {myReview && (
+                        <div className="beer-detail-axis-bar-bg">
+                          <div
+                            className="beer-detail-axis-bar-fill beer-detail-axis-bar-mine"
+                            style={{ width: `${((myReview.profile[axis] ?? 0) / 5) * 100}%` }}
+                          />
+                        </div>
+                      )}
                     </div>
-                    <span className="beer-detail-axis-val">{avg[axis]}</span>
+                    <div className="beer-detail-axis-vals">
+                      <span className="beer-detail-axis-val">{avg[axis]}</span>
+                      {myReview && (
+                        <span className="beer-detail-axis-val beer-detail-axis-val-mine">
+                          {myReview.profile[axis] ?? 0}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

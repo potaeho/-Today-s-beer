@@ -1,7 +1,9 @@
+export const MY_USER = "홉덕후";
+
 export const REVIEWS = {
   1: [
     {
-      id: 1, user: "홉덕후", avatar: "🍺", date: "2026.06.07",
+      id: 1, user: "홉덕후", avatar: "🍺", date: "2026.06.07", isMe: true,
       profile: { 단맛: 3.8, 신맛: 1.0, 쓴맛: 4.2, 아로마: 3.8, 부드러움: 2.8 },
       hashtags: ["sour_citrus", "hop_pine", "tex_dry"],
       star: 4, comment: "시트러스 홉 향이 진하고 깔끔하게 떨어져요. IPA 입문용으로 딱!"
@@ -21,7 +23,7 @@ export const REVIEWS = {
   ],
   2: [
     {
-      id: 1, user: "맥주초보", avatar: "🌱", date: "2026.06.08",
+      id: 1, user: "맥주초보", avatar: "🌱", date: "2026.06.08", isMe: true,
       profile: { 단맛: 1.2, 신맛: 0.5, 쓴맛: 1.0, 몰티함: 2.2, 아로마: 1.5 },
       hashtags: ["tex_watery", "tex_silky"],
       star: 5, comment: "맥주 쓴맛 싫은데 이건 진짜 편하게 마셔요. 목넘김 최고"
@@ -35,7 +37,7 @@ export const REVIEWS = {
   ],
   3: [
     {
-      id: 1, user: "위트에일팬", avatar: "🌾", date: "2026.06.06",
+      id: 1, user: "위트에일팬", avatar: "🌾", date: "2026.06.06", isMe: true,
       profile: { 단맛: 2.8, 신맛: 2.2, 쓴맛: 0.8, 아로마: 3.5, 부드러움: 4.2 },
       hashtags: ["sweet_vanilla", "sour_citrus", "tex_creamy"],
       star: 5, comment: "오렌지필 + 바나나 향 조합이 진짜 좋아요. 여름에 딱"
@@ -49,7 +51,7 @@ export const REVIEWS = {
   ],
   4: [
     {
-      id: 1, user: "스타우트러버", avatar: "☕", date: "2026.06.07",
+      id: 1, user: "스타우트러버", avatar: "☕", date: "2026.06.07", isMe: true,
       profile: { 단맛: 3.2, 탄맛: 4.8, 몰티함: 4.5, 바디감: 3.2, 아로마: 4.2 },
       hashtags: ["sweet_darkchoco", "roast_coffee", "roast_smoke"],
       star: 5, comment: "다크초콜릿 + 커피 조합 진짜 완벽해요. 겨울에 마시면 더 좋을 듯"
@@ -63,7 +65,7 @@ export const REVIEWS = {
   ],
   5: [
     {
-      id: 1, user: "사워에일러", avatar: "🍋", date: "2026.06.08",
+      id: 1, user: "사워에일러", avatar: "🍋", date: "2026.06.08", isMe: true,
       profile: { 단맛: 4.2, 신맛: 4.8, 쓴맛: 0.3, 아로마: 4.0, 부드러움: 2.8 },
       hashtags: ["sweet_tropical", "sour_citrus", "sour_berry"],
       star: 5, comment: "새콤달콤 과일 폭탄! 비오는 날 마셨는데 기분 전환 최고"
@@ -77,7 +79,7 @@ export const REVIEWS = {
   ],
   6: [
     {
-      id: 1, user: "필스너마스터", avatar: "🏆", date: "2026.06.06",
+      id: 1, user: "필스너마스터", avatar: "🏆", date: "2026.06.06", isMe: true,
       profile: { 단맛: 1.0, 신맛: 0.5, 쓴맛: 2.8, 몰티함: 1.5, 아로마: 2.5 },
       hashtags: ["hop_herb", "tex_dry", "tex_watery"],
       star: 5, comment: "체코 필스너 스타일에 충실해요. 허브 쓴맛이 깔끔하게 마무리됨"
@@ -85,7 +87,7 @@ export const REVIEWS = {
   ],
   7: [
     {
-      id: 1, user: "람빅러버", avatar: "🍷", date: "2026.06.04",
+      id: 1, user: "람빅러버", avatar: "🍷", date: "2026.06.04", isMe: true,
       profile: { 단맛: 2.2, 신맛: 5.0, 쓴맛: 0.2, 아로마: 3.5, 부드러움: 2.2 },
       hashtags: ["sour_citrus", "sour_berry"],
       star: 4, comment: "진짜 람빅 스타일. 초산 향 있어요. 취향 많이 탑니다"
@@ -93,7 +95,7 @@ export const REVIEWS = {
   ],
   8: [
     {
-      id: 1, user: "페일에일팬", avatar: "🌿", date: "2026.06.07",
+      id: 1, user: "페일에일팬", avatar: "🌿", date: "2026.06.07", isMe: true,
       profile: { 단맛: 2.2, 신맛: 1.2, 쓴맛: 2.5, 아로마: 2.5, 부드러움: 3.5 },
       hashtags: ["hop_herb", "malt_toast"],
       star: 4, comment: "영국식 페일에일 느낌. 무겁지 않고 일상적으로 마시기 좋아요"
@@ -107,7 +109,7 @@ export const REVIEWS = {
   ],
   9: [
     {
-      id: 1, user: "헤이지마니아", avatar: "☁️", date: "2026.06.08",
+      id: 1, user: "헤이지마니아", avatar: "☁️", date: "2026.06.08", isMe: true,
       profile: { 단맛: 3.5, 신맛: 2.0, 쓴맛: 2.8, 아로마: 4.5, 부드러움: 4.0 },
       hashtags: ["sweet_tropical", "tex_creamy"],
       star: 5, comment: "뿌연 외관에 열대과일 향 대박. 쓴맛 부드럽게 감춰져서 술술 들어감"
@@ -121,7 +123,7 @@ export const REVIEWS = {
   ],
   10: [
     {
-      id: 1, user: "오트밀마니아", avatar: "🥣", date: "2026.06.07",
+      id: 1, user: "오트밀마니아", avatar: "🥣", date: "2026.06.07", isMe: true,
       profile: { 단맛: 3.0, 탄맛: 3.5, 몰티함: 4.8, 바디감: 4.8, 아로마: 4.0 },
       hashtags: ["tex_creamy", "tex_heavy", "sweet_darkchoco"],
       star: 5, comment: "오트밀 덕분에 정말 크리미해요. 스타우트 중에 제일 부드러움"
