@@ -5,8 +5,10 @@ import NewsSlider from "../components/NewsSlider";
 import NewsDetailPage from "./NewsDetailPage";
 import NewsListPage from "./NewsListPage";
 import { getPersonalizedRecommendations, getMyRatedCount } from "../utils/recommend";
+import { useNotification } from "../contexts/NotificationContext";
 
 export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
+  const { openCenter, addToast } = useNotification();
   const [query, setQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [selectedNews, setSelectedNews] = useState(null);
@@ -43,13 +45,13 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
                 <line x1="15.5" y1="15.5" x2="21" y2="21"/>
               </svg>
             </button>
-            <button className="appbar-icon" onClick={() => alert("알림 기능 준비 중입니다 🔔")}>
+            <button className="appbar-icon" aria-label="알림" onClick={openCenter}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                 <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
               </svg>
             </button>
-            <button className="appbar-icon" onClick={() => alert("바코드 스캔 기능 준비 중입니다 📷")}>
+            <button className="appbar-icon" aria-label="바코드 스캔" onClick={() => addToast({ message: "바코드 스캔 기능을 준비 중입니다 📷", type: "info" })}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
                 <path d="M15 3h4a2 2 0 0 1 2 2v4"/>

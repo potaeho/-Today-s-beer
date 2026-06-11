@@ -13,6 +13,9 @@ import SearchBeerModal from "./components/SearchBeerModal";
 import BeerActionSheet from "./components/BeerActionSheet";
 import BottomTabBar from "./components/BottomTabBar";
 import { BeerProvider, useBeers } from "./contexts/BeerContext";
+import { NotificationProvider } from "./contexts/NotificationContext";
+import ToastContainer from "./components/ToastContainer";
+import NotificationCenter from "./components/NotificationCenter";
 import { track } from "./utils/analytics";
 import "./App.css";
 
@@ -23,9 +26,11 @@ function AppInner() {
 
 export default function App() {
   return (
-    <BeerProvider>
-      <AppInner />
-    </BeerProvider>
+    <NotificationProvider>
+      <BeerProvider>
+        <AppInner />
+      </BeerProvider>
+    </NotificationProvider>
   );
 }
 
@@ -229,6 +234,9 @@ function AppShell({ beers, loadingBeers }) {
           onClose={() => setShowActionSheet(false)}
         />
       )}
+
+      <NotificationCenter />
+      <ToastContainer />
     </div>
   );
 }
