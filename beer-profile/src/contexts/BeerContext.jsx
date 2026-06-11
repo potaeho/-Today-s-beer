@@ -49,6 +49,12 @@ export function BeerProvider({ children }) {
     let cancelled = false;
 
     async function fetchBeers() {
+      if (!supabase) {
+        console.warn("[BeerContext] Supabase 미설정 → 기본 데이터 사용");
+        applyFallback(false, null, setError, setBeers);
+        if (!cancelled) setLoading(false);
+        return;
+      }
       try {
         // PostgREST max_rows 제한을 피하기 위해 range로 전체 fetch
         let allData = [];
