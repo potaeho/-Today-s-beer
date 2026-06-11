@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import BeerCard from "../components/BeerCard";
 import BeerRecommendSlider from "../components/BeerRecommendSlider";
 import { CATEGORIES } from "../data/beerData";
@@ -37,7 +37,7 @@ export default function ExplorePage({ beers = [], onSelectBeer, userName = "사�
   }, []);
 
   // ── 추천 아이템 계산 ──────────────────────────────
-  const recommendItems = (() => {
+  const recommendItems = useMemo(() => {
     if (isPersonalized) {
       const recs = getPersonalizedRecommendations(beers, 6);
       if (activeCategory === "전체") return recs.slice(0, 3);
@@ -50,7 +50,7 @@ export default function ExplorePage({ beers = [], onSelectBeer, userName = "사�
           : beers.filter((b) => b.category === activeCategory).slice(0, 3);
       return pool.map((beer) => ({ beer, reason: null }));
     }
-  })();
+  }, [beers, isPersonalized, activeCategory]);
 
   return (
     <div className="home-page">

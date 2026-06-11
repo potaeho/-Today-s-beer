@@ -42,11 +42,11 @@ export function getPersonalizedRecommendations(beerList = [], count = 3) {
     const beer = beerList.find((b) => String(b.id) === String(beerId));
 
     (hashtags ?? []).forEach((tag) => {
-      hashtagWeight[tag] = (hashtagWeight[tag] || 0) + (star || 3);
+      hashtagWeight[tag] = (hashtagWeight[tag] || 0) + (star ?? 3);
     });
     if (beer) {
       categoryWeight[beer.category] =
-        (categoryWeight[beer.category] || 0) + (star || 3);
+        (categoryWeight[beer.category] || 0) + (star ?? 3);
     }
   });
 

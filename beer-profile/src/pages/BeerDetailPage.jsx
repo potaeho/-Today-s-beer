@@ -1,3 +1,4 @@
+import { useState } from "react";
 import FlavorRadar from "../components/FlavorRadar";
 import { HASHTAG_MAP, PROFILE_AXES } from "../data/beerData";
 import { REVIEWS } from "../data/reviewsData";
@@ -23,6 +24,7 @@ function avgProfile(reviews, axes) {
 }
 
 export default function BeerDetailPage({ beer, onBack, onRate }) {
+  const [imgErr, setImgErr] = useState(false);
   const axes = PROFILE_AXES[beer.category] || PROFILE_AXES["에일"];
   const allReviews = REVIEWS[beer.id] || [];
   const myReview = allReviews.find((r) => r.isMe) || null;
@@ -45,7 +47,16 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
         {/* 맥주 기본 정보 */}
         <div className="beer-detail-hero">
           <div className="beer-detail-img" style={{ background: beer.srmColor + "22" }}>
-            <span style={{ fontSize: 48 }}>🍺</span>
+            {beer.image && !imgErr ? (
+              <img
+                src={beer.image}
+                alt={beer.name}
+                className="beer-detail-img-photo"
+                onError={() => setImgErr(true)}
+              />
+            ) : (
+              <span style={{ fontSize: 44 }}>🍺</span>
+            )}
             <div className="beer-detail-srm-dot" style={{ background: beer.srmColor }} />
           </div>
           <div className="beer-detail-meta">

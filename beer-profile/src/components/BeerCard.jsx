@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { HASHTAG_MAP } from "../data/beerData";
 
 export default function BeerCard({ beer, onClick }) {
+  const [imgErr, setImgErr] = useState(false);
   const resolvedHashtags = (beer.hashtags || [])
     .map((id) => HASHTAG_MAP[id])
     .filter(Boolean)
@@ -8,8 +10,17 @@ export default function BeerCard({ beer, onClick }) {
 
   return (
     <div className="beer-card" onClick={() => onClick(beer)}>
-      <div className="beer-card-img" style={{ background: beer.srmColor + "18" }}>
-        <span>🍺</span>
+      <div className="beer-card-img" style={{ background: beer.srmColor + "22" }}>
+        {beer.image && !imgErr ? (
+          <img
+            src={beer.image}
+            alt={beer.name}
+            className="beer-card-img-photo"
+            onError={() => setImgErr(true)}
+          />
+        ) : (
+          <span className="beer-card-img-emoji">🍺</span>
+        )}
         <div className="beer-card-srm" style={{ background: beer.srmColor }} />
       </div>
       <div className="beer-card-body">

@@ -7,7 +7,7 @@ import { BEER_LIST } from "../data/beerData";
 // ────────────────────────────────────────────────────────────
 function normalizeBeer(b) {
   return {
-    id:          b.id,                     // UUID string
+    id:          b.id,
     name:        b.name ?? "",
     type:        b.type ?? "",
     category:    b.category ?? "",
@@ -21,8 +21,14 @@ function normalizeBeer(b) {
     brewery:     b.brewery ?? "",
     origin:      b.origin ?? "",
     description: b.description ?? "",
-    is_verified: b.is_verified ?? false,
+    isVerified:  b.is_verified ?? false,
   };
+}
+
+function applyFallback(cancelled, err, setError, setBeers) {
+  if (cancelled) return;
+  if (err) setError(err);
+  setBeers(BEER_LIST);
 }
 
 // ────────────────────────────────────────────────────────────
@@ -46,34 +52,35 @@ export function BeerProvider({ children }) {
       try {
         // PostgREST max_rows 제한을 피하기 위해 range로 전체 fetch
         let allData = [];
-        const PAGE = 500;
+        const PAGE_SIZE = 500;
         let from = 0;
         while (true) {
+          if (cancelled) return;
           const { data: chunk, error: chunkErr } = await supabase
             .from("beers")
             .select("*")
             .order("category")
             .order("name")
-            .range(from, from + PAGE - 1);
+            .range(from, from + PAGE_SIZE - 1);
 
           if (chunkErr) throw chunkErr;
           if (!chunk || chunk.length === 0) break;
           allData = allData.concat(chunk);
-          if (chunk.length < PAGE) break;
-          from += PAGE;
+          if (chunk.length < PAGE_SIZE) break;
+          from += PAGE_SIZE;
         }
         if (cancelled) return;
 
         const normalized = allData.map(normalizeBeer);
-        // DB가 비어 있으면 기본 데이터 사용
-        setBeers(normalized.length > 0 ? normalized : BEER_LIST);
-      } catch (err) {
-        if (!cancelled) {
-          setError(err);
-          console.error("[BeerContext] Supabase 연결 실패 → 기본 데이터 사용:", err.message);
-          // Supabase 실패 시 정적 BEER_LIST 폴백
-          setBeers(BEER_LIST);
+        if (normalized.length > 0) {
+          setBeers(normalized);
+        } else {
+          console.warn("[BeerContext] DB returned 0 beers — falling back to static BEER_LIST");
+          applyFallback(cancelled, null, setError, setBeers);
         }
+      } catch (err) {
+        console.error("[BeerContext] Supabase 연결 실패 → 기본 데이터 사용:", err.message);
+        applyFallback(cancelled, err, setError, setBeers);
       } finally {
         if (!cancelled) setLoading(false);
       }

@@ -38,7 +38,7 @@ function getMyReviews(beers = []) {
       if (beer) result.push({ ...mine, beer });
     }
   });
-  return result;
+  return result.sort((a, b) => b.beer.id - a.beer.id);
 }
 
 // 선호 카테고리: [{category, count, pct}]
