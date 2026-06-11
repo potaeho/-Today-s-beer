@@ -22,7 +22,10 @@ export default function ResultPage({ beer, profile, selected, starRating, onHome
 
       {/* 상단 네비 */}
       <div className="result-top-nav">
-        <button className="back-btn" onClick={onHome}>← 홈으로</button>
+        <button className="back-btn" onClick={onHome}>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          홈으로
+        </button>
         <div className="result-saved-badge">✓ 저장 완료</div>
       </div>
 

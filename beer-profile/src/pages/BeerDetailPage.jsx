@@ -38,7 +38,10 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
     <div className="detail-page-wrap">
       {/* 헤더 */}
       <div className="input-header">
-        <button className="back-btn" onClick={onBack}>← 맥주 탐색</button>
+        <button className="back-btn" onClick={onBack}>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          맥주 탐색
+        </button>
         <span style={{ width: 36 }} />
       </div>
 

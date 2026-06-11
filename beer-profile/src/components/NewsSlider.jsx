@@ -3,13 +3,15 @@ import { NEWS_LIST } from "../data/newsData";
 
 export default function NewsSlider({ onSelectNews, onShowAll }) {
   const [current, setCurrent] = useState(0);
+  const [imgErr, setImgErr] = useState(false);
 
   useEffect(() => {
+    setImgErr(false);
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % NEWS_LIST.length);
     }, 3500);
     return () => clearInterval(timer);
-  }, []);
+  }, [current]);
 
   const news = NEWS_LIST[current];
 
@@ -19,8 +21,20 @@ export default function NewsSlider({ onSelectNews, onShowAll }) {
       style={{ background: news.color }}
       onClick={() => onSelectNews(news)}
     >
+      {news.image && !imgErr ? (
+        <img
+          src={news.image}
+          alt={news.title}
+          className="news-slider-img"
+          onError={() => setImgErr(true)}
+        />
+      ) : (
+        <div className="news-slider-emoji-wrap">
+          <span className="news-slider-emoji">{news.emoji}</span>
+        </div>
+      )}
+
       <div className="news-slider-content">
-        <span className="news-slider-emoji">{news.emoji}</span>
         <span className="news-slider-category">{news.category}</span>
         <p className="news-slider-title">{news.title}</p>
         <p className="news-slider-date">{news.date}</p>

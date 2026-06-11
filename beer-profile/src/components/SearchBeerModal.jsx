@@ -29,7 +29,7 @@ export default function SearchBeerModal({ beers = [], onSelect, onClose }) {
 
         {/* 검색창 */}
         <div className="search-modal-header">
-          <span className="search-modal-title">어떤 맥주 마셨나요?</span>
+          <span className="search-modal-title">어떤 맥주 찾으세요?</span>
           <div className="search-modal-bar">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.2" strokeLinecap="round">
               <circle cx="10.5" cy="10.5" r="6.5"/>

@@ -375,7 +375,9 @@ export default function CommunityPage({ beers = [], composeBeer, onComposeClear 
   return (
     <div className="community-page">
       <div className="community-header">
-        <span className="community-title">커뮤니티</span>
+        <div className="appbar">
+          <span className="appbar-logo">커뮤니티</span>
+        </div>
         <div className="community-filters">
           {["추천", "팔로잉"].map((f) => (
             <button

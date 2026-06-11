@@ -20,8 +20,11 @@ export default function DetailPage({ beer, profile, selected, onToggle, onBack, 
 
   return (
     <div className="page">
-      <div>
-        <button className="back-btn" onClick={onBack}>← 수정하기</button>
+      <div className="detail-header">
+        <button className="back-btn" onClick={onBack}>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          맛 입력
+        </button>
         <BeerHeader beer={beer} />
         <FlavorRadar profile={profile} axes={axes} />
         <div className="divider" />

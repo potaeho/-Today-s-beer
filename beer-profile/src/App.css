@@ -1,44 +1,51 @@
 /* ── Design Tokens ── */
 :root {
-  /* 브랜드 컬러 — 크래프트 맥주 황금빛 */
-  --accent: #C47900;
-  --accent-hover: #A36400;
-  --accent-light: #FEF3C7;
-  --accent-subtle: #FFFBEB;
+  /* Primary — 크래프트 맥주 황금빛 amber */
+  --accent: #B86E00;
+  --accent-hover: #965900;
+  --accent-light: #F5E6C8;   /* 맥아 느낌 따뜻한 황갈색, 파스텔 노랑 제거 */
+  --accent-subtle: #FAF3E8;
 
-  /* 세컨더리 — 홉/보리 느낌의 딥 그린 */
-  --accent2: #2D6A4F;
-  --accent2-light: #D8F3DC;
+  /* Secondary — 홉 딥 그린 */
+  --accent2: #1E5C3A;
+  --accent2-light: #B8DEC8;  /* 차분한 세이지 그린, 형광 민트 제거 */
 
-  /* 배경 — 따뜻한 스톤 톤 (cool gray 제거) */
-  --bg: #FAFAF9;
-  --surface: #F5F4F2;
+  /* Tertiary — 로스티드 몰트 (다크 맥주, 스타우트 계열) */
+  --malt: #7C2D12;
+  --malt-light: #FAEAE4;
+
+  /* 배경 */
+  --bg: #F8F7F5;
+  --surface: #EEECEA;        /* 살짝 더 진한 스톤 톤 */
   --surface-elevated: #FFFFFF;
+  --surface-dark: #1C1917;   /* 다크 강조 블록용 */
 
   /* 텍스트 계층 */
   --text-dark: #1C1917;
-  --text-mid: #44403C;
-  --text-muted: #A8A29E;
-  --text-faint: #D6D3D1;
+  --text-mid: #3D3935;
+  --text-muted: #948E89;
+  --text-faint: #C9C4BF;
 
   /* 경계선 */
-  --border: #E7E5E4;
-  --border-strong: #C4B9B0;
+  --border: #E2DDD8;
+  --border-strong: #B8B0A8;
 
   /* 칩 */
-  --chip-bg: #F5F4F2;
-  --chip-text: #57534E;
+  --chip-bg: #EEECEA;
+  --chip-text: #4A4541;
 
   /* 그림자 */
-  --shadow-sm: 0 1px 3px rgba(28,25,23,0.07), 0 1px 2px rgba(28,25,23,0.04);
-  --shadow-md: 0 4px 16px rgba(28,25,23,0.10);
-  --shadow-accent: 0 4px 16px rgba(196,121,0,0.22);
+  --shadow-sm: 0 1px 3px rgba(28,25,23,0.08), 0 1px 2px rgba(28,25,23,0.05);
+  --shadow-md: 0 4px 20px rgba(28,25,23,0.12);
+  --shadow-accent: 0 4px 16px rgba(184,110,0,0.28);
 
   /* 앱바 타이틀 — 모든 탭 공통 */
   --appbar-title-size: 17px;
   --appbar-title-weight: 700;
   --appbar-title-tracking: -0.4px;
   --appbar-left: 20px;
+  --appbar-height: 52px;
+  --appbar-padding-top: 14px;
 }
 
 /* ── Reset & Base ── */
@@ -317,7 +324,7 @@ body {
   font-size: 12px;
   font-weight: 700;
   color: #F59E0B;
-  background: #FEF3C7;
+  background: var(--accent-light);
   border: 1.5px solid #F59E0B;
   border-radius: 20px;
   padding: 4px 12px;
@@ -326,7 +333,7 @@ body {
   transition: background 0.15s;
 }
 .beer-detail-star-rate-btn:hover {
-  background: #FDE68A;
+  background: var(--border-strong);
 }
 
 .beer-detail-avg-star-num {
@@ -708,41 +715,31 @@ body {
   border-bottom: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  height: 52px;
-  padding: 0;
-}
-
-.community-title {
-  display: block;
-  font-size: var(--appbar-title-size);
-  font-weight: var(--appbar-title-weight);
-  color: var(--text-dark);
-  letter-spacing: var(--appbar-title-tracking);
-  padding: 0 var(--appbar-left);
 }
 
 .community-filters {
   display: flex;
-  padding: 0 16px;
+  padding: 0 var(--appbar-left);
+  border-top: 1px solid var(--border);
 }
 
 .community-filter {
   flex: 1;
   background: none;
   border: none;
-  padding: 12px 0;
-  font-size: 14px;
+  padding: 10px 0;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
   position: relative;
   font-family: 'Pretendard', sans-serif;
+  letter-spacing: 0.3px;
   transition: color 0.15s;
 }
 
 .community-filter.active {
-  color: var(--text-dark);
+  color: var(--accent);
 }
 
 .community-filter.active::after {
@@ -751,9 +748,9 @@ body {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 40px;
-  height: 2.5px;
-  background: var(--text-dark);
+  width: 32px;
+  height: 2px;
+  background: var(--accent);
   border-radius: 2px;
 }
 
@@ -839,8 +836,8 @@ body {
   align-items: center;
   gap: 5px;
   background: var(--accent-light);
-  border: 1px solid #FDE68A;
-  border-radius: 20px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
   padding: 4px 10px;
   margin-bottom: 10px;
 }
@@ -1032,7 +1029,7 @@ body {
   align-items: center;
   gap: 5px;
   background: var(--accent-light);
-  border: 1px solid #FDE68A;
+  border: 1px solid var(--border-strong);
   border-radius: 20px;
   padding: 5px 8px 5px 10px;
   align-self: flex-start;
@@ -1562,7 +1559,7 @@ body {
   transition: background 0.15s;
 }
 
-.compose-media-btn:hover { background: #FEF3C7; }
+.compose-media-btn:hover { background: var(--accent-light); }
 .compose-media-btn:disabled { color: #D1D5DB; cursor: not-allowed; }
 
 .compose-count {
@@ -2008,8 +2005,8 @@ body {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: #FEF3C7;
-  border: 3px solid #FDE68A;
+  background: var(--accent-light);
+  border: 3px solid var(--border-strong);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2431,7 +2428,7 @@ body {
   padding: 7px 12px;
   border-radius: 20px;
   background: #FFF7ED;
-  border: 1px solid #FDE68A;
+  border: 1px solid var(--border-strong);
   font-size: 13px;
   font-weight: 600;
   color: #92400E;
@@ -2513,7 +2510,7 @@ body {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #FEF3C7;
+  background: var(--accent-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2606,8 +2603,8 @@ body {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: #FEF3C7;
-  border: 3px solid #FDE68A;
+  background: var(--accent-light);
+  border: 3px solid var(--border-strong);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2826,7 +2823,7 @@ body {
   gap: 12px;
   padding: 12px 14px;
   background: var(--accent-light);
-  border: 1px solid #FDE68A;
+  border: 1px solid var(--border-strong);
   border-radius: 14px;
   cursor: pointer;
   transition: box-shadow 0.15s;
@@ -3132,11 +3129,38 @@ body {
   box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
 }
 
+/* 실제 이미지 — 카드 우측 절반을 채우고 좌측 그라데이션 페이드 */
+.news-slider-img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 100%;
+  object-fit: cover;
+  mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.6) 30%, #000 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.6) 30%, #000 100%);
+  pointer-events: none;
+}
+
+/* 이미지 없을 때 이모지 폴백 */
+.news-slider-emoji-wrap {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 36px;
+  line-height: 1;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
 .news-slider-content {
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding-bottom: 32px;
+  max-width: 65%;
+  position: relative;
+  z-index: 1;
 }
 
 .news-slider-emoji { font-size: 28px; }
@@ -3262,7 +3286,12 @@ body {
 }
 
 .news-detail-header {
-  padding: 20px 20px 28px;
+  padding: 0 20px 28px;
+}
+.news-detail-header > .back-btn {
+  height: var(--appbar-height);
+  padding-top: var(--appbar-padding-top);
+  box-sizing: border-box;
 }
 
 .news-detail-hero {
@@ -3470,23 +3499,48 @@ body {
 .page {
   display: flex;
   flex-direction: column;
-  padding: 20px 20px 0;
+  padding: 0 20px 0;
   min-height: 100vh;
 }
 
-/* ── Back Button ── */
+/* ── Back Button — 앱바 타이틀과 동일 위치, 보조 위계(500) ── */
 .back-btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   background: none;
   border: none;
-  color: var(--accent-hover);
-  font-size: 17px;
-  font-weight: 600;
+  font-family: inherit;
+  color: var(--text-dark);
+  font-size: var(--appbar-title-size);
+  font-weight: 500;
+  letter-spacing: var(--appbar-title-tracking);
   cursor: pointer;
-  padding: 8px 0 16px;
+  padding: 0;
   text-align: left;
+  line-height: 1;
+}
+.back-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* .page 안의 back-btn: 앱바와 동일한 높이·패딩으로 텍스트 수직 정렬 */
+.page > .back-btn,
+.page > .detail-header > .back-btn {
+  height: var(--appbar-height);
+  padding-top: var(--appbar-padding-top);
+  box-sizing: border-box;
+}
+
+/* BeerDetailPage 전용 appbar 컨테이너 */
+.input-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--appbar-padding-top) var(--appbar-left) 0;
+  height: var(--appbar-height);
 }
 
 /* ── Beer Header ── */
@@ -3597,7 +3651,7 @@ body {
   font-weight: 700;
   color: var(--accent-hover);
   background: var(--accent-light);
-  border: 1.5px solid #FDE68A;
+  border: 1.5px solid var(--border-strong);
   border-radius: 8px;
   padding: 4px 6px;
   cursor: pointer;
@@ -3607,7 +3661,7 @@ body {
 }
 
 .slider-value:hover {
-  background: #FEF3C7;
+  background: var(--accent-light);
   border-color: var(--accent);
 }
 
@@ -4188,11 +4242,11 @@ body {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 14px 12px;
-  border-radius: 12px;
+  padding: 14px 14px;
+  border-radius: 10px;
   border: 1px solid var(--border);
   cursor: pointer;
-  transition: opacity 0.12s, box-shadow 0.15s;
+  transition: box-shadow 0.15s, transform 0.1s;
   background: var(--surface-elevated);
   box-shadow: var(--shadow-sm);
   margin-bottom: 8px;
@@ -4201,11 +4255,26 @@ body {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.beer-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.15s;
 }
 
 .beer-card:first-child { border-top: 1px solid var(--border); }
 
-.beer-card:hover { opacity: 0.72; }
+.beer-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.beer-card:hover::before { opacity: 1; }
 
 .beer-card-img {
   width: 52px;
@@ -4296,13 +4365,14 @@ body {
 }
 
 .beer-card-hashtag {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-mid);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent-hover);
   background: var(--accent-light);
-  border: 1px solid #FDE68A;
-  border-radius: 20px;
-  padding: 2px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  padding: 2px 6px;
+  letter-spacing: 0.02em;
 }
 
 /* 카드 우측 미니 맛 바 */
@@ -4431,7 +4501,7 @@ body {
   padding: 14px 16px;
   background: var(--accent-light);
   border-radius: 12px;
-  border: 1px solid #FDE68A;
+  border: 1px solid var(--border-strong);
 }
 
 .result-star {
@@ -4490,7 +4560,7 @@ body {
   font-weight: 600;
   color: var(--text-mid);
   background: var(--accent-light);
-  border: 1px solid #FDE68A;
+  border: 1px solid var(--border-strong);
   border-radius: 20px;
   padding: 5px 10px;
   cursor: pointer;
@@ -4652,7 +4722,7 @@ body {
   font-weight: 600;
   color: var(--text-mid);
   background: var(--accent-light);
-  border: 1px solid #FDE68A;
+  border: 1px solid var(--border-strong);
   border-radius: 20px;
   padding: 4px 10px;
 }
@@ -4706,12 +4776,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: var(--appbar-height);
+  padding-top: var(--appbar-padding-top);
+  box-sizing: border-box;
   margin-bottom: 12px;
 }
 
-.result-top-nav .back-btn {
-  padding: 0 0 0 0;
-}
 
 .result-saved-badge {
   display: inline-flex;
@@ -4853,7 +4923,7 @@ body {
   font-weight: 600;
   color: var(--text-mid);
   background: var(--accent-light);
-  border: 1px solid #FDE68A;
+  border: 1px solid var(--border-strong);
   border-radius: 20px;
   padding: 6px 12px;
 }
@@ -5009,7 +5079,7 @@ body {
 }
 
 .notif-item--unread {
-  background: #FFFBEB;
+  background: var(--accent-subtle);
 }
 
 .notif-item-icon {

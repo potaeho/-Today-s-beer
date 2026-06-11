@@ -5,6 +5,7 @@ export const NEWS_LIST = [
     title: "콜드 IPA — 라거 기술로 만든 새로운 IPA 스타일",
     date: "2026.06.10",
     emoji: "🧊",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Fuller%27s_India_pale_ale.jpg/330px-Fuller%27s_India_pale_ale.jpg",
     color: "#EFF6FF",
     content: `콜드 IPA(Cold IPA)는 2021년 미국 오리건주 포틀랜드의 웨이파인더 비어(Wayfinder Beer)가 처음 선보인 스타일로, 크래프트 맥주계에서 가장 주목받는 신(新) 카테고리입니다.
 
@@ -18,6 +19,7 @@ export const NEWS_LIST = [
     title: "홉 품종 완전 정복 — Citra·Mosaic·Galaxy의 차이",
     date: "2026.06.08",
     emoji: "🌿",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Humulus_Lupulus_Hopfendolde-mit-hopfengarten.jpg/330px-Humulus_Lupulus_Hopfendolde-mit-hopfengarten.jpg",
     color: "#F0FDF4",
     content: `크래프트 맥주 레이블에서 자주 보이는 홉 품종 이름, 어떤 차이가 있을까요?
 
@@ -37,6 +39,7 @@ export const NEWS_LIST = [
     title: "사워 맥주 국내 확산 — 케틀 사워부터 람빅까지",
     date: "2026.06.06",
     emoji: "🍋",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Norwegian_sour_beer.jpg/330px-Norwegian_sour_beer.jpg",
     color: "#FEFCE8",
     content: `산미가 강한 사워 맥주(Sour Beer)가 국내 크래프트 신에서 빠르게 자리를 잡고 있습니다. 몇 년 전만 해도 "맥주가 왜 시큼해?"라는 반응이 대부분이었지만, 지금은 사워 전문 탭룸까지 등장했습니다.
 
@@ -52,6 +55,7 @@ export const NEWS_LIST = [
     title: "IBU란? — 쓴맛 수치로 맥주 읽는 법",
     date: "2026.06.04",
     emoji: "⚗️",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Bitburger_Glass.JPG/330px-Bitburger_Glass.JPG",
     color: "#FFF7ED",
     content: `맥주 레이블에서 종종 보이는 IBU(International Bitterness Units)는 홉에서 추출된 이소알파산의 농도를 ppm(mg/L)으로 나타낸 단위입니다.
 
@@ -72,6 +76,7 @@ export const NEWS_LIST = [
     title: "국내 주목할 마이크로 브루어리 5곳",
     date: "2026.06.02",
     emoji: "🏭",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/8210_Brewery_in_Abbaye_Notre-Dame_de_Saint-Remy_Rochefort_2007_Luca_Galuzzi.jpg/330px-8210_Brewery_in_Abbaye_Notre-Dame_de_Saint-Remy_Rochefort_2007_Luca_Galuzzi.jpg",
     color: "#FDF4FF",
     content: `한국 크래프트 맥주 신(Scene)을 이끄는 소규모 브루어리들을 소개합니다.
 
@@ -91,6 +96,7 @@ export const NEWS_LIST = [
     title: "배럴 에이징 맥주 — 오크통이 맥주를 바꾸는 방식",
     date: "2026.05.30",
     emoji: "🛢️",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Oak-wine-barrel-at-toneleria-nacional-chile.jpg/330px-Oak-wine-barrel-at-toneleria-nacional-chile.jpg",
     color: "#FEF3C7",
     content: `배럴 에이징(Barrel Aging)은 위스키·버번·와인·럼 등을 숙성하는 데 사용한 오크통에 맥주를 담아 추가 숙성하는 기법입니다. 1992년 시카고의 굿즈 브루어리(Goose Island)가 버번 오크통에 스타우트를 숙성한 것이 현대 배럴 에이징 맥주의 시작입니다.
 
