@@ -4763,46 +4763,47 @@ body {
   line-height: 1.4;
 }
 
-/* ── Notification Center ── */
-.notif-overlay {
+/* ── Notification Center (full-screen page) ── */
+.notif-page {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 500;
-}
-
-.notif-sheet {
-  position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 0;
   width: 100%;
   max-width: 393px;
-  background: #fff;
-  border-radius: 24px 24px 0 0;
-  max-height: 75vh;
+  background: var(--bg);
   display: flex;
   flex-direction: column;
-  z-index: 501;
-  animation: slideUp 0.25s ease;
+  z-index: 500;
+  animation: slideInRight 0.22s ease;
 }
 
-.notif-handle {
-  width: 36px;
-  height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-  margin: 12px auto 0;
-  flex-shrink: 0;
-}
-
-.notif-header {
+.notif-page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px 12px;
+  padding: 16px 16px 12px;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
+}
+
+.notif-back-btn {
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dark);
+  border-radius: 50%;
+}
+
+.notif-page-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-dark);
 }
 
 .notif-title {
