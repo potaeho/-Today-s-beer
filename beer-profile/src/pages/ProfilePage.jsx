@@ -376,7 +376,7 @@ export default function ProfilePage({ beers = [], onSelectBeer, ratedCount: rate
                   <span>{pct}%</span>
                 </div>
                 <div className="profile-level-progress-track">
-                  <div className="profile-level-progress-fill" style={{ width: `${pct}%` }} />
+                  <div className="profile-level-progress-fill" style={{ transform: `scaleX(${pct / 100})` }} />
                 </div>
                 <p className="profile-level-next">다음: {next.name}</p>
               </div>
@@ -404,7 +404,7 @@ export default function ProfilePage({ beers = [], onSelectBeer, ratedCount: rate
                   <div
                     className="profile-cat-bar-fill"
                     style={{
-                      width: `${pct}%`,
+                      transform: `scaleX(${pct / 100})`,
                       background: i === 0 ? "var(--accent)" : "#D1D5DB",
                     }}
                   />

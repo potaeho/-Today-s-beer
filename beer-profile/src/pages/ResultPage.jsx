@@ -49,7 +49,7 @@ export default function ResultPage({ beer, profile, selected, starRating, onHome
             <div key={axis} className="result-axis-row">
               <span className="result-axis-name">{axis}</span>
               <div className="result-axis-track">
-                <div className="result-axis-fill" style={{ width: `${((profile[axis] ?? 0) / 5) * 100}%` }} />
+                <div className="result-axis-fill" style={{ transform: `scaleX(${(profile[axis] ?? 0) / 5})` }} />
               </div>
               <span className="result-axis-value">{(profile[axis] ?? 0).toFixed(1)}</span>
             </div>

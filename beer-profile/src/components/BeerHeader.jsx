@@ -3,7 +3,7 @@ export default function BeerHeader({ beer }) {
     <div className="beer-header">
       <div className="beer-image">
         {beer.image ? (
-          <img src={beer.image} alt={beer.name} />
+          <img src={beer.image} alt={beer.name} loading="lazy" />
         ) : (
           <div className="beer-image-placeholder">🍺</div>
         )}

@@ -112,7 +112,7 @@ export default function LevelJourneyModal({ ratedCount, onClose }) {
                       {isCurrent && next && (
                         <div className="journey-progress-wrap">
                           <div className="journey-progress-track">
-                            <div className="journey-progress-fill" style={{ width: `${pct}%` }} />
+                            <div className="journey-progress-fill" style={{ transform: `scaleX(${pct / 100})` }} />
                           </div>
                           <div className="journey-progress-labels">
                             <span>다음까지</span>

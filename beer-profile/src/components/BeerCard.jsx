@@ -9,13 +9,14 @@ export default function BeerCard({ beer, onClick }) {
     .slice(0, 4);
 
   return (
-    <div className="beer-card" onClick={() => onClick(beer)}>
+    <button type="button" className="beer-card" onClick={() => onClick(beer)} aria-label={beer.name}>
       <div className="beer-card-img" style={{ background: beer.srmColor + "22" }}>
         {beer.image && !imgErr ? (
           <img
             src={beer.image}
             alt={beer.name}
             className="beer-card-img-photo"
+            loading="lazy"
             onError={() => setImgErr(true)}
           />
         ) : (
@@ -24,8 +25,8 @@ export default function BeerCard({ beer, onClick }) {
         <div className="beer-card-srm" style={{ background: beer.srmColor }} />
       </div>
       <div className="beer-card-body">
-        <p className="beer-card-type">{beer.type}</p>
         <p className="beer-card-name">{beer.name}</p>
+        <p className="beer-card-type">{beer.type}</p>
         <div className="beer-card-meta">
           <span className="beer-card-abv">{beer.abv}</span>
           {beer.tags.map((t) => (
@@ -47,11 +48,11 @@ export default function BeerCard({ beer, onClick }) {
           <div key={k} className="mini-profile-row">
             <span className="mini-profile-key">{k[0]}</span>
             <div className="mini-profile-track">
-              <div className="mini-profile-fill" style={{ width: `${(v / 5) * 100}%` }} />
+              <div className="mini-profile-fill" style={{ transform: `scaleX(${v / 5})` }} />
             </div>
           </div>
         ))}
       </div>
-    </div>
+    </button>
   );
 }

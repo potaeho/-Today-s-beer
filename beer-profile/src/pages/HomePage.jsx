@@ -119,7 +119,7 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
                   >
                     <div className="home-search-item-img" style={{ background: beer.srmColor + "22" }}>
                       {beer.image ? (
-                        <img src={beer.image} alt={beer.name} style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: 8 }} />
+                        <img src={beer.image} alt={beer.name} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: 8 }} />
                       ) : (
                         <span style={{ fontSize: 20 }}>🍺</span>
                       )}

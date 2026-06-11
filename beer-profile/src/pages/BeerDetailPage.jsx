@@ -52,6 +52,7 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
                 src={beer.image}
                 alt={beer.name}
                 className="beer-detail-img-photo"
+                loading="lazy"
                 onError={() => setImgErr(true)}
               />
             ) : (
@@ -142,7 +143,7 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
                         <div className="beer-detail-axis-bar-bg">
                           <div
                             className="beer-detail-axis-bar-fill beer-detail-axis-bar-mine"
-                            style={{ width: `${((myReview.profile[axis] ?? 0) / 5) * 100}%` }}
+                            style={{ transform: `scaleX(${(myReview.profile[axis] ?? 0) / 5})` }}
                           />
                         </div>
                       )}
@@ -150,7 +151,7 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
                       <div className="beer-detail-axis-bar-bg">
                         <div
                           className="beer-detail-axis-bar-fill"
-                          style={{ width: `${(avg[axis] / 5) * 100}%` }}
+                          style={{ transform: `scaleX(${avg[axis] / 5})` }}
                         />
                       </div>
                     </div>

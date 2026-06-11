@@ -19,7 +19,7 @@ export default function ConfirmModal({ beer, profile, selected, starRating, onCo
             <div key={axis} className="modal-profile-row">
               <span className="modal-profile-label">{axis}</span>
               <div className="modal-profile-track">
-                <div className="modal-profile-fill" style={{ width: `${((profile[axis] ?? 0) / 5) * 100}%` }} />
+                <div className="modal-profile-fill" style={{ transform: `scaleX(${(profile[axis] ?? 0) / 5})` }} />
               </div>
               <span className="modal-profile-value">{(profile[axis] ?? 0).toFixed(1)}</span>
             </div>

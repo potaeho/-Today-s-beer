@@ -32,7 +32,7 @@ export default function BarrelProgress({ count, total = 20 }) {
       </p>
       <p className="barrel-label">지금까지 마신 맥주</p>
       <div className="barrel-progress-bar">
-        <div className="barrel-progress-fill" style={{ width: `${pct * 100}%` }}/>
+        <div className="barrel-progress-fill" style={{ transform: `scaleX(${pct})` }}/>
       </div>
       <p className="barrel-progress-hint">{count} / {total}종 달성 시 배럴 완성 🎉</p>
     </div>

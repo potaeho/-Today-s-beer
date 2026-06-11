@@ -40,7 +40,7 @@ export default function LevelCard({ ratedCount, onClick }) {
           <div className="level-progress-track">
             <div
               className="level-progress-fill"
-              style={{ width: `${pct}%` }}
+              style={{ transform: `scaleX(${pct / 100})` }}
             />
           </div>
         </div>

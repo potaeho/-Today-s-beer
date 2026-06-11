@@ -371,9 +371,11 @@ body {
 
 .beer-detail-axis-bar-fill {
   height: 100%;
+  width: 100%;
   background: #6366F1;
   border-radius: 3px;
-  transition: width 0.4s ease;
+  transform-origin: left;
+  transition: transform 0.4s ease;
 }
 
 .beer-detail-axis-bar-mine {
@@ -1361,9 +1363,11 @@ body {
 
 .journey-progress-fill {
   height: 100%;
+  width: 100%;
   background: var(--accent);
   border-radius: 99px;
-  transition: width 0.4s ease;
+  transform-origin: left;
+  transition: transform 0.4s ease;
 }
 
 .journey-progress-labels {
@@ -2141,9 +2145,11 @@ body {
 
 .profile-level-progress-fill {
   height: 100%;
+  width: 100%;
   background: rgba(0,0,0,0.3);
   border-radius: 3px;
-  transition: width 0.5s ease;
+  transform-origin: left;
+  transition: transform 0.5s ease;
 }
 
 .profile-level-next {
@@ -2378,8 +2384,10 @@ body {
 
 .profile-cat-bar-fill {
   height: 100%;
+  width: 100%;
   border-radius: 4px;
-  transition: width 0.5s ease;
+  transform-origin: left;
+  transition: transform 0.5s ease;
 }
 
 /* 맛 취향 태그 */
@@ -2976,9 +2984,11 @@ body {
 
 .level-progress-fill {
   height: 100%;
+  width: 100%;
   background: var(--accent);
   border-radius: 3px;
-  transition: width 0.4s ease;
+  transform-origin: left;
+  transition: transform 0.4s ease;
 }
 
 .level-max {
@@ -3037,9 +3047,11 @@ body {
 
 .barrel-progress-fill {
   height: 100%;
+  width: 100%;
   background: var(--accent);
   border-radius: 3px;
-  transition: width 0.4s ease;
+  transform-origin: left;
+  transition: transform 0.4s ease;
 }
 
 .barrel-progress-hint {
@@ -4146,6 +4158,11 @@ body {
   background: #fff;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.03);
   margin-bottom: 8px;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
 }
 
 .beer-card:first-child { border-top: 1px solid var(--border); }
@@ -4280,8 +4297,11 @@ body {
 
 .mini-profile-fill {
   height: 100%;
+  width: 100%;
   background: var(--text-dark);
   border-radius: 2px;
+  transform-origin: left;
+  transition: transform 0.4s ease;
 }
 
 /* ── 별점 ── */
@@ -4557,8 +4577,11 @@ body {
 
 .modal-profile-fill {
   height: 100%;
+  width: 100%;
   background: var(--accent);
   border-radius: 3px;
+  transform-origin: left;
+  transition: transform 0.4s ease;
 }
 
 .modal-profile-value {
@@ -4750,8 +4773,11 @@ body {
 
 .result-axis-fill {
   height: 100%;
+  width: 100%;
   background: var(--accent);
   border-radius: 3px;
+  transform-origin: left;
+  transition: transform 0.4s ease;
 }
 
 .result-axis-value {
@@ -5005,3 +5031,68 @@ body {
 
 .notif-empty-icon { font-size: 36px; }
 .notif-empty-text { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+
+/* ── 다크모드 ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: #F59E0B;
+    --accent-hover: #FBBF24;
+    --accent-light: #292219;
+    --bg: #111827;
+    --surface: #1F2937;
+    --text-dark: #F9FAFB;
+    --text-mid: #D1D5DB;
+    --text-muted: #6B7280;
+    --border: #374151;
+    --chip-bg: #1F2937;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+    --shadow-accent: 0 4px 16px rgba(245,158,11,0.2);
+  }
+
+  body { background: #0D1117; }
+
+  .app-shell {
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 24px 80px rgba(0,0,0,0.8);
+  }
+
+  .beer-card { background: var(--surface); }
+  .appbar { background: var(--bg); border-bottom-color: var(--border); }
+  .home-sticky-header { background: var(--bg); }
+  .bottom-tab-bar { background: var(--bg); border-top-color: var(--border); }
+  .search-bar { background: var(--surface); border-color: var(--border); }
+  .home-search-results { background: var(--bg); }
+  .home-search-item { background: var(--bg); color: var(--text-dark); }
+  .home-search-item:hover { background: var(--surface); }
+
+  .beer-detail-page { background: var(--bg); }
+  .beer-detail-hero { background: var(--bg); }
+  .beer-detail-tab-bar { background: var(--bg); border-bottom-color: var(--border); }
+  .beer-detail-section { background: var(--bg); border-color: var(--border); }
+
+  .notif-page { background: var(--bg); }
+  .notif-page-header { background: var(--bg); border-bottom-color: var(--border); }
+  .notif-item { border-bottom-color: var(--border); }
+  .notif-item--unread { background: var(--accent-light); }
+
+  .modal-overlay { background: rgba(0,0,0,0.7); }
+  .modal-box { background: var(--surface); }
+  .confirm-modal { background: var(--surface); }
+
+  .level-card { filter: brightness(0.9); }
+
+  .category-tab { background: var(--surface); color: var(--text-mid); border-color: var(--border); }
+  .category-tab.active { background: var(--text-dark); color: var(--bg); }
+
+  .rec-card { background: var(--surface); border-color: var(--border); }
+  .news-card { background: var(--surface); border-color: var(--border); }
+
+  .community-page { background: var(--bg); }
+  .post-card { background: var(--bg); border-color: var(--border); }
+
+  .profile-page { background: var(--bg); }
+  .profile-appbar { background: var(--bg); border-bottom-color: var(--border); }
+  .profile-stats { background: var(--surface); }
+
+  .toast { box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+}

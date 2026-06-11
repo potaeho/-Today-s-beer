@@ -202,7 +202,7 @@ function BeerSearchComposeModal({ beers = [], initialBeer, onClose, onPost }) {
                     {mediaFiles.map((m, i) => (
                       <div key={i} className="compose-media-item">
                         {m.type === "image" ? (
-                          <img src={m.url} alt="" className="compose-media-thumb" />
+                          <img src={m.url} alt="" loading="lazy" className="compose-media-thumb" />
                         ) : (
                           <video src={m.url} className="compose-media-thumb" muted />
                         )}
@@ -292,7 +292,7 @@ function PostCard({ post, onLike }) {
             {post.media.map((m, i) => (
               <div key={i} className="post-media-item">
                 {m.type === "image" ? (
-                  <img src={m.url} alt="" className="post-media-thumb" />
+                  <img src={m.url} alt="" loading="lazy" className="post-media-thumb" />
                 ) : (
                   <video src={m.url} className="post-media-thumb" controls muted />
                 )}
