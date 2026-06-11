@@ -18,6 +18,17 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
   const ratedCount = getMyRatedCount();
   const recommended = getPersonalizedRecommendations(beers, 6);
 
+  const q = query.trim();
+  const searchResults = q
+    ? beers.filter(
+        (b) =>
+          b.name.includes(q) ||
+          (b.type ?? "").includes(q) ||
+          (b.brewery ?? "").includes(q) ||
+          (b.tags ?? []).some((t) => t.includes(q))
+      )
+    : [];
+
   if (selectedNews) {
     return <NewsDetailPage news={selectedNews} onBack={() => setSelectedNews(null)} />;
   }
@@ -67,22 +78,73 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
         {showSearch && (
           <div className="home-search-wrap">
             <div className="search-bar">
-              <span className="search-icon">🔍</span>
+              <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                <circle cx="10.5" cy="10.5" r="6.5"/>
+                <line x1="15.5" y1="15.5" x2="21" y2="21"/>
+              </svg>
               <input
                 type="text"
-                placeholder="맥주 이름 또는 스타일 검색"
+                placeholder="맥주 이름, 스타일, 브루어리 검색"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="search-input"
                 autoFocus
               />
-              {query && <button className="search-clear" onClick={() => setQuery("")}>✕</button>}
+              {query && (
+                <button className="search-clear" aria-label="검색어 지우기" onClick={() => setQuery("")}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
         )}
       </div>
 
-      <div className="home-scroll-body">
+      {/* 검색 결과 */}
+      {showSearch && q && (
+        <div className="home-search-results">
+          {searchResults.length === 0 ? (
+            <div className="home-search-empty">
+              <p className="home-search-empty-text">"{q}"에 대한 결과가 없습니다</p>
+            </div>
+          ) : (
+            <ul className="home-search-list">
+              {searchResults.map((beer) => (
+                <li key={beer.id}>
+                  <button
+                    className="home-search-item"
+                    onClick={() => { onSelectBeer(beer); setQuery(""); setShowSearch(false); }}
+                  >
+                    <div className="home-search-item-img" style={{ background: beer.srmColor + "22" }}>
+                      {beer.image ? (
+                        <img src={beer.image} alt={beer.name} style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: 8 }} />
+                      ) : (
+                        <span style={{ fontSize: 20 }}>🍺</span>
+                      )}
+                      <div className="home-search-item-srm" style={{ background: beer.srmColor }} />
+                    </div>
+                    <div className="home-search-item-info">
+                      <div className="home-search-item-row">
+                        <span className="home-search-item-category">{beer.category}</span>
+                        <span className="home-search-item-abv">{beer.abv}</span>
+                      </div>
+                      <p className="home-search-item-name">{beer.name}</p>
+                      <p className="home-search-item-type">{beer.type}</p>
+                    </div>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--text-muted)", flexShrink: 0 }}>
+                      <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      <div className="home-scroll-body" style={{ display: showSearch && q ? "none" : undefined }}>
 
         {/* 게이미피케이션 레벨 카드 */}
         <div className="home-section">
