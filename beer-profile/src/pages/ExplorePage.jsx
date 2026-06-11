@@ -60,17 +60,22 @@ export default function ExplorePage({ beers = [], onSelectBeer, userName = "사�
         </div>
         <div className="home-search-wrap">
           <div className="search-bar">
-            <span className="search-icon">🔍</span>
+            <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+              <circle cx="10.5" cy="10.5" r="6.5"/>
+              <line x1="15.5" y1="15.5" x2="21" y2="21"/>
+            </svg>
             <input
               type="text"
-              placeholder="맥주 이름 또는 스타일 검색"
+              placeholder="맥주 이름, 스타일, 브루어리 검색"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="search-input"
             />
             {query && (
-              <button className="search-clear" onClick={() => setQuery("")}>
-                ✕
+              <button className="search-clear" aria-label="검색어 지우기" onClick={() => setQuery("")}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
               </button>
             )}
           </div>

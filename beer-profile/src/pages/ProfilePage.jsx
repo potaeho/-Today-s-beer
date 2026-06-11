@@ -310,6 +310,7 @@ export default function ProfilePage({ beers = [], onSelectBeer, ratedCount: rate
       <div className="profile-header">
         {/* 우측 상단 프로필 수정 버튼 */}
         <div className="profile-appbar">
+          <span className="appbar-logo">프로필</span>
           <button className="profile-edit-btn" onClick={() => alert("프로필 수정 기능 준비 중입니다 ✏️")}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 20h9"/>

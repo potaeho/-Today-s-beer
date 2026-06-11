@@ -677,14 +677,20 @@ body {
   backdrop-filter: blur(12px);
   z-index: 10;
   border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 52px;
+  padding: 12px 0 0;
 }
 
 .community-title {
   display: block;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
   color: var(--text-dark);
-  padding: 16px 16px 0;
+  letter-spacing: -0.5px;
+  padding: 0 16px;
 }
 
 .community-filters {
@@ -1935,9 +1941,11 @@ body {
 
 .profile-appbar {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
   padding: 12px 16px 4px;
   width: 100%;
+  min-height: 52px;
 }
 
 .profile-edit-btn {
