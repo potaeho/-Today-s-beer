@@ -5071,72 +5071,8 @@ body {
 .notif-empty-icon { font-size: 36px; }
 .notif-empty-text { font-size: 14px; color: var(--text-muted); font-weight: 500; }
 
-/* ── 다크모드 ── */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --accent: #D97706;
-    --accent-hover: #B45309;
-    --accent-light: #292210;
-    --accent-subtle: #1C1708;
-    --bg: #1C1917;
-    --surface: #292524;
-    --surface-elevated: #2C2825;
-    --text-dark: #FAF9F7;
-    --text-mid: #D6D3D1;
-    --text-muted: #78716C;
-    --text-faint: #57534E;
-    --border: #44403C;
-    --border-strong: #57534E;
-    --chip-bg: #292524;
-    --chip-text: #A8A29E;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
-    --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
-    --shadow-accent: 0 4px 16px rgba(196,121,0,0.25);
-  }
-
-  body { background: #0E0C0B; }
-
-  .app-shell {
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 24px 80px rgba(0,0,0,0.8);
-  }
-
-  .beer-card { background: var(--surface); }
-  .appbar { background: var(--bg); border-bottom-color: var(--border); }
-  .home-sticky-header { background: var(--bg); }
-  .bottom-tab-bar { background: var(--bg); border-top-color: var(--border); }
-  .search-bar { background: var(--surface); border-color: var(--border); }
-  .home-search-results { background: var(--bg); }
-  .home-search-item { background: var(--bg); color: var(--text-dark); }
-  .home-search-item:hover { background: var(--surface); }
-
-  .beer-detail-page { background: var(--bg); }
-  .beer-detail-hero { background: var(--bg); }
-  .beer-detail-tab-bar { background: var(--bg); border-bottom-color: var(--border); }
-  .beer-detail-section { background: var(--bg); border-color: var(--border); }
-
-  .notif-page { background: var(--bg); }
-  .notif-page-header { background: var(--bg); border-bottom-color: var(--border); }
-  .notif-item { border-bottom-color: var(--border); }
-  .notif-item--unread { background: var(--accent-light); }
-
-  .modal-overlay { background: rgba(0,0,0,0.7); }
-  .modal-box { background: var(--surface); }
-  .confirm-modal { background: var(--surface); }
-
-  .level-card { filter: brightness(0.9); }
-
-  .category-tab { background: var(--surface); color: var(--text-mid); border-color: var(--border); }
-  .category-tab.active { background: var(--text-dark); color: var(--bg); }
-
-  .rec-card { background: var(--surface); border-color: var(--border); }
-  .news-card { background: var(--surface); border-color: var(--border); }
-
-  .community-page { background: var(--bg); }
-  .post-card { background: var(--bg); border-color: var(--border); }
-
-  .profile-page { background: var(--bg); }
-  .profile-appbar { background: var(--bg); border-bottom-color: var(--border); }
-  .profile-stats { background: var(--surface); }
-
-  .toast { box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-}
+/* ── 다크모드 (현재 비활성 — 라이트모드 고정) ── */
+/* 다크모드 지원이 필요할 때 아래 주석을 해제하세요 */
+/*
+@media (prefers-color-scheme: dark) { ... }
+*/
