@@ -20,7 +20,7 @@ export default function DetailPage({ beer, profile, selected, onToggle, onBack, 
 
   return (
     <div className="page">
-      <div className="detail-sticky-top">
+      <div>
         <button className="back-btn" onClick={onBack}>← 수정하기</button>
         <BeerHeader beer={beer} />
         <FlavorRadar profile={profile} axes={axes} />
