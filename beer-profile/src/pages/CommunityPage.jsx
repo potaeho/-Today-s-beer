@@ -271,7 +271,105 @@ function BeerSearchComposeModal({ beers = [], initialBeer, onClose, onPost }) {
   );
 }
 
-function PostCard({ post, onLike }) {
+function CommentSheet({ post, onClose, onSubmit }) {
+  const [text, setText] = useState("");
+  const textareaRef = useRef(null);
+
+  useEffect(() => { textareaRef.current?.focus(); }, []);
+
+  function handleSubmit() {
+    if (!text.trim()) return;
+    onSubmit(post.id, text.trim());
+    onClose();
+  }
+
+  return (
+    <div className="comment-overlay" onClick={onClose}>
+      <div className="comment-sheet" onClick={(e) => e.stopPropagation()}>
+        <div className="comment-sheet-handle" />
+        <div className="comment-sheet-header">
+          <span className="comment-sheet-title">{post.user}에게 답글</span>
+          <button className="comment-sheet-close" onClick={onClose}>✕</button>
+        </div>
+        <div className="comment-sheet-origin">
+          <span className="comment-sheet-origin-avatar">{post.avatar}</span>
+          <p className="comment-sheet-origin-text">{post.content || (post.beerTag && `🍺 ${post.beerTag}`) || ""}</p>
+        </div>
+        <div className="comment-sheet-compose">
+          <span className="comment-sheet-me-avatar">😄</span>
+          <textarea
+            ref={textareaRef}
+            className="comment-sheet-textarea"
+            placeholder="답글을 입력하세요..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            maxLength={280}
+            rows={3}
+          />
+        </div>
+        <div className="comment-sheet-footer">
+          <span className="comment-sheet-count">{text.length} / 280</span>
+          <button
+            className="comment-sheet-submit"
+            onClick={handleSubmit}
+            disabled={!text.trim()}
+          >
+            답글
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RepostMenu({ anchorEl, onRepost, onQuote, onClose }) {
+  useEffect(() => {
+    function onClickOutside(e) {
+      if (anchorEl && !anchorEl.contains(e.target)) onClose();
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [anchorEl, onClose]);
+
+  return (
+    <div className="repost-menu">
+      <button className="repost-menu-item" onClick={onRepost}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="17 1 21 5 17 9"/>
+          <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+          <polyline points="7 23 3 19 7 15"/>
+          <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+        </svg>
+        리포스트
+      </button>
+      <button className="repost-menu-item" onClick={onQuote}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        인용하기
+      </button>
+    </div>
+  );
+}
+
+function PostCard({ post, onLike, onRepost, onComment, onShare }) {
+  const [showRepostMenu, setShowRepostMenu] = useState(false);
+  const repostBtnRef = useRef(null);
+
+  function handleRepostClick() {
+    setShowRepostMenu((v) => !v);
+  }
+
+  function handleRepost() {
+    onRepost(post.id, "repost");
+    setShowRepostMenu(false);
+  }
+
+  function handleQuote() {
+    onRepost(post.id, "quote");
+    setShowRepostMenu(false);
+  }
+
   return (
     <div className="post-card">
       <div className="post-left">
@@ -286,7 +384,6 @@ function PostCard({ post, onLike }) {
           <span className="post-time">{post.time}</span>
         </div>
         {post.content && <p className="post-content">{post.content}</p>}
-        {/* 미디어 */}
         {post.media && post.media.length > 0 && (
           <div className={`post-media-grid post-media-grid--${Math.min(post.media.length, 2)}`}>
             {post.media.map((m, i) => (
@@ -307,23 +404,37 @@ function PostCard({ post, onLike }) {
           </div>
         )}
         <div className="post-actions">
-          <button className="post-action-btn">
+          <button className="post-action-btn btn-comment" onClick={() => onComment(post)}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
             <span>{post.comments}</span>
           </button>
-          <button className="post-action-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="17 1 21 5 17 9"/>
-              <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
-              <polyline points="7 23 3 19 7 15"/>
-              <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
-            </svg>
-            <span>{post.reposts}</span>
-          </button>
+          <div className="post-action-repost-wrap">
+            <button
+              ref={repostBtnRef}
+              className={`post-action-btn btn-repost${post.reposted ? " reposted" : ""}`}
+              onClick={handleRepostClick}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="17 1 21 5 17 9"/>
+                <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                <polyline points="7 23 3 19 7 15"/>
+                <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+              </svg>
+              <span>{post.reposts}</span>
+            </button>
+            {showRepostMenu && (
+              <RepostMenu
+                anchorEl={repostBtnRef.current}
+                onRepost={handleRepost}
+                onQuote={handleQuote}
+                onClose={() => setShowRepostMenu(false)}
+              />
+            )}
+          </div>
           <button
-            className={`post-action-btn like-btn ${post.liked ? "liked" : ""}`}
+            className={`post-action-btn btn-like like-btn ${post.liked ? "liked" : ""}`}
             onClick={() => onLike(post.id)}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill={post.liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -331,7 +442,7 @@ function PostCard({ post, onLike }) {
             </svg>
             <span>{post.likes}</span>
           </button>
-          <button className="post-action-btn">
+          <button className="post-action-btn btn-share" onClick={() => onShare(post)}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
@@ -348,10 +459,17 @@ export default function CommunityPage({ beers = [], composeBeer, onComposeClear 
   const [posts, setPosts] = useState(POSTS);
   const [showCompose, setShowCompose] = useState(false);
   const [activeFilter, setActiveFilter] = useState("추천");
+  const [commentTarget, setCommentTarget] = useState(null);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     if (composeBeer) setShowCompose(true);
   }, [composeBeer]);
+
+  function showToast(msg) {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2000);
+  }
 
   function handleLike(id) {
     setPosts((prev) =>
@@ -363,12 +481,51 @@ export default function CommunityPage({ beers = [], composeBeer, onComposeClear 
     );
   }
 
+  function handleRepost(id, type) {
+    if (type === "repost") {
+      setPosts((prev) =>
+        prev.map((p) =>
+          p.id === id
+            ? { ...p, reposted: !p.reposted, reposts: p.reposted ? p.reposts - 1 : p.reposts + 1 }
+            : p
+        )
+      );
+      showToast("리포스트했어요");
+    } else {
+      setCommentTarget(posts.find((p) => p.id === id) || null);
+      setShowCompose(true);
+    }
+  }
+
+  function handleComment(post) {
+    setCommentTarget(post);
+  }
+
+  function handleCommentSubmit(postId, text) {
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === postId ? { ...p, comments: p.comments + 1 } : p
+      )
+    );
+    showToast("답글을 달았어요");
+  }
+
+  function handleShare(post) {
+    const text = [post.content, post.beerTag && `🍺 ${post.beerTag}`].filter(Boolean).join(" — ");
+    if (navigator.share) {
+      navigator.share({ title: "오늘의 맥주", text }).catch(() => {});
+    } else {
+      navigator.clipboard?.writeText(text).then(() => showToast("링크를 복사했어요")).catch(() => showToast("복사에 실패했어요"));
+    }
+  }
+
   function handlePost(newPost) {
     setPosts((prev) => [newPost, ...prev]);
   }
 
   function handleComposeClose() {
     setShowCompose(false);
+    setCommentTarget(null);
     onComposeClear?.();
   }
 
@@ -391,16 +548,25 @@ export default function CommunityPage({ beers = [], composeBeer, onComposeClear 
         </div>
       </div>
 
-      {/* 글쓰기 입력창 */}
       <button className="community-compose-bar" onClick={() => setShowCompose(true)}>
         <div className="community-compose-avatar">😄</div>
-        <span className="community-compose-placeholder">지금 어떤 맥주 마시고 있나요?</span>
+        <div className="community-compose-left">
+          <span className="community-compose-label">오늘의 맥주 이야기</span>
+          <span className="community-compose-placeholder">지금 마시는 맥주 공유해보세요</span>
+        </div>
         <span className="community-compose-btn">게시</span>
       </button>
 
       <div className="community-feed">
         {posts.map((post) => (
-          <PostCard key={post.id} post={post} onLike={handleLike} />
+          <PostCard
+            key={post.id}
+            post={post}
+            onLike={handleLike}
+            onRepost={handleRepost}
+            onComment={handleComment}
+            onShare={handleShare}
+          />
         ))}
         <div style={{ height: 100 }} />
       </div>
@@ -413,6 +579,16 @@ export default function CommunityPage({ beers = [], composeBeer, onComposeClear 
           onPost={handlePost}
         />
       )}
+
+      {commentTarget && !showCompose && (
+        <CommentSheet
+          post={commentTarget}
+          onClose={() => setCommentTarget(null)}
+          onSubmit={handleCommentSubmit}
+        />
+      )}
+
+      {toast && <div className="community-toast">{toast}</div>}
     </div>
   );
 }
