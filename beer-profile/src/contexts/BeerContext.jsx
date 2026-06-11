@@ -20,8 +20,9 @@ function normalizeBeer(b) {
     profile:     b.profile ?? {},
     brewery:     b.brewery ?? "",
     origin:      b.origin ?? "",
-    description: b.description ?? "",
-    isVerified:  b.is_verified ?? false,
+    description:       b.description ?? "",
+    descriptionDetail: b.description_detail ?? "",
+    isVerified:        b.is_verified ?? false,
   };
 }
 

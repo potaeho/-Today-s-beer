@@ -1,12 +1,78 @@
+import { useState } from "react";
 import FlavorRadar from "../components/FlavorRadar";
 import { HASHTAG_MAP, AXES, PROFILE_AXES } from "../data/beerData";
+import { supabase } from "../lib/supabase";
 
 const TAG_PREFIX = {
   단맛: "sweet_", 산미: "sour_", 홉향: "hop_", 몰트: "malt_",
   로스팅: "roast_", 발효: "ferment_", 질감: "tex_",
 };
 
+function WaitlistModal({ beerName, onClose }) {
+  const [contact, setContact] = useState("");
+  const [agreed, setAgreed] = useState(false);
+  const [status, setStatus] = useState("idle"); // idle | loading | done | error
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!contact.trim() || !agreed) return;
+    setStatus("loading");
+    try {
+      if (supabase) {
+        await supabase.from("waitlist").insert({ contact: contact.trim(), beer_name: beerName });
+      }
+      setStatus("done");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  return (
+    <div className="waitlist-overlay" onClick={onClose}>
+      <div className="waitlist-modal" onClick={(e) => e.stopPropagation()}>
+        {status === "done" ? (
+          <div className="waitlist-done">
+            <div className="waitlist-done-icon">🙌</div>
+            <p className="waitlist-done-title">등록 완료!</p>
+            <p className="waitlist-done-sub">정식 출시 때 가장 먼저 알려드릴게요.</p>
+            <button className="waitlist-close-btn" onClick={onClose}>닫기</button>
+          </div>
+        ) : (
+          <>
+            <button className="waitlist-x" onClick={onClose}>✕</button>
+            <div className="waitlist-icon">📥</div>
+            <p className="waitlist-title">아직 준비 중이에요</p>
+            <p className="waitlist-sub">정식 출시 시 가장 먼저 알려드릴게요.<br />연락처를 남겨주시면 바로 연락드릴게요!</p>
+            <form onSubmit={handleSubmit} className="waitlist-form">
+              <input
+                className="waitlist-input"
+                type="text"
+                placeholder="이메일 또는 전화번호"
+                value={contact}
+                onChange={(e) => setContact(e.target.value)}
+              />
+              <label className="waitlist-agree">
+                <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
+                <span>출시 알림 목적으로만 사용하고 즉시 삭제합니다.</span>
+              </label>
+              {status === "error" && <p className="waitlist-error">오류가 발생했어요. 다시 시도해주세요.</p>}
+              <button
+                type="submit"
+                className="waitlist-submit"
+                disabled={!contact.trim() || !agreed || status === "loading"}
+              >
+                {status === "loading" ? "저장 중..." : "알림 신청하기"}
+              </button>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function ResultPage({ beer, profile, selected, starRating, onHome }) {
+  const [showWaitlist, setShowWaitlist] = useState(false);
   const resolvedTags = selected.map((id) => HASHTAG_MAP[id]).filter(Boolean);
   const profileAxes = PROFILE_AXES[beer?.category] || PROFILE_AXES["에일"];
 
@@ -101,14 +167,21 @@ export default function ResultPage({ beer, profile, selected, starRating, onHome
       )}
 
       {/* 하단 여백 (고정 버튼 높이만큼) */}
-      <div style={{ height: 100 }} />
+      <div style={{ height: 130 }} />
 
       {/* 하단 고정 버튼 */}
       <div className="result-bottom-bar">
+        <button className="result-save-btn" onClick={() => setShowWaitlist(true)}>
+          📥 내 맥주 프로파일 저장하기
+        </button>
         <button className="result-home-btn" onClick={onHome}>
           홈으로 돌아가기
         </button>
       </div>
+
+      {showWaitlist && (
+        <WaitlistModal beerName={beer?.name} onClose={() => setShowWaitlist(false)} />
+      )}
     </div>
   );
 }

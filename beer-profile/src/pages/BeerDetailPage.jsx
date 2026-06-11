@@ -25,6 +25,7 @@ function avgProfile(reviews, axes) {
 
 export default function BeerDetailPage({ beer, onBack, onRate }) {
   const [imgErr, setImgErr] = useState(false);
+  const [descExpanded, setDescExpanded] = useState(false);
   const axes = PROFILE_AXES[beer.category] || PROFILE_AXES["에일"];
   const allReviews = REVIEWS[beer.id] || [];
   const myReview = allReviews.find((r) => r.isMe) || null;
@@ -73,6 +74,30 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
             </div>
           </div>
         </div>
+
+        {beer.description && (
+          <div className="beer-detail-description">
+            <p>{beer.description}</p>
+            {descExpanded && beer.descriptionDetail && (
+              <p className="beer-detail-description-detail">{beer.descriptionDetail}</p>
+            )}
+            {beer.descriptionDetail && (
+              <button
+                className="beer-detail-desc-toggle"
+                onClick={() => setDescExpanded((v) => !v)}
+              >
+                {descExpanded ? "접기" : "상세보기"}
+                <svg
+                  width="12" height="12" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                  style={{ transform: descExpanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
+                >
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+              </button>
+            )}
+          </div>
+        )}
 
         {reviews.length > 0 ? (
           <>

@@ -4,7 +4,7 @@ import LevelJourneyModal from "../components/LevelJourneyModal";
 import NewsSlider from "../components/NewsSlider";
 import NewsDetailPage from "./NewsDetailPage";
 import NewsListPage from "./NewsListPage";
-import { getPersonalizedRecommendations, getMyRatedCount } from "../utils/recommend";
+import { getPersonalizedRecommendations, getTrendingBeers, getMyRatedCount } from "../utils/recommend";
 import { useNotification } from "../contexts/NotificationContext";
 
 export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
@@ -16,7 +16,10 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
   const [showJourney, setShowJourney] = useState(false);
 
   const ratedCount = getMyRatedCount();
-  const recommended = getPersonalizedRecommendations(beers, 6);
+  const trending = getTrendingBeers(beers, 6);
+  const recommended = getPersonalizedRecommendations(beers, 3);
+
+  const TREND_ICON = { hot: "🔥", new: "🆕", seasonal: "☀️", issue: "📈" };
 
   const q = query.trim();
   const searchResults = q
@@ -167,23 +170,28 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
           />
         </div>
 
-        {/* 추천 맥주 */}
+        {/* 추천 맥주 — 트렌딩 */}
         <div className="home-section">
           <div className="section-row-header">
             <h2 className="home-section-title">추천 맥주 <span className="home-section-eyebrow-inline">For You</span></h2>
             <button className="section-more-btn" onClick={onGoExplore}>더 알아보기 →</button>
           </div>
           <div className="horizontal-scroll">
-            {recommended.map(({ beer, reason }) => (
+            {trending.map(({ beer, trendType, trendLabel, reason }) => (
               <div key={beer.id} className="rec-card" onClick={() => onSelectBeer(beer)}>
                 <div className="rec-card-img" style={{ background: beer.srmColor + "22" }}>
                   <span>🍺</span>
                   <div className="rec-card-srm" style={{ background: beer.srmColor }}/>
+                  {trendLabel && (
+                    <span className={`trend-badge trend-badge--${trendType}`}>
+                      {TREND_ICON[trendType]} {trendLabel}
+                    </span>
+                  )}
                 </div>
+                {reason && <p className="rec-card-trend-reason">{reason}</p>}
                 <p className="rec-card-category">{beer.category}</p>
                 <p className="rec-card-name">{beer.name}</p>
                 <p className="rec-card-abv">{beer.abv}</p>
-                {reason && <p className="rec-card-reason">{reason}</p>}
                 <div className="rec-card-tags">
                   {beer.tags.map((t) => <span key={t} className="rec-card-tag">{t}</span>)}
                 </div>
@@ -192,6 +200,43 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
             ))}
           </div>
         </div>
+
+        {/* AI 맞춤 추천 */}
+        {recommended.length > 0 && (
+          <div className="home-section">
+            <div className="section-row-header">
+              <h2 className="home-section-title">
+                홈덕후 님을 위한 추천
+                <span className="ai-badge">AI 맞춤</span>
+              </h2>
+            </div>
+            <div className="horizontal-scroll ai-rec-scroll">
+              {recommended.map(({ beer, reason }, idx) => (
+                <div key={beer.id} className="ai-rec-card" onClick={() => onSelectBeer(beer)}>
+                  <div className="ai-rec-reason">
+                    <span className="ai-rec-sparkle">✨</span>
+                    {reason}
+                  </div>
+                  <div className="ai-rec-body">
+                    <div className="ai-rec-img" style={{ background: beer.srmColor + "22" }}>
+                      <span>🍺</span>
+                      <div className="ai-rec-srm" style={{ background: beer.srmColor }}/>
+                    </div>
+                    <div className="ai-rec-info">
+                      <p className="ai-rec-category">{beer.category}</p>
+                      <p className="ai-rec-name">{beer.name}</p>
+                      <p className="ai-rec-abv">ABV {beer.abv}</p>
+                      <div className="ai-rec-tags">
+                        {beer.tags.map((t) => <span key={t} className="rec-card-tag">{t}</span>)}
+                      </div>
+                    </div>
+                    <span className="ai-rec-page">{idx + 1} / {recommended.length}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div style={{ height: 100 }} />
       </div>

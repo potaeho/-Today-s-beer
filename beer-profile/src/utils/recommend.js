@@ -1,5 +1,5 @@
 import { REVIEWS } from "../data/reviewsData";
-import { HASHTAG_MAP } from "../data/beerData";
+import { HASHTAG_MAP, TRENDING_OVERRIDES } from "../data/beerData";
 
 /** isMe 리뷰 전체 수집 */
 export function getMyReviews() {
@@ -12,6 +12,27 @@ export function getMyReviews() {
 /** 내가 평가한 맥주 수 */
 export function getMyRatedCount() {
   return getMyReviews().length;
+}
+
+/**
+ * 트렌딩 맥주 — TRENDING_OVERRIDES(이름 기반) 또는 beer.trending 필드로 식별
+ */
+export function getTrendingBeers(beerList = [], count = 6) {
+  const resolve = (beer) => beer.trending ?? TRENDING_OVERRIDES[beer.name] ?? null;
+
+  const trending = beerList.filter((b) => resolve(b));
+  const rest     = beerList.filter((b) => !resolve(b));
+  const combined = [...trending, ...rest];
+
+  return combined.slice(0, count).map((beer) => {
+    const t = resolve(beer);
+    return {
+      beer,
+      trendType:  t?.type  ?? null,
+      trendLabel: t?.label ?? null,
+      reason:     t?.reason ?? null,
+    };
+  });
 }
 
 /**
