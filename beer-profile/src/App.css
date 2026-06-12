@@ -6134,10 +6134,11 @@ body {
 .onboard-radar-svg-wrap {
   flex: 1;
   min-height: 0;
-  overflow: hidden;
   position: relative;
 }
 .onboard-radar-svg-wrap svg {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   display: block;
