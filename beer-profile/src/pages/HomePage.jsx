@@ -180,7 +180,9 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
             {trending.map(({ beer, trendType, trendLabel, reason }) => (
               <div key={beer.id} className="rec-card" onClick={() => onSelectBeer(beer)}>
                 <div className="rec-card-img" style={{ background: beer.srmColor + "22" }}>
-                  <span>🍺</span>
+                  {beer.image
+                    ? <img src={beer.image} alt={beer.name} loading="lazy" className="rec-card-img-photo" />
+                    : <span>🍺</span>}
                   <div className="rec-card-srm" style={{ background: beer.srmColor }}/>
                   {trendLabel && (
                     <span className={`trend-badge trend-badge--${trendType}`}>
@@ -219,7 +221,9 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
                   </div>
                   <div className="ai-rec-body">
                     <div className="ai-rec-img" style={{ background: beer.srmColor + "22" }}>
-                      <span>🍺</span>
+                      {beer.image
+                        ? <img src={beer.image} alt={beer.name} loading="lazy" className="rec-card-img-photo" />
+                        : <span>🍺</span>}
                       <div className="ai-rec-srm" style={{ background: beer.srmColor }}/>
                     </div>
                     <div className="ai-rec-info">
