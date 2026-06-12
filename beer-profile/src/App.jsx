@@ -17,6 +17,7 @@ import { NotificationProvider } from "./contexts/NotificationContext";
 import ToastContainer from "./components/ToastContainer";
 import NotificationCenter from "./components/NotificationCenter";
 import { track } from "./utils/analytics";
+import OnboardingPopup, { ONBOARD_KEY } from "./components/OnboardingPopup";
 import "./App.css";
 
 function AppInner() {
@@ -46,6 +47,7 @@ function AppShell({ beers, loadingBeers }) {
   const [selectedTags, setSelectedTags] = useState([]);
   const [starRating, setStarRating] = useState(0);
   const [ratedCount, setRatedCount] = useState(() => getMyRatedCount());
+  const [showOnboarding, setShowOnboarding] = useState(() => !localStorage.getItem(ONBOARD_KEY));
 
   // 카드 클릭 → 상세 페이지
   function handleSelectBeer(beer) {
@@ -237,6 +239,10 @@ function AppShell({ beers, loadingBeers }) {
 
       <NotificationCenter />
       <ToastContainer />
+
+      {showOnboarding && (
+        <OnboardingPopup onClose={() => setShowOnboarding(false)} />
+      )}
     </div>
   );
 }
