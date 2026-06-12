@@ -214,23 +214,28 @@ export default function OnboardingPopup({ onClose }) {
     onClose();
   }
 
-  const { step, category, desc, Visual } = SLIDES[page];
   const isLast = page === SLIDES.length - 1;
 
   return (
     <div className="onboard-overlay">
       <div className="onboard-modal" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-        <div className="onboard-pill">
-          <span className="onboard-pill-num">{step} · </span>
-          <span className="onboard-pill-cat">{category}</span>
-        </div>
 
-        <SlideTitle page={page} />
-
-        <p className="onboard-desc">{desc}</p>
-
-        <div className="onboard-visual-area">
-          <Visual />
+        <div className="onboard-slides-wrap">
+          <div className="onboard-slides-track" style={{ transform: `translateX(-${page * 100}%)` }}>
+            {SLIDES.map((slide, i) => (
+              <div className="onboard-slide" key={i}>
+                <div className="onboard-pill">
+                  <span className="onboard-pill-num">{slide.step} · </span>
+                  <span className="onboard-pill-cat">{slide.category}</span>
+                </div>
+                <SlideTitle page={i} />
+                <p className="onboard-desc">{slide.desc}</p>
+                <div className="onboard-visual-area">
+                  <slide.Visual />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="onboard-bottom">
