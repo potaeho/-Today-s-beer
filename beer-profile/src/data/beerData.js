@@ -266,13 +266,11 @@ export const BEER_LIST = [
 
 // 트렌딩 맥주 설정 — 맥주 이름 기준 (Supabase 포함 모든 소스에 적용)
 export const TRENDING_OVERRIDES = {
-  "갈매기 IPA":               { type: "hot",      label: "요즘 핫",    reason: "이번 달 크래프트 탭룸 1위" },
-  "더블 IPA 헤이지":          { type: "issue",    label: "화제",       reason: "홉 마니아 커뮤니티 화제작" },
-  "뉴잉글랜드 IPA (NEIPA)":   { type: "new",      label: "신규 출시",  reason: "최근 출시된 뉴잉글랜드 스타일" },
-  "아트몬스터 유자 사워":     { type: "seasonal", label: "시즌 추천",  reason: "여름 시즌 필수 맥주" },
-  "클라우드 크래프트 IPA":    { type: "hot",      label: "요즘 핫",    reason: "이번 달 크래프트 탭룸 1위" },
-  "망고 사워 에일":           { type: "new",      label: "신규 출시",  reason: "6월 신규 출시 한정판" },
-  "제주 위트 에일":           { type: "seasonal", label: "시즌 추천",  reason: "여름 시즌 필수 맥주" },
+  // 신규 출시
+  "OBC 라거 비엔나":          { type: "new",      label: "신규 출시",  reason: "새롭게 출시된 OBC 비엔나 라거" },
+  "OBC 라거 헬레스":          { type: "new",      label: "신규 출시",  reason: "새롭게 출시된 OBC 헬레스 라거" },
+  // 시즌 추천
+  "필스너 우르켈":            { type: "seasonal", label: "시즌 추천",  reason: "시원한 여름 밤" },
 };
 
 // 해시태그 ID → { label, icon } 빠른 조회용
