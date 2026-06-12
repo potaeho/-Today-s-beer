@@ -16,8 +16,8 @@ function RadarIllustration() {
   const poly = (vals) => vals.map((v, i) => pt(maxR * v, i).join(",")).join(" ");
   const gridPoly = (s) => Array.from({ length: N }, (_, i) => pt(maxR * s, i).join(",")).join(" ");
 
-  const myVals  = [0.88, 0.18, 0.70, 0.14, 0.92];
-  const avgVals = [0.46, 0.72, 0.34, 0.66, 0.40];
+  const myVals  = [0.74, 0.28, 0.62, 0.22, 0.80];
+  const avgVals = [0.52, 0.60, 0.44, 0.58, 0.50];
   const labels  = ["단맛", "신맛", "쓴맛", "몰티함", "아로마"];
 
   return (
@@ -25,12 +25,12 @@ function RadarIllustration() {
       <div className="onboard-radar-header">
         <div className="onboard-radar-score-block">
           <span className="onboard-score-label">내 평점</span>
-          <span className="onboard-score-my">5 ★</span>
+          <span className="onboard-score-my">4.3 ★</span>
         </div>
         <div className="onboard-radar-sep" />
         <div className="onboard-radar-score-block">
           <span className="onboard-score-label">전체 평균</span>
-          <span className="onboard-score-avg">3.1 ★</span>
+          <span className="onboard-score-avg">3.7 ★</span>
         </div>
       </div>
       <div className="onboard-legend">
