@@ -1,5 +1,36 @@
 import { useState, useEffect, useRef } from "react";
 import { POSTS } from "../data/communityData";
+import { supabase } from "../lib/supabase";
+import { useAuth } from "../contexts/AuthContext";
+import { track } from "../utils/analytics";
+
+function relativeTime(iso) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return "방금";
+  if (m < 60) return `${m}분 전`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}시간 전`;
+  return `${Math.floor(h / 24)}일 전`;
+}
+
+function normalizeDbPost(p, likedSet = new Set()) {
+  return {
+    id: p.id,
+    user: p.users?.username ?? "익명",
+    handle: p.users?.handle ?? "@unknown",
+    avatar: "🍺",
+    time: relativeTime(p.created_at),
+    content: p.content ?? "",
+    beerTag: p.beers?.name ?? null,
+    media: [],
+    likes: p.likes_count ?? 0,
+    comments: p.comments_count ?? 0,
+    reposts: p.reposts_count ?? 0,
+    liked: likedSet.has(p.id),
+    isDbPost: true,
+  };
+}
 
 function BeerSearchComposeModal({ beers = [], initialBeer, onClose, onPost }) {
   const [step, setStep] = useState(initialBeer ? 2 : 1);
@@ -69,6 +100,7 @@ function BeerSearchComposeModal({ beers = [], initialBeer, onClose, onPost }) {
       time: "방금",
       content: text.trim(),
       beerTag: selectedBeer?.name || null,
+      _beer: selectedBeer,
       media: mediaFiles,
       likes: 0,
       comments: 0,
@@ -456,11 +488,50 @@ function PostCard({ post, onLike, onRepost, onComment, onShare }) {
 }
 
 export default function CommunityPage({ beers = [], composeBeer, onComposeClear }) {
+  const { user } = useAuth();
   const [posts, setPosts] = useState(POSTS);
+  const [isDbMode, setIsDbMode] = useState(false);
   const [showCompose, setShowCompose] = useState(false);
   const [activeFilter, setActiveFilter] = useState("추천");
   const [commentTarget, setCommentTarget] = useState(null);
   const [toast, setToast] = useState(null);
+
+  // Supabase에서 게시물 fetch — 데이터 있으면 DB 모드로 전환
+  useEffect(() => {
+    if (!supabase) return;
+    let cancelled = false;
+
+    async function fetchPosts() {
+      const { data: dbPosts, error } = await supabase
+        .from("posts")
+        .select(`
+          id, content, beer_id, likes_count, comments_count, reposts_count, created_at, user_id,
+          users:user_id ( username, handle, avatar_url ),
+          beers:beer_id ( name )
+        `)
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+      if (cancelled || error || !dbPosts || dbPosts.length === 0) return;
+
+      let likedSet = new Set();
+      if (user) {
+        const { data: likedData } = await supabase
+          .from("post_likes")
+          .select("post_id")
+          .eq("user_id", user.id);
+        likedSet = new Set((likedData ?? []).map((l) => l.post_id));
+      }
+
+      if (!cancelled) {
+        setPosts(dbPosts.map((p) => normalizeDbPost(p, likedSet)));
+        setIsDbMode(true);
+      }
+    }
+
+    fetchPosts();
+    return () => { cancelled = true; };
+  }, [user]);
 
   useEffect(() => {
     if (composeBeer) setShowCompose(true);
@@ -471,7 +542,11 @@ export default function CommunityPage({ beers = [], composeBeer, onComposeClear 
     setTimeout(() => setToast(null), 2000);
   }
 
-  function handleLike(id) {
+  async function handleLike(id) {
+    const post = posts.find((p) => p.id === id);
+    if (!post) return;
+
+    // 낙관적 업데이트
     setPosts((prev) =>
       prev.map((p) =>
         p.id === id
@@ -479,6 +554,21 @@ export default function CommunityPage({ beers = [], composeBeer, onComposeClear 
           : p
       )
     );
+    track.tapLikePost(id);
+
+    if (!isDbMode || !user || !supabase) return;
+
+    if (!post.liked) {
+      const { error } = await supabase.from("post_likes").insert({ post_id: id, user_id: user.id });
+      if (error) {
+        // 실패 시 되돌리기
+        setPosts((prev) =>
+          prev.map((p) => p.id === id ? { ...p, liked: false, likes: p.likes - 1 } : p)
+        );
+      }
+    } else {
+      await supabase.from("post_likes").delete().eq("post_id", id).eq("user_id", user.id);
+    }
   }
 
   function handleRepost(id, type) {
@@ -519,8 +609,32 @@ export default function CommunityPage({ beers = [], composeBeer, onComposeClear 
     }
   }
 
-  function handlePost(newPost) {
+  async function handlePost(newPost) {
+    const beer = newPost._beer;
+    const isUUID = beer?.id && /^[0-9a-f-]{36}$/.test(String(beer.id));
+
+    if (isDbMode && user && supabase) {
+      const { data, error } = await supabase
+        .from("posts")
+        .insert({ user_id: user.id, content: newPost.content, beer_id: isUUID ? beer.id : null })
+        .select(`
+          id, content, beer_id, likes_count, comments_count, reposts_count, created_at, user_id,
+          users:user_id ( username, handle, avatar_url ),
+          beers:beer_id ( name )
+        `)
+        .single();
+
+      if (!error && data) {
+        setPosts((prev) => [normalizeDbPost(data), ...prev]);
+        track.postComplete(!!beer, 0);
+        return;
+      }
+      console.warn("[CommunityPage] post insert 실패:", error?.message);
+    }
+
+    // 로컬 fallback (미로그인 or DB 오류)
     setPosts((prev) => [newPost, ...prev]);
+    track.postComplete(!!beer, 0);
   }
 
   function handleComposeClose() {

@@ -13,11 +13,13 @@ import SearchBeerModal from "./components/SearchBeerModal";
 import BeerActionSheet from "./components/BeerActionSheet";
 import BottomTabBar from "./components/BottomTabBar";
 import { BeerProvider, useBeers } from "./contexts/BeerContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
 import ToastContainer from "./components/ToastContainer";
 import NotificationCenter from "./components/NotificationCenter";
 import { track } from "./utils/analytics";
 import OnboardingPopup, { ONBOARD_KEY } from "./components/OnboardingPopup";
+import { supabase } from "./lib/supabase";
 import "./App.css";
 
 function AppInner() {
@@ -28,14 +30,17 @@ function AppInner() {
 export default function App() {
   return (
     <NotificationProvider>
-      <BeerProvider>
-        <AppInner />
-      </BeerProvider>
+      <AuthProvider>
+        <BeerProvider>
+          <AppInner />
+        </BeerProvider>
+      </AuthProvider>
     </NotificationProvider>
   );
 }
 
 function AppShell({ beers, loadingBeers }) {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("home");
   const [screen, setScreen] = useState(null);
   const [showSearchModal, setShowSearchModal] = useState(false);
@@ -77,6 +82,18 @@ function AppShell({ beers, loadingBeers }) {
     if (showOnboarding) track.screenView("OnboardingPopup");
   }, [showOnboarding]);
 
+  // 로그인 시 DB reviews 카운트로 동기화
+  useEffect(() => {
+    if (!user || !supabase) return;
+    supabase
+      .from("reviews")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .then(({ count, error }) => {
+        if (!error && typeof count === "number") setRatedCount(count);
+      });
+  }, [user]);
+
   // 카드 클릭 → 상세 페이지
   function handleSelectBeer(beer) {
     setSelectedBeer(beer);
@@ -109,6 +126,17 @@ function AppShell({ beers, loadingBeers }) {
     setScreen("result");
     track.ratingStepEnter("result", selectedBeer);
     track.ratingComplete(selectedBeer, starRating, selectedTags);
+
+    // DB reviews upsert — UUID 맥주 + 로그인 상태일 때만
+    const isUUID = typeof selectedBeer?.id === "string" && /^[0-9a-f-]{36}$/.test(selectedBeer.id);
+    if (user && supabase && isUUID && starRating >= 1) {
+      supabase.from("reviews").upsert(
+        { user_id: user.id, beer_id: selectedBeer.id, star: starRating, profile, hashtags: selectedTags },
+        { onConflict: "user_id,beer_id" }
+      ).then(({ error }) => {
+        if (error) console.warn("[handleSave] reviews upsert:", error.message);
+      });
+    }
   }
 
   function handleHome() {

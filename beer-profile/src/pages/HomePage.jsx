@@ -4,13 +4,13 @@ import LevelJourneyModal from "../components/LevelJourneyModal";
 import NewsSlider from "../components/NewsSlider";
 import NewsDetailPage from "./NewsDetailPage";
 import NewsListPage from "./NewsListPage";
-import { getPersonalizedRecommendations, getTrendingBeers, getMyRatedCount } from "../utils/recommend";
+import { getPersonalizedRecommendations, getTrendingBeers } from "../utils/recommend";
 import { filterBeers } from "../utils/search";
 import { useNotification } from "../contexts/NotificationContext";
 import { track } from "../utils/analytics";
 import { useScreenTime } from "../hooks/useScreenTime";
 
-export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
+export default function HomePage({ beers = [], onSelectBeer, ratedCount = 0, onGoExplore }) {
   const { openCenter, addToast } = useNotification();
   const [query, setQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
@@ -20,7 +20,6 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
 
   useScreenTime("home");
 
-  const ratedCount = getMyRatedCount();
   const trending = useMemo(() => getTrendingBeers(beers, 6), [beers]);
   const recommended = useMemo(() => getPersonalizedRecommendations(beers, 3), [beers]);
 
