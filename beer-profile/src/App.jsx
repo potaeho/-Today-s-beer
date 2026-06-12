@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HomePage from "./pages/HomePage";
 import ExplorePage from "./pages/ExplorePage";
 import { getMyRatedCount } from "./utils/recommend";
@@ -48,6 +48,17 @@ function AppShell({ beers, loadingBeers }) {
   const [starRating, setStarRating] = useState(0);
   const [ratedCount, setRatedCount] = useState(() => getMyRatedCount());
   const [showOnboarding, setShowOnboarding] = useState(() => !localStorage.getItem(ONBOARD_KEY));
+
+  // 앱 최초 진입 + 초기 화면 기록
+  useEffect(() => {
+    track.appOpen();
+    track.screenView("home");
+  }, []);
+
+  // 온보딩 팝업 노출 기록
+  useEffect(() => {
+    if (showOnboarding) track.screenView("OnboardingPopup");
+  }, [showOnboarding]);
 
   // 카드 클릭 → 상세 페이지
   function handleSelectBeer(beer) {
@@ -133,10 +144,10 @@ function AppShell({ beers, loadingBeers }) {
   // ── 맥주 DB 로딩 중 스피너 ───────────────────────────
   if (loadingBeers) {
     return (
-      <div className="app-shell" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ textAlign: "center", color: "#9CA3AF" }}>
-          <div style={{ fontSize: 40, marginBottom: 12 }}>🍺</div>
-          <p style={{ fontSize: 14 }}>맥주 데이터 불러오는 중...</p>
+      <div className="app-shell app-shell--loading">
+        <div className="app-loading">
+          <div className="app-loading-emoji">🍺</div>
+          <p className="app-loading-text">맥주 데이터 불러오는 중...</p>
         </div>
       </div>
     );

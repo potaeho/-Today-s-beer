@@ -39,15 +39,15 @@ export default function ExplorePage({ beers = [], onSelectBeer, userName = "사�
   // ── 추천 아이템 계산 ──────────────────────────────
   const recommendItems = useMemo(() => {
     if (isPersonalized) {
-      const recs = getPersonalizedRecommendations(beers, 6);
-      if (activeCategory === "전체") return recs.slice(0, 3);
+      const recs = getPersonalizedRecommendations(beers, 9);
+      if (activeCategory === "전체") return recs;
       const catRecs = recs.filter((r) => r.beer.category === activeCategory);
-      return catRecs.length > 0 ? catRecs.slice(0, 3) : recs.slice(0, 3);
+      return catRecs.length > 0 ? catRecs : recs;
     } else {
       const pool =
         activeCategory === "전체"
-          ? beers.slice(0, 3)
-          : beers.filter((b) => b.category === activeCategory).slice(0, 3);
+          ? beers.slice(0, 9)
+          : beers.filter((b) => b.category === activeCategory).slice(0, 9);
       return pool.map((beer) => ({ beer, reason: null }));
     }
   }, [beers, isPersonalized, activeCategory]);

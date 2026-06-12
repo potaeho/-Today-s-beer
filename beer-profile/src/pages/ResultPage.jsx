@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FlavorRadar from "../components/FlavorRadar";
 import { HASHTAG_MAP, AXES, PROFILE_AXES } from "../data/beerData";
 import { supabase } from "../lib/supabase";
+import { logEvent } from "../lib/track";
 
 const TAG_PREFIX = {
   단맛: "sweet_", 산미: "sour_", 홉향: "hop_", 몰트: "malt_",
@@ -9,47 +10,127 @@ const TAG_PREFIX = {
 };
 
 function WaitlistModal({ beerName, onClose }) {
+  // stage: intro(추천 팝업) → choose(이메일/전화 선택) → input(연락처 입력) → done
+  const [stage, setStage] = useState("intro");
+  const [contactType, setContactType] = useState(null); // "email" | "phone"
   const [contact, setContact] = useState("");
   const [agreed, setAgreed] = useState(false);
-  const [status, setStatus] = useState("idle"); // idle | loading | done | error
+  const [status, setStatus] = useState("idle"); // idle | loading | error
+
+  // 각 단계 진입을 추적 (퍼널 분석용) — intro_view / choose_view / input_view / done_view
+  useEffect(() => {
+    logEvent("download_popup", `${stage}_view`, { meta: { beer_name: beerName, contact_type: contactType } });
+  }, [stage]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 닫기 = 해당 단계에서 이탈 (완료 단계 제외)
+  function handleClose() {
+    if (stage !== "done") {
+      logEvent("download_popup", "abandon", { meta: { stage, beer_name: beerName } });
+    }
+    onClose();
+  }
+
+  function pickType(type) {
+    logEvent("download_popup", "pick_contact", { meta: { contact_type: type, beer_name: beerName } });
+    setContactType(type);
+    setContact("");
+    setStatus("idle");
+    setStage("input");
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
     if (!contact.trim() || !agreed) return;
     setStatus("loading");
-    try {
-      if (supabase) {
-        await supabase.from("waitlist").insert({ contact: contact.trim(), beer_name: beerName });
-      }
-      setStatus("done");
-    } catch {
+    logEvent("download_popup", "submit", { meta: { contact_type: contactType, beer_name: beerName } });
+
+    // fake door test — 연락처가 반드시 저장되어야 데이터 수집 의미가 있음
+    if (!supabase) {
+      console.error("[waitlist] Supabase 미설정 — 연락처 저장 불가");
       setStatus("error");
+      logEvent("download_popup", "submit_error", { meta: { reason: "no_supabase" } });
+      return;
+    }
+    try {
+      const { error } = await supabase
+        .from("waitlist")
+        .insert({ contact: contact.trim(), contact_type: contactType, beer_name: beerName });
+      if (error) {
+        console.error("[waitlist] insert 실패:", error.message);
+        setStatus("error");
+        logEvent("download_popup", "submit_error", { meta: { reason: error.message } });
+        return;
+      }
+      setStage("done");
+      logEvent("download_popup", "submit_success", { meta: { contact_type: contactType, beer_name: beerName } });
+    } catch (err) {
+      console.error("[waitlist] 네트워크 오류:", err);
+      setStatus("error");
+      logEvent("download_popup", "submit_error", { meta: { reason: "network" } });
     }
   }
 
+  function goDownload() {
+    logEvent("download_popup", "download_click", { meta: { beer_name: beerName } });
+    setStage("choose");
+  }
+
+  const isEmail = contactType === "email";
+
   return (
-    <div className="waitlist-overlay" onClick={onClose}>
+    <div className="waitlist-overlay" onClick={handleClose}>
       <div className="waitlist-modal" onClick={(e) => e.stopPropagation()}>
-        {status === "done" ? (
-          <div className="waitlist-done">
-            <div className="waitlist-done-icon">🙌</div>
-            <p className="waitlist-done-title">등록 완료!</p>
-            <p className="waitlist-done-sub">정식 출시 때 가장 먼저 알려드릴게요.</p>
-            <button className="waitlist-close-btn" onClick={onClose}>닫기</button>
-          </div>
-        ) : (
+
+        {/* ① 추천 팝업 — 다운로드 유도 */}
+        {stage === "intro" && (
           <>
-            <button className="waitlist-x" onClick={onClose}>✕</button>
-            <div className="waitlist-icon">📥</div>
-            <p className="waitlist-title">아직 준비 중이에요</p>
-            <p className="waitlist-sub">정식 출시 시 가장 먼저 알려드릴게요.<br />연락처를 남겨주시면 바로 연락드릴게요!</p>
+            <button className="waitlist-x" onClick={handleClose}>✕</button>
+            <div className="waitlist-icon">🍺</div>
+            <p className="waitlist-title">취향 맞춤 추천이 준비됐어요!</p>
+            <p className="waitlist-sub">회원님 취향에 꼭 맞는 추천 맥주는<br />앱에서 확인할 수 있어요.</p>
+            <button className="waitlist-submit" onClick={goDownload}>
+              ⬇️ 다운로드 하기
+            </button>
+          </>
+        )}
+
+        {/* ② 연락 수단 선택 */}
+        {stage === "choose" && (
+          <>
+            <button className="waitlist-x" onClick={handleClose}>✕</button>
+            <div className="waitlist-icon">🙏</div>
+            <p className="waitlist-title">관심 가져주셔서 감사해요!</p>
+            <p className="waitlist-sub">아직 정식 출시 전이에요.<br />어떻게 알림을 받으실래요?</p>
+            <div className="waitlist-choice-group">
+              <button className="waitlist-choice-btn" onClick={() => pickType("email")}>
+                <span className="waitlist-choice-icon">📧</span>
+                이메일로 받기
+              </button>
+              <button className="waitlist-choice-btn" onClick={() => pickType("phone")}>
+                <span className="waitlist-choice-icon">📱</span>
+                전화번호로 받기
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* ③ 연락처 입력 (fake door) */}
+        {stage === "input" && (
+          <>
+            <button className="waitlist-back" onClick={() => setStage("choose")}>‹ 뒤로</button>
+            <button className="waitlist-x" onClick={handleClose}>✕</button>
+            <div className="waitlist-icon">{isEmail ? "📧" : "📱"}</div>
+            <p className="waitlist-title">{isEmail ? "이메일을 입력해주세요" : "전화번호를 입력해주세요"}</p>
+            <p className="waitlist-sub">출시했을 때 가장 먼저 알려드릴게요.</p>
             <form onSubmit={handleSubmit} className="waitlist-form">
               <input
                 className="waitlist-input"
-                type="text"
-                placeholder="이메일 또는 전화번호"
+                type={isEmail ? "email" : "tel"}
+                inputMode={isEmail ? "email" : "tel"}
+                placeholder={isEmail ? "example@email.com" : "010-1234-5678"}
                 value={contact}
                 onChange={(e) => setContact(e.target.value)}
+                autoFocus
               />
               <label className="waitlist-agree">
                 <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
@@ -66,6 +147,17 @@ function WaitlistModal({ beerName, onClose }) {
             </form>
           </>
         )}
+
+        {/* ④ 완료 */}
+        {stage === "done" && (
+          <div className="waitlist-done">
+            <div className="waitlist-done-icon">🎉</div>
+            <p className="waitlist-done-title">신청 완료!</p>
+            <p className="waitlist-done-sub">출시되면 가장 먼저 알려드릴게요.</p>
+            <button className="waitlist-close-btn" onClick={onClose}>닫기</button>
+          </div>
+        )}
+
       </div>
     </div>
   );
@@ -73,6 +165,8 @@ function WaitlistModal({ beerName, onClose }) {
 
 export default function ResultPage({ beer, profile, selected, starRating, onHome }) {
   const [showWaitlist, setShowWaitlist] = useState(false);
+  const [imgErr, setImgErr] = useState(false);
+  const showImg = beer.image && !imgErr;
   const resolvedTags = selected.map((id) => HASHTAG_MAP[id]).filter(Boolean);
   const profileAxes = PROFILE_AXES[beer?.category] || PROFILE_AXES["에일"];
 
@@ -82,6 +176,16 @@ export default function ResultPage({ beer, profile, selected, starRating, onHome
     if (axisTags.length > 0) acc.push({ axis, tags: axisTags });
     return acc;
   }, []);
+
+  // 결과 페이지 진입 기록
+  useEffect(() => {
+    logEvent("ResultPage", "view", { targetId: beer?.id, targetType: "beer", meta: { name: beer?.name, star: starRating } });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function openRecommend() {
+    logEvent("ResultPage", "tap_recommend_cta", { targetId: beer?.id, targetType: "beer", meta: { name: beer?.name } });
+    setShowWaitlist(true);
+  }
 
   return (
     <div className="page result-page">
@@ -98,8 +202,18 @@ export default function ResultPage({ beer, profile, selected, starRating, onHome
       {/* 맥주 정보 */}
       <div className="result-header">
         <div className="result-beer-info">
-          <div className="result-img" style={{ background: beer.srmColor + "20" }}>
-            <span>🍺</span>
+          <div className="result-img" style={{ background: showImg ? "transparent" : beer.srmColor + "20" }}>
+            {showImg ? (
+              <img
+                src={beer.image}
+                alt={beer.name}
+                className="result-img-photo"
+                loading="lazy"
+                onError={() => setImgErr(true)}
+              />
+            ) : (
+              <span>🍺</span>
+            )}
           </div>
           <div>
             <p className="result-type">{beer.type}</p>
@@ -171,8 +285,8 @@ export default function ResultPage({ beer, profile, selected, starRating, onHome
 
       {/* 하단 고정 버튼 */}
       <div className="result-bottom-bar">
-        <button className="result-save-btn" onClick={() => setShowWaitlist(true)}>
-          📥 내 맥주 프로파일 저장하기
+        <button className="result-save-btn result-recommend-btn" onClick={openRecommend}>
+          ✨ 추천 맥주 보기
         </button>
         <button className="result-home-btn" onClick={onHome}>
           홈으로 돌아가기

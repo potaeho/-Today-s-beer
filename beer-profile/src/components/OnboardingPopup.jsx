@@ -116,7 +116,7 @@ function RecommendIllustration() {
 // ── Slide 3: Community ─────────────────────────────────
 function CommunityIllustration() {
   return (
-    <div className="onboard-visual-community">
+    <div className="onboard-visual-card onboard-visual-community">
       <div className="onboard-post">
         <div className="onboard-post-top">
           <div className="onboard-post-avatar">✈️</div>
@@ -251,9 +251,13 @@ export default function OnboardingPopup({ onClose }) {
               </button>
             )}
           </div>
-          {isLast && (
-            <button className="onboard-next-btn is-last" onClick={handleClose}>시작하기</button>
-          )}
+          <button
+            className="onboard-next-btn is-last"
+            onClick={handleClose}
+            style={isLast ? {} : { visibility: "hidden", pointerEvents: "none" }}
+          >
+            시작하기
+          </button>
         </div>
       </div>
     </div>

@@ -92,7 +92,7 @@ export default function LevelJourneyModal({ ratedCount, onClose }) {
                     style={isCurrent ? { background: lv.color } : {}}
                   >
                     <div className="journey-card-icon-wrap">
-                      {Icon && <Icon />}
+                      {Icon && <Icon size={72} />}
                     </div>
                     <div className="journey-card-content">
                       <div className="journey-card-top">

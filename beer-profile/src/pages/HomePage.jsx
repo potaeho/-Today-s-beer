@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import LevelCard from "../components/LevelCard";
 import LevelJourneyModal from "../components/LevelJourneyModal";
 import NewsSlider from "../components/NewsSlider";
 import NewsDetailPage from "./NewsDetailPage";
 import NewsListPage from "./NewsListPage";
 import { getPersonalizedRecommendations, getTrendingBeers, getMyRatedCount } from "../utils/recommend";
+import { filterBeers } from "../utils/search";
 import { useNotification } from "../contexts/NotificationContext";
 
 export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
@@ -16,21 +17,13 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
   const [showJourney, setShowJourney] = useState(false);
 
   const ratedCount = getMyRatedCount();
-  const trending = getTrendingBeers(beers, 6);
-  const recommended = getPersonalizedRecommendations(beers, 3);
+  const trending = useMemo(() => getTrendingBeers(beers, 6), [beers]);
+  const recommended = useMemo(() => getPersonalizedRecommendations(beers, 3), [beers]);
 
   const TREND_ICON = { hot: "🔥", new: "🆕", seasonal: "☀️", issue: "📈" };
 
   const q = query.trim();
-  const searchResults = q
-    ? beers.filter(
-        (b) =>
-          b.name.includes(q) ||
-          (b.type ?? "").includes(q) ||
-          (b.brewery ?? "").includes(q) ||
-          (b.tags ?? []).some((t) => t.includes(q))
-      )
-    : [];
+  const searchResults = useMemo(() => (q ? filterBeers(beers, q) : []), [beers, q]);
 
   if (selectedNews) {
     return <NewsDetailPage news={selectedNews} onBack={() => setSelectedNews(null)} />;
@@ -179,7 +172,7 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
           <div className="horizontal-scroll">
             {trending.map(({ beer, trendType, trendLabel, reason }) => (
               <div key={beer.id} className="rec-card" onClick={() => onSelectBeer(beer)}>
-                <div className="rec-card-img" style={{ background: beer.srmColor + "22" }}>
+                <div className="rec-card-img" style={{ background: beer.image ? "transparent" : beer.srmColor + "22" }}>
                   {beer.image
                     ? <img src={beer.image} alt={beer.name} loading="lazy" className="rec-card-img-photo" />
                     : <span>🍺</span>}
@@ -195,7 +188,7 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
                 <p className="rec-card-name">{beer.name}</p>
                 <p className="rec-card-abv">{beer.abv}</p>
                 <div className="rec-card-tags">
-                  {beer.tags.map((t) => <span key={t} className="rec-card-tag">{t}</span>)}
+                  {(beer.tags ?? []).map((t) => <span key={t} className="rec-card-tag">{t}</span>)}
                 </div>
                 <button className="rec-card-btn">마셔보기</button>
               </div>
@@ -220,7 +213,7 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
                     {reason}
                   </div>
                   <div className="ai-rec-body">
-                    <div className="ai-rec-img" style={{ background: beer.srmColor + "22" }}>
+                    <div className="ai-rec-img" style={{ background: beer.image ? "transparent" : beer.srmColor + "22" }}>
                       {beer.image
                         ? <img src={beer.image} alt={beer.name} loading="lazy" className="rec-card-img-photo" />
                         : <span>🍺</span>}
@@ -231,7 +224,7 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
                       <p className="ai-rec-name">{beer.name}</p>
                       <p className="ai-rec-abv">ABV {beer.abv}</p>
                       <div className="ai-rec-tags">
-                        {beer.tags.map((t) => <span key={t} className="rec-card-tag">{t}</span>)}
+                        {(beer.tags ?? []).map((t) => <span key={t} className="rec-card-tag">{t}</span>)}
                       </div>
                     </div>
                     <span className="ai-rec-page">{idx + 1} / {recommended.length}</span>

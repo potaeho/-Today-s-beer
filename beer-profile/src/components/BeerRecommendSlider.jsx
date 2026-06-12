@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 export default function BeerRecommendSlider({ items = [], onSelect }) {
   const [current, setCurrent] = useState(0);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => { setCurrent(0); }, [items]);
 
@@ -57,8 +58,8 @@ export default function BeerRecommendSlider({ items = [], onSelect }) {
         </div>
       </div>
 
-      {/* 나머지 추천 목록 */}
-      {others.map(({ beer, score }) => (
+      {/* 추천 목록 */}
+      {(showAll ? items.filter((_, i) => i !== current) : others).map(({ beer, score }) => (
         <div key={beer.id} className="rec-list-row" onClick={() => onSelect(beer)}>
           <div className="rec-list-img" style={{ background: beer.srmColor + "22" }}>
             {beer.image ? (
@@ -75,9 +76,11 @@ export default function BeerRecommendSlider({ items = [], onSelect }) {
       ))}
 
       {/* 더 보기 */}
-      <button className="rec-more-btn" onClick={() => {}}>
-        취향 맞는 맥주 {items.length}개 더 →
-      </button>
+      {!showAll && items.length > 3 && (
+        <button className="rec-more-btn" onClick={() => setShowAll(true)}>
+          취향 맞는 맥주 {items.length - 3}개 더 →
+        </button>
+      )}
     </div>
   );
 }

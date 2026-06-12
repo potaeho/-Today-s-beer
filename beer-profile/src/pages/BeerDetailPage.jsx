@@ -2,6 +2,7 @@ import { useState } from "react";
 import FlavorRadar from "../components/FlavorRadar";
 import { HASHTAG_MAP, PROFILE_AXES } from "../data/beerData";
 import { REVIEWS } from "../data/reviewsData";
+import { generateDummyReviews } from "../data/dummyReviews";
 
 function StarRow({ value }) {
   return (
@@ -28,7 +29,7 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
   const [descExpanded, setDescExpanded] = useState(false);
   const [lightbox, setLightbox] = useState(false);
   const axes = PROFILE_AXES[beer.category] || PROFILE_AXES["에일"];
-  const allReviews = REVIEWS[beer.id] || [];
+  const allReviews = REVIEWS[beer.id]?.length ? REVIEWS[beer.id] : generateDummyReviews(beer);
   const myReview = allReviews.find((r) => r.isMe) || null;
   const reviews = allReviews;
   const avg = avgProfile(reviews, axes);
@@ -53,7 +54,7 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
         <div className="beer-detail-hero">
           <div
             className={`beer-detail-img${beer.image && !imgErr ? " beer-detail-img--clickable" : ""}`}
-            style={{ background: beer.srmColor + "22" }}
+            style={{ background: beer.image && !imgErr ? "transparent" : beer.srmColor + "22" }}
             onClick={() => beer.image && !imgErr && setLightbox(true)}
           >
             {beer.image && !imgErr ? (
@@ -78,7 +79,7 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
             <p className="beer-detail-type">{beer.type}</p>
             <p className="beer-detail-abv">ABV {beer.abv}</p>
             <div className="beer-detail-tags">
-              {beer.tags.map((t) => <span key={t} className="beer-detail-tag">{t}</span>)}
+              {(beer.tags ?? []).map((t) => <span key={t} className="beer-detail-tag">{t}</span>)}
             </div>
           </div>
         </div>

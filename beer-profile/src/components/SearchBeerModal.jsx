@@ -1,4 +1,20 @@
 import { useState, useEffect, useRef } from "react";
+import { filterBeers } from "../utils/search";
+
+function SearchBeerImg({ beer }) {
+  const [err, setErr] = useState(false);
+  return (
+    <div className="search-modal-item-img" style={{ background: beer.image && !err ? "transparent" : beer.srmColor + "22" }}>
+      {beer.image && !err ? (
+        <img src={beer.image} alt={beer.name} onError={() => setErr(true)}
+          style={{ width: "100%", height: "100%", objectFit: "contain", padding: 4 }} />
+      ) : (
+        <span>🍺</span>
+      )}
+      <div className="search-modal-item-srm" style={{ background: beer.srmColor }} />
+    </div>
+  );
+}
 
 export default function SearchBeerModal({ beers = [], onSelect, onClose }) {
   const [query, setQuery] = useState("");
@@ -8,17 +24,7 @@ export default function SearchBeerModal({ beers = [], onSelect, onClose }) {
     inputRef.current?.focus();
   }, []);
 
-  const q = query.trim();
-  const filtered = q
-    ? beers.filter(
-        (b) =>
-          b.name.includes(q) ||
-          (b.type ?? "").includes(q) ||
-          b.category.includes(q) ||
-          (b.tags ?? []).some((t) => t.includes(q)) ||
-          (b.brewery ?? "").includes(q)
-      )
-    : beers;
+  const filtered = filterBeers(beers, query);
 
   return (
     <div className="search-modal-overlay" onClick={onClose}>
@@ -68,10 +74,7 @@ export default function SearchBeerModal({ beers = [], onSelect, onClose }) {
                 className="search-modal-item"
                 onClick={() => onSelect(beer)}
               >
-                <div className="search-modal-item-img" style={{ background: beer.srmColor + "22" }}>
-                  <span>🍺</span>
-                  <div className="search-modal-item-srm" style={{ background: beer.srmColor }} />
-                </div>
+                <SearchBeerImg beer={beer} />
                 <div className="search-modal-item-info">
                   <div className="search-modal-item-row">
                     <span className="search-modal-item-category">{beer.category}</span>

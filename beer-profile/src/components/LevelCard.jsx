@@ -13,7 +13,7 @@ export default function LevelCard({ ratedCount, onClick }) {
       {/* 아이콘 + 이름 */}
       <div className="level-hero">
         <div className="level-icon">
-          {LevelIcon && <LevelIcon />}
+          {LevelIcon && <LevelIcon size={88} />}
         </div>
         <div className="level-name-wrap">
           <p className="level-name">{current.name}</p>

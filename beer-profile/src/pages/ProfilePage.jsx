@@ -1,5 +1,21 @@
 import { useState, useRef } from "react";
+
+function ProfileBeerImg({ beer }) {
+  const [err, setErr] = useState(false);
+  return (
+    <div className="profile-review-img" style={{ background: beer.image && !err ? "transparent" : beer.srmColor + "22" }}>
+      {beer.image && !err ? (
+        <img src={beer.image} alt={beer.name} onError={() => setErr(true)}
+          style={{ width: "100%", height: "100%", objectFit: "contain", padding: 3 }} />
+      ) : (
+        <span style={{ fontSize: 22 }}>🍺</span>
+      )}
+      <div className="profile-review-srm" style={{ background: beer.srmColor }} />
+    </div>
+  );
+}
 import { REVIEWS } from "../data/reviewsData";
+import { getMyDummyReviewedBeers } from "../data/dummyReviews";
 import { HASHTAG_MAP, BEER_LIST } from "../data/beerData";
 import { getCurrentLevel, formatMl } from "../data/levels";
 import { LEVEL_ICONS } from "../components/LevelIcons";
@@ -24,21 +40,31 @@ const FOLLOWING_DATA = [
   { id: 7, user: "위트에일팬", handle: "@wheat_fan", avatar: "🌾", bio: "벨기에 위트에일 최고 🌾", followers: 67, following: 145, reviews: 19, avgStar: "4.1" },
 ];
 
-// beers: Supabase에서 받은 맥주 목록. REVIEWS의 beerId와 매칭 시도.
-// UUID 매칭 실패 시 BEER_LIST 숫자 ID로 폴백.
 function getMyReviews(beers = []) {
   const result = [];
+  const seenIds = new Set();
+
+  // 1. 하드코딩된 REVIEWS (우선순위 높음)
   Object.entries(REVIEWS).forEach(([beerId, reviews]) => {
     const mine = reviews.find((r) => r.isMe);
     if (mine) {
-      // 1) Supabase UUID 매칭 시도
       let beer = beers.find((b) => String(b.id) === String(beerId));
-      // 2) 실패하면 BEER_LIST 숫자 ID로 폴백
       if (!beer) beer = BEER_LIST.find((b) => b.id === Number(beerId));
-      if (beer) result.push({ ...mine, beer });
+      if (beer) {
+        result.push({ ...mine, beer });
+        seenIds.add(String(beer.id));
+      }
     }
   });
-  return result.sort((a, b) => b.beer.id - a.beer.id);
+
+  // 2. 더미 리뷰 (REVIEWS에 없는 Supabase 맥주 보충)
+  getMyDummyReviewedBeers(beers).forEach(({ beer, ...review }) => {
+    if (!seenIds.has(String(beer.id))) {
+      result.push({ ...review, beer });
+    }
+  });
+
+  return result.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
 }
 
 // 선호 카테고리: [{category, count, pct}]
@@ -385,7 +411,7 @@ export default function ProfilePage({ beers = [], onSelectBeer, ratedCount: rate
             )}
           </div>
           <div className="profile-level-icon-wrap">
-            {LevelIcon && <LevelIcon />}
+            {LevelIcon && <LevelIcon size={88} />}
           </div>
         </div>
 
@@ -445,10 +471,7 @@ export default function ProfilePage({ beers = [], onSelectBeer, ratedCount: rate
                 className="profile-review-card"
                 onClick={() => onSelectBeer?.(rev.beer)}
               >
-                <div className="profile-review-img" style={{ background: rev.beer.srmColor + "22" }}>
-                  <span style={{ fontSize: 22 }}>🍺</span>
-                  <div className="profile-review-srm" style={{ background: rev.beer.srmColor }} />
-                </div>
+                <ProfileBeerImg beer={rev.beer} />
                 <div className="profile-review-info">
                   <div className="profile-review-top-row">
                     <span className="profile-review-category">{rev.beer.category}</span>

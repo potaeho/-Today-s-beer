@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { supabase } from "../lib/supabase";
 
 const AuthContext = createContext(null);
@@ -8,13 +8,18 @@ export function AuthProvider({ children }) {
   const [profile, setProfile] = useState(null);   // public.users row
   const [loading, setLoading] = useState(true);
 
+  // 가장 최근 fetchProfile 요청 식별 — 늦게 끝난 옛 요청이 최신 profile을 덮어쓰지 않도록
+  const profileReqId = useRef(0);
+
   // 프로필 fetch
   async function fetchProfile(userId) {
+    const reqId = ++profileReqId.current;
     const { data } = await supabase
       .from("users")
       .select("*")
       .eq("id", userId)
       .single();
+    if (reqId !== profileReqId.current) return; // stale 응답 폐기
     setProfile(data ?? null);
   }
 
