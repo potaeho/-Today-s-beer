@@ -239,13 +239,20 @@ export default function OnboardingPopup({ onClose }) {
         </div>
 
         <div className="onboard-bottom">
-          <div className="onboard-dots">
-            {SLIDES.map((_, i) => (
-              <button key={i} className={`onboard-dot${i === page ? " active" : ""}`} onClick={() => setPage(i)} />
-            ))}
+          <div className="onboard-nav-row">
+            <div className="onboard-dots">
+              {SLIDES.map((_, i) => (
+                <button key={i} className={`onboard-dot${i === page ? " active" : ""}`} onClick={() => setPage(i)} />
+              ))}
+            </div>
+            {!isLast && (
+              <button className="onboard-next-btn" onClick={() => setPage((p) => p + 1)}>
+                다음 <span>›</span>
+              </button>
+            )}
           </div>
           {isLast && (
-            <button className="onboard-cta" onClick={handleClose}>시작하기</button>
+            <button className="onboard-next-btn is-last" onClick={handleClose}>시작하기</button>
           )}
         </div>
       </div>

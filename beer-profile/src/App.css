@@ -1578,11 +1578,12 @@ body {
 
 .journey-card-icon-wrap {
   flex-shrink: 0;
-  width: 48px;
+  width: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
   align-self: center;
+  overflow: hidden;
 }
 
 .journey-icon-dim {
@@ -2513,11 +2514,12 @@ body {
 }
 
 .profile-level-icon-wrap {
-  width: 80px;
+  width: 72px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 /* 섹션 공통 */
@@ -3321,7 +3323,7 @@ body {
   gap: 12px;
 }
 
-.level-icon { font-size: 36px; line-height: 1; }
+.level-icon { font-size: 36px; line-height: 1; flex-shrink: 0; }
 
 .level-name-wrap { display: flex; flex-direction: column; gap: 2px; }
 
@@ -3988,6 +3990,7 @@ body {
   font-size: 32px;
   margin-bottom: 6px;
   position: relative;
+  overflow: hidden;
 }
 
 .rec-card-img-photo {
@@ -4170,6 +4173,7 @@ body {
   justify-content: center;
   font-size: 24px;
   position: relative;
+  overflow: hidden;
 }
 .ai-rec-srm {
   position: absolute;
@@ -5845,22 +5849,29 @@ body {
 .onboard-overlay {
   position: fixed;
   inset: 0;
-  background: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   z-index: 300;
   display: flex;
-  align-items: stretch;
+  align-items: center;
   justify-content: center;
+  padding: 24px 16px;
 }
 
 .onboard-modal {
   width: 100%;
   max-width: 393px;
+  max-height: 88vh;
+  background: #fff;
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
   padding: 28px 24px 0;
   box-sizing: border-box;
   overflow: hidden;
   user-select: none;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
 }
 
 /* Label pill */
@@ -6182,13 +6193,19 @@ body {
   color: var(--text-muted);
 }
 
-/* Bottom: dots + CTA */
+/* Bottom: dots + nav */
 .onboard-bottom {
-  padding: 20px 0 max(32px, env(safe-area-inset-bottom, 20px));
+  padding: 18px 0 24px;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.onboard-nav-row {
+  display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
 }
 .onboard-dots {
   display: flex;
@@ -6209,22 +6226,33 @@ body {
   width: 22px;
   border-radius: 4px;
 }
-.onboard-cta {
-  width: 100%;
-  padding: 15px;
+.onboard-next-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 18px;
   background: var(--text-dark);
   color: #fff;
   border: none;
-  border-radius: 14px;
+  border-radius: 22px;
   font-family: 'Pretendard', sans-serif;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   letter-spacing: 0.02em;
+  transition: opacity 0.15s, transform 0.15s;
+}
+.onboard-next-btn:hover { opacity: 0.88; }
+.onboard-next-btn:active { transform: scale(0.96); }
+.onboard-next-btn.is-last {
+  background: var(--accent);
+  width: 100%;
+  justify-content: center;
+  padding: 15px;
+  border-radius: 14px;
+  font-size: 15px;
   box-shadow: var(--shadow-md);
 }
-.onboard-cta:hover { opacity: 0.88; }
-.onboard-cta:active { transform: scale(0.98); }
 
 
 /* ── Toast ── */
