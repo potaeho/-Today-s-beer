@@ -198,6 +198,11 @@ export default function OnboardingPopup({ onClose }) {
   const [page, setPage] = useState(0);
   const touchStartX = useRef(null);
 
+  function handleDismiss() {
+    localStorage.setItem(ONBOARD_KEY, "1");
+    onClose();
+  }
+
   function handleTouchStart(e) {
     touchStartX.current = e.touches[0].clientX;
   }
@@ -219,6 +224,7 @@ export default function OnboardingPopup({ onClose }) {
   return (
     <div className="onboard-overlay">
       <div className="onboard-modal" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+        <button className="onboard-close-btn" onClick={handleDismiss} aria-label="닫기">✕</button>
 
         <div className="onboard-slides-wrap">
           <div className="onboard-slides-track" style={{ transform: `translateX(-${page * 100}%)` }}>

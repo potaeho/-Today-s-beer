@@ -4140,6 +4140,7 @@ body {
 .trend-badge--new     { background: #D1FAE5; color: #059669; }
 .trend-badge--seasonal{ background: #DBEAFE; color: #2563EB; }
 .trend-badge--issue   { background: #EDE9FE; color: #7C3AED; }
+.trend-badge--ai      { background: #FFF7ED; color: #B45309; }
 
 .rec-card-trend-reason {
   font-size: 9px;
@@ -5963,7 +5964,27 @@ body {
   padding: 24px 16px;
 }
 
+.onboard-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: #948E89;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  z-index: 1;
+}
+.onboard-close-btn:hover { background: #f0ebe5; }
+
 .onboard-modal {
+  position: relative;
   width: 100%;
   max-width: 393px;
   max-height: 88vh;
