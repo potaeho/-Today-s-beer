@@ -52,9 +52,9 @@ export default function DetailPage({ beer, profile, selected, onToggle, onBack, 
           </div>
         )}
         <button
-          className={`detail-done-btn ${selected.length > 0 ? "active" : ""}`}
+          className={`detail-done-btn ${selected.length > 0 && starRating > 0 ? "active" : ""}`}
           onClick={() => setShowModal(true)}
-          disabled={selected.length === 0}
+          disabled={selected.length === 0 || starRating === 0}
         >
           완료
         </button>

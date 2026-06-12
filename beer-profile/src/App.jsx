@@ -57,14 +57,17 @@ function AppShell({ beers, loadingBeers }) {
 
   // 앱 이탈(탭 닫기/새로고침) — 마지막 화면 기록
   useEffect(() => {
+    let fired = false;
     const handleExit = () => {
-      const lastScreen = screen ?? activeTab;
-      track.exitApp(lastScreen);
+      if (fired) return;
+      fired = true;
+      track.exitApp(screen ?? activeTab);
     };
-    window.addEventListener("visibilitychange", handleExit);
+    const onVisibility = () => { if (document.visibilityState === "hidden") handleExit(); };
+    window.addEventListener("visibilitychange", onVisibility);
     window.addEventListener("pagehide", handleExit);
     return () => {
-      window.removeEventListener("visibilitychange", handleExit);
+      window.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("pagehide", handleExit);
     };
   }, [screen, activeTab]);

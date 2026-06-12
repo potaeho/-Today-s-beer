@@ -41,18 +41,18 @@ export const track = {
   tapRecommendedBeer(beer) {
     ev("tap_recommended_beer",
       { beer_id: beer.id, beer_name: beer.name, beer_category: beer.category },
-      { screen: "HomePage", action: "tap_recommended_beer", targetId: beer.id, targetType: "beer", meta: { name: beer.name, category: beer.category } });
+      { screen: "home", action: "tap_recommended_beer", targetId: beer.id, targetType: "beer", meta: { name: beer.name, category: beer.category } });
   },
   tapDrinkBtn(beer) {
     ev("tap_drink_btn", { beer_id: beer.id, beer_name: beer.name },
-      { screen: "HomePage", action: "tap_drink_btn", targetId: beer.id, targetType: "beer", meta: { name: beer.name } });
+      { screen: "home", action: "tap_drink_btn", targetId: beer.id, targetType: "beer", meta: { name: beer.name } });
   },
   tapNews(newsTitle) {
     ev("tap_news", { news_title: newsTitle },
-      { screen: "HomePage", action: "tap_news", meta: { title: newsTitle } });
+      { screen: "home", action: "tap_news", meta: { title: newsTitle } });
   },
   tapLevelCard() {
-    ev("tap_level_card", {}, { screen: "HomePage", action: "tap_level_card" });
+    ev("tap_level_card", {}, { screen: "home", action: "tap_level_card" });
   },
   tapSearchIcon() {
     ev("tap_search_icon", {}, { screen: "global", action: "tap_search_icon" });
@@ -93,23 +93,23 @@ export const track = {
   /* ── 탐색 화면 ────────────────────────────── */
   tapCategoryFilter(category) {
     ev("tap_category_filter", { category },
-      { screen: "ExplorePage", action: "tap_category_filter", meta: { category } });
+      { screen: "explore", action: "tap_category_filter", meta: { category } });
   },
   tapExploreBeer(beer) {
     ev("tap_explore_beer",
       { beer_id: beer.id, beer_name: beer.name, beer_category: beer.category },
-      { screen: "ExplorePage", action: "tap_explore_beer", targetId: beer.id, targetType: "beer", meta: { name: beer.name } });
+      { screen: "explore", action: "tap_explore_beer", targetId: beer.id, targetType: "beer", meta: { name: beer.name } });
   },
 
   /* ── 맥주 상세 ────────────────────────────── */
   beerDetailView(beer) {
     ev("beer_detail_view",
       { beer_id: beer.id, beer_name: beer.name, beer_category: beer.category },
-      { screen: "BeerDetailPage", action: "view", targetId: beer.id, targetType: "beer", meta: { name: beer.name, category: beer.category } });
+      { screen: "beer-detail", action: "view", targetId: beer.id, targetType: "beer", meta: { name: beer.name, category: beer.category } });
   },
   tapStartRating(beer) {
     ev("tap_start_rating", { beer_id: beer.id, beer_name: beer.name },
-      { screen: "BeerDetailPage", action: "tap_start_rating", targetId: beer.id, targetType: "beer", meta: { name: beer.name } });
+      { screen: "beer-detail", action: "tap_start_rating", targetId: beer.id, targetType: "beer", meta: { name: beer.name } });
   },
 
   /* ── 평가 플로우 ──────────────────────────── */
@@ -184,13 +184,13 @@ export const track = {
   tapAiRecCard(beer) {
     ev("tap_ai_rec_card",
       { beer_id: beer.id, beer_name: beer.name, beer_category: beer.category },
-      { screen: "HomePage", action: "tap_ai_rec_card", targetId: beer.id, targetType: "beer", meta: { name: beer.name } });
+      { screen: "home", action: "tap_ai_rec_card", targetId: beer.id, targetType: "beer", meta: { name: beer.name } });
   },
   tapMoreBtn() {
-    ev("tap_more_btn", {}, { screen: "HomePage", action: "tap_more_btn" });
+    ev("tap_more_btn", {}, { screen: "home", action: "tap_more_btn" });
   },
   tapNewsShowAll() {
-    ev("tap_news_show_all", {}, { screen: "HomePage", action: "tap_news_show_all" });
+    ev("tap_news_show_all", {}, { screen: "home", action: "tap_news_show_all" });
   },
 
   /* ── 평가 중도 포기 ────────────────────────── */
