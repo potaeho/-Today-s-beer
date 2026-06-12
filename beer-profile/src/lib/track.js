@@ -34,6 +34,17 @@ function getSessionId() {
   } catch { return "no-storage"; }
 }
 
+const SAFE_PARAMS = ["tab", "category"];
+function safePath() {
+  if (typeof location === "undefined") return null;
+  const p = new URLSearchParams();
+  for (const k of SAFE_PARAMS) {
+    const v = new URLSearchParams(location.search).get(k);
+    if (v) p.set(k, v);
+  }
+  return location.pathname + (p.size ? "?" + p : "");
+}
+
 /**
  * 행동 이벤트 1건 기록 (fire-and-forget, UX를 절대 막지 않음)
  * @param {string} screen  화면/영역 이름 (예: "ResultPage", "download_popup")
@@ -53,7 +64,7 @@ export async function logEvent(screen, action, opts = {}) {
     meta: {
       ...(meta || {}),
       visitor_id: getVisitorId(),
-      path: typeof location !== "undefined" ? location.pathname + location.search : null,
+      path: safePath(),
       ts_client: new Date().toISOString(),
     },
   };
