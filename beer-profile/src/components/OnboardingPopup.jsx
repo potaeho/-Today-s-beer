@@ -37,27 +37,29 @@ function RadarIllustration() {
         <span className="onboard-legend-item"><em className="onboard-dot-my" />내 평가</span>
         <span className="onboard-legend-item"><em className="onboard-dot-avg" />전체 평균</span>
       </div>
-      <svg viewBox="0 0 240 224">
-        {[0.2, 0.4, 0.6, 0.8, 1].map((s) => (
-          <polygon key={s} points={gridPoly(s)} fill="none" stroke="#E2DDD8" strokeWidth="1" />
-        ))}
-        {Array.from({ length: N }, (_, i) => {
-          const [x, y] = pt(maxR, i);
-          return <line key={i} x1={cx} y1={cy} x2={x} y2={y} stroke="#E2DDD8" strokeWidth="1" />;
-        })}
-        <polygon points={poly(avgVals)} fill="rgba(99,102,241,0.18)" stroke="#6366F1" strokeWidth="1.5" />
-        <polygon points={poly(myVals)} fill="rgba(184,110,0,0.28)" stroke="#B86E00" strokeWidth="1.5" />
-        {labels.map((label, i) => {
-          const angle = start + i * step;
-          const cos = Math.cos(angle);
-          const [x, y] = pt(maxR + 20, i);
-          const anchor = cos > 0.15 ? "start" : cos < -0.15 ? "end" : "middle";
-          return (
-            <text key={i} x={x} y={y} textAnchor={anchor} dominantBaseline="middle"
-              fontSize="11" fontFamily="Pretendard, sans-serif" fill="#948E89">{label}</text>
-          );
-        })}
-      </svg>
+      <div className="onboard-radar-svg-wrap">
+        <svg viewBox="0 0 240 224" style={{ width: "100%", height: "100%", display: "block" }}>
+          {[0.2, 0.4, 0.6, 0.8, 1].map((s) => (
+            <polygon key={s} points={gridPoly(s)} fill="none" stroke="#E2DDD8" strokeWidth="1" />
+          ))}
+          {Array.from({ length: N }, (_, i) => {
+            const [x, y] = pt(maxR, i);
+            return <line key={i} x1={cx} y1={cy} x2={x} y2={y} stroke="#E2DDD8" strokeWidth="1" />;
+          })}
+          <polygon points={poly(avgVals)} fill="rgba(99,102,241,0.18)" stroke="#6366F1" strokeWidth="1.5" />
+          <polygon points={poly(myVals)} fill="rgba(184,110,0,0.28)" stroke="#B86E00" strokeWidth="1.5" />
+          {labels.map((label, i) => {
+            const angle = start + i * step;
+            const cos = Math.cos(angle);
+            const [x, y] = pt(maxR + 20, i);
+            const anchor = cos > 0.15 ? "start" : cos < -0.15 ? "end" : "middle";
+            return (
+              <text key={i} x={x} y={y} textAnchor={anchor} dominantBaseline="middle"
+                fontSize="11" fontFamily="Pretendard, sans-serif" fill="#948E89">{label}</text>
+            );
+          })}
+        </svg>
+      </div>
     </div>
   );
 }

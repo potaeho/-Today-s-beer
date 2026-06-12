@@ -6131,12 +6131,16 @@ body {
 }
 .onboard-dot-my  { background: var(--accent); }
 .onboard-dot-avg { background: #6366F1; }
-.onboard-visual-card svg {
+.onboard-radar-svg-wrap {
   flex: 1;
   min-height: 0;
-  width: 100%;
-  display: block;
   overflow: hidden;
+  position: relative;
+}
+.onboard-radar-svg-wrap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 /* Recommend card */
