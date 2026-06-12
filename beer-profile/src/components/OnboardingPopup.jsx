@@ -38,7 +38,7 @@ function RadarIllustration() {
         <span className="onboard-legend-item"><em className="onboard-dot-avg" />전체 평균</span>
       </div>
       <div className="onboard-radar-svg-wrap">
-        <svg viewBox="0 -10 240 256" style={{ width: "100%", height: "100%", display: "block" }}>
+        <svg viewBox="0 -10 240 256" style={{ width: "100%", height: "auto", display: "block" }}>
           {[0.2, 0.4, 0.6, 0.8, 1].map((s) => (
             <polygon key={s} points={gridPoly(s)} fill="none" stroke="#E2DDD8" strokeWidth="1" />
           ))}

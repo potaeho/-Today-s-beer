@@ -6036,24 +6036,22 @@ body {
   color: var(--text-muted);
   line-height: 1.55;
   margin-bottom: 10px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 /* Slide track */
 .onboard-slides-wrap {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   width: 100%;
   flex: 1;
   min-height: 0;
 }
 .onboard-slides-track {
   display: flex;
+  align-items: flex-start;
   transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
-  height: 100%;
 }
 .onboard-slide {
   flex: 0 0 100%;
@@ -6065,11 +6063,9 @@ body {
 
 /* Visual area */
 .onboard-visual-area {
-  flex: 1;
-  min-height: 0;
+  flex: none;
   display: flex;
   align-items: stretch;
-  overflow: hidden;
 }
 
 /* ── Shared card base ── */
@@ -6132,15 +6128,12 @@ body {
 .onboard-dot-my  { background: var(--accent); }
 .onboard-dot-avg { background: #6366F1; }
 .onboard-radar-svg-wrap {
-  flex: 1;
-  min-height: 0;
-  position: relative;
+  width: 100%;
 }
 .onboard-radar-svg-wrap svg {
-  position: absolute;
-  inset: 0;
   width: 100%;
-  height: 100%;
+  height: auto;
+  max-height: 300px;
   display: block;
 }
 
