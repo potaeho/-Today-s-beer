@@ -4964,7 +4964,7 @@ body {
 /* Beer Card — 구분선 리스트 스타일 */
 .beer-card {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 14px;
   padding: 14px 14px;
   border-radius: 10px;
@@ -5001,8 +5001,8 @@ body {
 .beer-card:hover::before { opacity: 1; }
 
 .beer-card-img {
-  width: 76px;
-  height: 76px;
+  width: 64px;
+  height: 88px;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -5019,7 +5019,7 @@ body {
   height: 100%;
   object-fit: contain;
   border-radius: 12px;
-  padding: 4px;
+  padding: 6px 4px;
 }
 
 .beer-card-img-emoji {

@@ -10,7 +10,7 @@ export default function BeerCard({ beer, onClick }) {
 
   return (
     <button type="button" className="beer-card" onClick={() => onClick(beer)} aria-label={beer.name}>
-      <div className="beer-card-img" style={{ background: beer.srmColor + "22" }}>
+      <div className="beer-card-img">
         {beer.image && !imgErr ? (
           <img
             src={beer.image}
