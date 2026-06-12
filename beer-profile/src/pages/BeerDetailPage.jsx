@@ -113,10 +113,10 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
 
         {reviews.length > 0 ? (
           <>
-            {/* 평균 맛 프로파일 */}
+            {/* 평점 */}
             <div className="beer-detail-section">
               <div className="beer-detail-section-header">
-                <h3 className="beer-detail-section-title">평균 맛 프로파일</h3>
+                <h3 className="beer-detail-section-title">평점</h3>
                 <span className="beer-detail-review-count">{reviews.length}명 평가</span>
               </div>
               <div className="beer-detail-avg-row">
@@ -157,6 +157,17 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
                   </>
                 )}
               </div>
+            </div>
+
+            {/* 맛 강도 프로파일 */}
+            <div className="beer-detail-section">
+              <div className="beer-detail-section-header">
+                <h3 className="beer-detail-section-title">맛 강도 프로파일</h3>
+                <span className="beer-detail-profile-scale">0~5 강도</span>
+              </div>
+              <p className="beer-detail-profile-hint">
+                각 맛이 얼마나 강한지를 나타내요. 별점(선호도)과는 별개예요.
+              </p>
               {avg && (
                 <FlavorRadar
                   profile={avg}
