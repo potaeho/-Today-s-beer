@@ -10,6 +10,7 @@ const TAG_PREFIX = {
 
 function WaitlistModal({ beerName, onClose }) {
   const [contact, setContact] = useState("");
+  const [contactType, setContactType] = useState("email"); // email | phone
   const [agreed, setAgreed] = useState(false);
   const [status, setStatus] = useState("idle"); // idle | loading | done | error
 
@@ -19,7 +20,12 @@ function WaitlistModal({ beerName, onClose }) {
     setStatus("loading");
     try {
       if (supabase) {
-        await supabase.from("waitlist").insert({ contact: contact.trim(), beer_name: beerName });
+        await supabase.from("waitlist").insert({
+          contact: contact.trim(),
+          contact_type: contactType,
+          beer_name: beerName,
+          source: "result_page",
+        });
       }
       setStatus("done");
     } catch {
@@ -32,28 +38,44 @@ function WaitlistModal({ beerName, onClose }) {
       <div className="waitlist-modal" onClick={(e) => e.stopPropagation()}>
         {status === "done" ? (
           <div className="waitlist-done">
-            <div className="waitlist-done-icon">🙌</div>
-            <p className="waitlist-done-title">등록 완료!</p>
-            <p className="waitlist-done-sub">정식 출시 때 가장 먼저 알려드릴게요.</p>
+            <div className="waitlist-done-icon">🎉</div>
+            <p className="waitlist-done-title">사전예약 완료!</p>
+            <p className="waitlist-done-sub">앱 출시 때 가장 먼저 알려드릴게요.<br />기다려주셔서 감사해요 🍺</p>
             <button className="waitlist-close-btn" onClick={onClose}>닫기</button>
           </div>
         ) : (
           <>
             <button className="waitlist-x" onClick={onClose}>✕</button>
-            <div className="waitlist-icon">📥</div>
-            <p className="waitlist-title">아직 준비 중이에요</p>
-            <p className="waitlist-sub">정식 출시 시 가장 먼저 알려드릴게요.<br />연락처를 남겨주시면 바로 연락드릴게요!</p>
+            <div className="waitlist-icon">📱</div>
+            <p className="waitlist-title">앱 출시 알림 받기</p>
+            <p className="waitlist-sub">
+              {beerName} 같은 맥주를<br />
+              앱에서 더 편하게 기록하고 추천받아요.
+            </p>
+            <div className="waitlist-type-toggle">
+              <button
+                className={`waitlist-type-btn${contactType === "email" ? " active" : ""}`}
+                onClick={() => setContactType("email")}
+                type="button"
+              >이메일</button>
+              <button
+                className={`waitlist-type-btn${contactType === "phone" ? " active" : ""}`}
+                onClick={() => setContactType("phone")}
+                type="button"
+              >전화번호</button>
+            </div>
             <form onSubmit={handleSubmit} className="waitlist-form">
               <input
                 className="waitlist-input"
-                type="text"
-                placeholder="이메일 또는 전화번호"
+                type={contactType === "email" ? "email" : "tel"}
+                placeholder={contactType === "email" ? "example@email.com" : "010-0000-0000"}
                 value={contact}
                 onChange={(e) => setContact(e.target.value)}
+                autoFocus
               />
               <label className="waitlist-agree">
                 <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
-                <span>출시 알림 목적으로만 사용하고 즉시 삭제합니다.</span>
+                <span>출시 알림 목적으로만 사용하며 이후 즉시 삭제합니다.</span>
               </label>
               {status === "error" && <p className="waitlist-error">오류가 발생했어요. 다시 시도해주세요.</p>}
               <button
@@ -61,7 +83,7 @@ function WaitlistModal({ beerName, onClose }) {
                 className="waitlist-submit"
                 disabled={!contact.trim() || !agreed || status === "loading"}
               >
-                {status === "loading" ? "저장 중..." : "알림 신청하기"}
+                {status === "loading" ? "저장 중..." : "사전예약 신청하기"}
               </button>
             </form>
           </>
@@ -171,8 +193,8 @@ export default function ResultPage({ beer, profile, selected, starRating, onHome
 
       {/* 하단 고정 버튼 */}
       <div className="result-bottom-bar">
-        <button className="result-save-btn" onClick={() => setShowWaitlist(true)}>
-          📥 내 맥주 프로파일 저장하기
+        <button className="result-rec-btn" onClick={() => setShowWaitlist(true)}>
+          🍺 취향 맞는 맥주 더 보기
         </button>
         <button className="result-home-btn" onClick={onHome}>
           홈으로 돌아가기
