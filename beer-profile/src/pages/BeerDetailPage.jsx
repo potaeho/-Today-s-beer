@@ -26,6 +26,7 @@ function avgProfile(reviews, axes) {
 export default function BeerDetailPage({ beer, onBack, onRate }) {
   const [imgErr, setImgErr] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
+  const [lightbox, setLightbox] = useState(false);
   const axes = PROFILE_AXES[beer.category] || PROFILE_AXES["에일"];
   const allReviews = REVIEWS[beer.id] || [];
   const myReview = allReviews.find((r) => r.isMe) || null;
@@ -50,7 +51,11 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
 
         {/* 맥주 기본 정보 */}
         <div className="beer-detail-hero">
-          <div className="beer-detail-img" style={{ background: beer.srmColor + "22" }}>
+          <div
+            className={`beer-detail-img${beer.image && !imgErr ? " beer-detail-img--clickable" : ""}`}
+            style={{ background: beer.srmColor + "22" }}
+            onClick={() => beer.image && !imgErr && setLightbox(true)}
+          >
             {beer.image && !imgErr ? (
               <img
                 src={beer.image}
@@ -63,6 +68,9 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
               <span style={{ fontSize: 44 }}>🍺</span>
             )}
             <div className="beer-detail-srm-dot" style={{ background: beer.srmColor }} />
+            {beer.image && !imgErr && (
+              <span className="beer-detail-img-zoom">🔍</span>
+            )}
           </div>
           <div className="beer-detail-meta">
             <p className="beer-detail-category">{beer.category}</p>
@@ -245,6 +253,20 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
           🍺 나도 평가하기
         </button>
       </div>
+
+      {/* 이미지 라이트박스 */}
+      {lightbox && (
+        <div className="beer-lightbox-overlay" onClick={() => setLightbox(false)}>
+          <button className="beer-lightbox-close" onClick={() => setLightbox(false)}>✕</button>
+          <img
+            src={beer.image}
+            alt={beer.name}
+            className="beer-lightbox-img"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <p className="beer-lightbox-name">{beer.name}</p>
+        </div>
+      )}
     </div>
   );
 }
