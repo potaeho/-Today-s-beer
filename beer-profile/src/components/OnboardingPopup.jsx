@@ -16,8 +16,8 @@ function RadarIllustration() {
   const poly = (vals) => vals.map((v, i) => pt(maxR * v, i).join(",")).join(" ");
   const gridPoly = (s) => Array.from({ length: N }, (_, i) => pt(maxR * s, i).join(",")).join(" ");
 
-  const myVals  = [0.74, 0.28, 0.62, 0.22, 0.80];
-  const avgVals = [0.52, 0.60, 0.44, 0.58, 0.50];
+  const myVals  = [0.76, 0.38, 0.68, 0.35, 0.80];
+  const avgVals = [0.44, 0.72, 0.38, 0.70, 0.48];
   const labels  = ["단맛", "신맛", "쓴맛", "몰티함", "아로마"];
 
   return (
