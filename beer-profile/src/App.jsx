@@ -104,12 +104,11 @@ function AppShell({ beers, loadingBeers }) {
     );
   }
 
-  function handleSave(rating) {
-    setStarRating(rating);
+  function handleSave() {
     setRatedCount((c) => c + 1);
     setScreen("result");
     track.ratingStepEnter("result", selectedBeer);
-    track.ratingComplete(selectedBeer, rating, selectedTags);
+    track.ratingComplete(selectedBeer, starRating, selectedTags);
   }
 
   function handleHome() {
@@ -190,6 +189,8 @@ function AppShell({ beers, loadingBeers }) {
             onProfileChange={handleProfileChange}
             onConfirm={() => setScreen("detail")}
             onBack={() => selectedBeer ? setScreen("beer-detail") : setScreen(null)}
+            starRating={starRating}
+            onStarChange={setStarRating}
           />
         )}
         {screen === "detail" && (
@@ -200,6 +201,7 @@ function AppShell({ beers, loadingBeers }) {
             onToggle={handleTagToggle}
             onBack={() => setScreen("input")}
             onSave={handleSave}
+            starRating={starRating}
           />
         )}
         {screen === "result" && (
