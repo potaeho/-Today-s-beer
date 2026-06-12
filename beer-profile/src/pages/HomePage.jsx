@@ -156,22 +156,10 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
           <LevelJourneyModal ratedCount={ratedCount} onClose={() => setShowJourney(false)} />
         )}
 
-        {/* 새 소식 슬라이더 */}
-        <div className="home-section">
-          <div className="section-row-header">
-            <h2 className="home-section-title">새 소식 <span className="home-section-eyebrow-inline">Latest</span></h2>
-          </div>
-          <NewsSlider
-            onSelectNews={(news) => { track.tapNews(news.title); setSelectedNews(news); }}
-            onShowAll={() => { track.tapNewsShowAll(); setShowNewsList(true); }}
-          />
-        </div>
-
         {/* 추천 맥주 — AI 맞춤 + 트렌딩 통합 */}
         <div className="home-section">
           <div className="section-row-header">
             <h2 className="home-section-title">추천 맥주 <span className="home-section-eyebrow-inline">For You</span></h2>
-            <button className="section-more-btn" onClick={() => { track.tapMoreBtn(); onGoExplore(); }}>더 알아보기 →</button>
           </div>
           <div className="horizontal-scroll">
             {(() => {
@@ -215,6 +203,24 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
               ));
             })()}
           </div>
+          {/* 탐색 CTA */}
+          <button
+            className="home-explore-cta"
+            onClick={() => { track.tapMoreBtn(); onGoExplore(); }}
+          >
+            🍺 맥주 더 탐색하기
+          </button>
+        </div>
+
+        {/* 새 소식 슬라이더 */}
+        <div className="home-section">
+          <div className="section-row-header">
+            <h2 className="home-section-title">새 소식 <span className="home-section-eyebrow-inline">Latest</span></h2>
+          </div>
+          <NewsSlider
+            onSelectNews={(news) => { track.tapNews(news.title); setSelectedNews(news); }}
+            onShowAll={() => { track.tapNewsShowAll(); setShowNewsList(true); }}
+          />
         </div>
 
         <div style={{ height: 100 }} />
