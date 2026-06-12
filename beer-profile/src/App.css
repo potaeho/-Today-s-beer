@@ -6021,12 +6021,12 @@ body {
 
 /* Title */
 .onboard-title {
-  font-size: 25px;
+  font-size: 23px;
   font-weight: 900;
   color: var(--text-dark);
-  line-height: 1.3;
-  letter-spacing: -0.6px;
-  margin-bottom: 10px;
+  line-height: 1.28;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
 }
 .onboard-hl { color: var(--accent); }
 
@@ -6034,15 +6034,17 @@ body {
 .onboard-desc {
   font-size: 13px;
   color: var(--text-muted);
-  line-height: 1.6;
-  margin-bottom: 14px;
+  line-height: 1.55;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* Slide track */
 .onboard-slides-wrap {
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
   width: 100%;
   flex: 1;
   min-height: 0;
@@ -6051,6 +6053,7 @@ body {
   display: flex;
   transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
+  height: 100%;
 }
 .onboard-slide {
   flex: 0 0 100%;
@@ -6062,9 +6065,11 @@ body {
 
 /* Visual area */
 .onboard-visual-area {
-  flex: none;
+  flex: 1;
+  min-height: 0;
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
+  overflow: hidden;
 }
 
 /* ── Shared card base ── */
@@ -6072,37 +6077,40 @@ body {
   width: 100%;
   background: var(--accent-subtle);
   border-radius: 16px;
-  padding: 16px;
+  padding: 14px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Radar card */
 .onboard-radar-header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 8px;
+  gap: 14px;
+  margin-bottom: 6px;
+  flex-shrink: 0;
 }
 .onboard-radar-score-block { flex: 1; display: flex; flex-direction: column; align-items: flex-start; }
 .onboard-score-label {
   font-size: 11px;
   color: var(--text-muted);
-  margin-bottom: 6px;
+  margin-bottom: 3px;
   letter-spacing: 0.02em;
 }
 .onboard-score-my {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   color: var(--accent);
 }
 .onboard-score-avg {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   color: #6366F1;
 }
 .onboard-radar-sep {
   width: 1px;
-  height: 40px;
+  height: 36px;
   background: var(--border);
 }
 .onboard-legend {
@@ -6111,6 +6119,7 @@ body {
   margin-bottom: 4px;
   font-size: 11px;
   color: var(--text-muted);
+  flex-shrink: 0;
 }
 .onboard-legend-item { display: flex; align-items: center; gap: 5px; }
 .onboard-dot-my, .onboard-dot-avg {
@@ -6122,15 +6131,13 @@ body {
 }
 .onboard-dot-my  { background: var(--accent); }
 .onboard-dot-avg { background: #6366F1; }
-.onboard-radar-footer {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 4px;
+.onboard-visual-card svg {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: block;
+  overflow: hidden;
 }
-.onboard-footer-my  { color: var(--accent); font-weight: 600; }
-.onboard-footer-avg { color: #6366F1; font-weight: 600; }
 
 /* Recommend card */
 .onboard-rec-header {
@@ -6321,11 +6328,11 @@ body {
 
 /* Bottom: dots + nav */
 .onboard-bottom {
-  padding: 12px 0 20px;
+  padding: 10px 0 16px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 10px;
+  gap: 8px;
   flex-shrink: 0;
 }
 .onboard-nav-row {
@@ -6356,7 +6363,7 @@ body {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 10px 18px;
+  padding: 9px 16px;
   background: var(--text-dark);
   color: #fff;
   border: none;
@@ -6374,7 +6381,7 @@ body {
   background: var(--accent);
   width: 100%;
   justify-content: center;
-  padding: 15px;
+  padding: 13px;
   border-radius: 14px;
   font-size: 15px;
   box-shadow: var(--shadow-md);

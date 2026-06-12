@@ -37,7 +37,7 @@ function RadarIllustration() {
         <span className="onboard-legend-item"><em className="onboard-dot-my" />내 평가</span>
         <span className="onboard-legend-item"><em className="onboard-dot-avg" />전체 평균</span>
       </div>
-      <svg viewBox="0 0 240 224" style={{ width: "100%", display: "block", maxHeight: 200 }}>
+      <svg viewBox="0 0 240 224">
         {[0.2, 0.4, 0.6, 0.8, 1].map((s) => (
           <polygon key={s} points={gridPoly(s)} fill="none" stroke="#E2DDD8" strokeWidth="1" />
         ))}
@@ -58,10 +58,6 @@ function RadarIllustration() {
           );
         })}
       </svg>
-      <div className="onboard-radar-footer">
-        <span className="onboard-footer-my">내 평가</span>
-        <span className="onboard-footer-avg">전체 평균</span>
-      </div>
     </div>
   );
 }
@@ -178,17 +174,17 @@ function SlideTitle({ page }) {
 const SLIDES = [
   {
     step: "01", category: "테이스팅 노트",
-    desc: "단맛·신맛·쓴맛·몰티함·아로마를 슬라이더로 평가하고 해시태그로 향미를 기록해요. 기록이 쌓일수록 내 취향 프로파일이 완성돼요.",
+    desc: "슬라이더로 5가지 맛 강도를 기록하고 해시태그로 향미를 추가해요.",
     Visual: RadarIllustration,
   },
   {
     step: "02", category: "취향 추천",
-    desc: "평점이 아니라 맛 프로파일이 비슷한 사람들의 데이터로 다음 맥주를 추천해요. AI 맞춤 추천으로 실패 없는 맥주 탐색.",
+    desc: "맛 프로파일이 비슷한 사람들의 데이터로 AI가 다음 맥주를 추천해요.",
     Visual: RecommendIllustration,
   },
   {
     step: "03", category: "커뮤니티",
-    desc: "새로운 맥주를 탐색하고 같은 취향의 맥덕들과 테이스팅 경험을 나눠요. 당신의 다음 맥주를 여기서 발견하세요.",
+    desc: "같은 취향 맥덕들과 테이스팅 경험을 나누고 새로운 맥주를 발견해요.",
     Visual: CommunityIllustration,
   },
 ];
