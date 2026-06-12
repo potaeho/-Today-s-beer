@@ -5,10 +5,13 @@ import HashtagSection from "../components/HashtagSection";
 import ConfirmModal from "../components/ConfirmModal";
 import StarRating from "../components/StarRating";
 import { HASHTAG_MAP, PROFILE_AXES } from "../data/beerData";
+import { track } from "../utils/analytics";
+import { useScreenTime } from "../hooks/useScreenTime";
 
 export default function DetailPage({ beer, profile, selected, onToggle, onBack, onSave }) {
   const axes = PROFILE_AXES[beer?.category] || PROFILE_AXES["에일"];
   const [showModal, setShowModal] = useState(false);
+  useScreenTime("rating-detail", { beer_id: beer?.id, beer_name: beer?.name });
   const [starRating, setStarRating] = useState(0);
 
   const resolvedTags = selected.map((id) => HASHTAG_MAP[id]).filter(Boolean);
@@ -21,7 +24,7 @@ export default function DetailPage({ beer, profile, selected, onToggle, onBack, 
   return (
     <div className="page">
       <div className="detail-header">
-        <button className="back-btn" onClick={onBack}>
+        <button className="back-btn" onClick={() => { track.ratingAbandon("detail", beer); onBack(); }}>
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
           맛 입력
         </button>

@@ -30,10 +30,10 @@ describe("generateDummyReviews", () => {
     expect(a).not.toEqual(b);
   });
 
-  it("리뷰 개수는 2~4개다", () => {
+  it("리뷰 개수는 4~7개다", () => {
     const r = generateDummyReviews(BEER);
-    expect(r.length).toBeGreaterThanOrEqual(2);
-    expect(r.length).toBeLessThanOrEqual(4);
+    expect(r.length).toBeGreaterThanOrEqual(4);
+    expect(r.length).toBeLessThanOrEqual(7);
   });
 
   it("별점은 2~5 정수 범위다", () => {

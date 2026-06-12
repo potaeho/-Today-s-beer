@@ -6,6 +6,8 @@ import {
   getPersonalizedRecommendations,
   getMyRatedCount,
 } from "../utils/recommend";
+import { track } from "../utils/analytics";
+import { useScreenTime } from "../hooks/useScreenTime";
 
 const PERSONALIZED_THRESHOLD = 5;
 
@@ -14,6 +16,8 @@ export default function ExplorePage({ beers = [], onSelectBeer, userName = "사�
   const [activeCategory, setActiveCategory] = useState("전체");
 
   const allCategories = ["전체", ...CATEGORIES];
+
+  useScreenTime("explore");
 
   const ratedCount = getMyRatedCount();
   const isPersonalized = ratedCount >= PERSONALIZED_THRESHOLD;
@@ -86,7 +90,7 @@ export default function ExplorePage({ beers = [], onSelectBeer, userName = "사�
               <button
                 key={cat}
                 className={`category-tab ${activeCategory === cat ? "active" : ""}`}
-                onClick={() => setActiveCategory(cat)}
+                onClick={() => { track.tapCategoryFilter(cat); setActiveCategory(cat); }}
               >
                 {cat}
               </button>
@@ -138,7 +142,7 @@ export default function ExplorePage({ beers = [], onSelectBeer, userName = "사�
                 </div>
               ) : (
                 filtered.map((beer) => (
-                  <BeerCard key={beer.id} beer={beer} onClick={onSelectBeer} />
+                  <BeerCard key={beer.id} beer={beer} onClick={(b) => { track.tapExploreBeer(b); onSelectBeer(b); }} />
                 ))
               )}
             </div>
@@ -152,7 +156,7 @@ export default function ExplorePage({ beers = [], onSelectBeer, userName = "사�
               </div>
               <div className="beer-list">
                 {beers.map((beer) => (
-                  <BeerCard key={beer.id} beer={beer} onClick={onSelectBeer} />
+                  <BeerCard key={beer.id} beer={beer} onClick={(b) => { track.tapExploreBeer(b); onSelectBeer(b); }} />
                 ))}
               </div>
             </div>

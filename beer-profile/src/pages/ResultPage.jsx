@@ -3,6 +3,7 @@ import FlavorRadar from "../components/FlavorRadar";
 import { HASHTAG_MAP, AXES, PROFILE_AXES } from "../data/beerData";
 import { supabase } from "../lib/supabase";
 import { logEvent } from "../lib/track";
+import { useScreenTime } from "../hooks/useScreenTime";
 
 const TAG_PREFIX = {
   단맛: "sweet_", 산미: "sour_", 홉향: "hop_", 몰트: "malt_",
@@ -166,6 +167,7 @@ function WaitlistModal({ beerName, onClose }) {
 export default function ResultPage({ beer, profile, selected, starRating, onHome }) {
   const [showWaitlist, setShowWaitlist] = useState(false);
   const [imgErr, setImgErr] = useState(false);
+  useScreenTime("result", { beer_id: beer?.id, beer_name: beer?.name });
   const showImg = beer.image && !imgErr;
   const resolvedTags = selected.map((id) => HASHTAG_MAP[id]).filter(Boolean);
   const profileAxes = PROFILE_AXES[beer?.category] || PROFILE_AXES["에일"];

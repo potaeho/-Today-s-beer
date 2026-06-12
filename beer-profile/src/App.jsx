@@ -55,6 +55,20 @@ function AppShell({ beers, loadingBeers }) {
     track.screenView("home");
   }, []);
 
+  // 앱 이탈(탭 닫기/새로고침) — 마지막 화면 기록
+  useEffect(() => {
+    const handleExit = () => {
+      const lastScreen = screen ?? activeTab;
+      track.exitApp(lastScreen);
+    };
+    window.addEventListener("visibilitychange", handleExit);
+    window.addEventListener("pagehide", handleExit);
+    return () => {
+      window.removeEventListener("visibilitychange", handleExit);
+      window.removeEventListener("pagehide", handleExit);
+    };
+  }, [screen, activeTab]);
+
   // 온보딩 팝업 노출 기록
   useEffect(() => {
     if (showOnboarding) track.screenView("OnboardingPopup");

@@ -3,6 +3,8 @@ import FlavorRadar from "../components/FlavorRadar";
 import { HASHTAG_MAP, PROFILE_AXES } from "../data/beerData";
 import { REVIEWS } from "../data/reviewsData";
 import { generateDummyReviews } from "../data/dummyReviews";
+import { track } from "../utils/analytics";
+import { useScreenTime } from "../hooks/useScreenTime";
 
 function StarRow({ value }) {
   return (
@@ -28,6 +30,7 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
   const [imgErr, setImgErr] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
   const [lightbox, setLightbox] = useState(false);
+  useScreenTime("beer-detail", { beer_id: beer.id, beer_name: beer.name });
   const axes = PROFILE_AXES[beer.category] || PROFILE_AXES["에일"];
   const allReviews = REVIEWS[beer.id]?.length ? REVIEWS[beer.id] : generateDummyReviews(beer);
   const myReview = allReviews.find((r) => r.isMe) || null;
@@ -41,7 +44,7 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
     <div className="detail-page-wrap">
       {/* 헤더 */}
       <div className="input-header">
-        <button className="back-btn" onClick={onBack}>
+        <button className="back-btn" onClick={() => { track.ratingStepExit("beer-detail", beer); onBack(); }}>
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
           맥주 탐색
         </button>

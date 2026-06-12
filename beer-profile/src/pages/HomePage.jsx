@@ -7,6 +7,8 @@ import NewsListPage from "./NewsListPage";
 import { getPersonalizedRecommendations, getTrendingBeers, getMyRatedCount } from "../utils/recommend";
 import { filterBeers } from "../utils/search";
 import { useNotification } from "../contexts/NotificationContext";
+import { track } from "../utils/analytics";
+import { useScreenTime } from "../hooks/useScreenTime";
 
 export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
   const { openCenter, addToast } = useNotification();
@@ -15,6 +17,8 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
   const [selectedNews, setSelectedNews] = useState(null);
   const [showNewsList, setShowNewsList] = useState(false);
   const [showJourney, setShowJourney] = useState(false);
+
+  useScreenTime("home");
 
   const ratedCount = getMyRatedCount();
   const trending = useMemo(() => getTrendingBeers(beers, 6), [beers]);
@@ -144,7 +148,7 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
 
         {/* 게이미피케이션 레벨 카드 */}
         <div className="home-section">
-          <LevelCard ratedCount={ratedCount} onClick={() => setShowJourney(true)} />
+          <LevelCard ratedCount={ratedCount} onClick={() => { track.tapLevelCard(); setShowJourney(true); }} />
         </div>
 
         {/* 레벨 여정 모달 */}
@@ -158,8 +162,8 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
             <h2 className="home-section-title">새 소식 <span className="home-section-eyebrow-inline">Latest</span></h2>
           </div>
           <NewsSlider
-            onSelectNews={setSelectedNews}
-            onShowAll={() => setShowNewsList(true)}
+            onSelectNews={(news) => { track.tapNews(news.title); setSelectedNews(news); }}
+            onShowAll={() => { track.tapNewsShowAll(); setShowNewsList(true); }}
           />
         </div>
 
@@ -167,11 +171,11 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
         <div className="home-section">
           <div className="section-row-header">
             <h2 className="home-section-title">추천 맥주 <span className="home-section-eyebrow-inline">For You</span></h2>
-            <button className="section-more-btn" onClick={onGoExplore}>더 알아보기 →</button>
+            <button className="section-more-btn" onClick={() => { track.tapMoreBtn(); onGoExplore(); }}>더 알아보기 →</button>
           </div>
           <div className="horizontal-scroll">
             {trending.map(({ beer, trendType, trendLabel, reason }) => (
-              <div key={beer.id} className="rec-card" onClick={() => onSelectBeer(beer)}>
+              <div key={beer.id} className="rec-card" onClick={() => { track.tapRecommendedBeer(beer); onSelectBeer(beer); }}>
                 <div className="rec-card-img" style={{ background: beer.image ? "transparent" : beer.srmColor + "22" }}>
                   {beer.image
                     ? <img src={beer.image} alt={beer.name} loading="lazy" className="rec-card-img-photo" />
@@ -190,7 +194,7 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
                 <div className="rec-card-tags">
                   {(beer.tags ?? []).map((t) => <span key={t} className="rec-card-tag">{t}</span>)}
                 </div>
-                <button className="rec-card-btn">마셔보기</button>
+                <button className="rec-card-btn" onClick={(e) => { e.stopPropagation(); track.tapDrinkBtn(beer); onSelectBeer(beer); }}>마셔보기</button>
               </div>
             ))}
           </div>
@@ -207,7 +211,7 @@ export default function HomePage({ beers = [], onSelectBeer, onGoExplore }) {
             </div>
             <div className="horizontal-scroll ai-rec-scroll">
               {recommended.map(({ beer, reason }, idx) => (
-                <div key={beer.id} className="ai-rec-card" onClick={() => onSelectBeer(beer)}>
+                <div key={beer.id} className="ai-rec-card" onClick={() => { track.tapAiRecCard(beer); onSelectBeer(beer); }}>
                   <div className="ai-rec-reason">
                     <span className="ai-rec-sparkle">✨</span>
                     {reason}

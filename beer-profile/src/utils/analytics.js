@@ -173,6 +173,40 @@ export const track = {
       { screen: "download_popup", action: "cta_click", meta: { from: screen } });
   },
 
+  /* ── 화면 체류 시간 ───────────────────────── */
+  screenTime(screenName, durationMs, meta = {}) {
+    ev("screen_time",
+      { screen_name: screenName, duration_ms: durationMs },
+      { screen: screenName, action: "screen_time", meta: { duration_ms: durationMs, ...meta } });
+  },
+
+  /* ── 홈 추가 버튼 ──────────────────────────── */
+  tapAiRecCard(beer) {
+    ev("tap_ai_rec_card",
+      { beer_id: beer.id, beer_name: beer.name, beer_category: beer.category },
+      { screen: "HomePage", action: "tap_ai_rec_card", targetId: beer.id, targetType: "beer", meta: { name: beer.name } });
+  },
+  tapMoreBtn() {
+    ev("tap_more_btn", {}, { screen: "HomePage", action: "tap_more_btn" });
+  },
+  tapNewsShowAll() {
+    ev("tap_news_show_all", {}, { screen: "HomePage", action: "tap_news_show_all" });
+  },
+
+  /* ── 평가 중도 포기 ────────────────────────── */
+  ratingAbandon(step, beer) {
+    // step: "input" | "detail"
+    ev("rating_abandon", { step, beer_id: beer?.id, beer_name: beer?.name },
+      { screen: "rating", action: "abandon", targetId: beer?.id, targetType: "beer", meta: { step, name: beer?.name } });
+  },
+
+  /* ── 앱 이탈 (beforeunload) ─────────────────── */
+  exitApp(lastScreen) {
+    // sendBeacon 기반 — 페이지 닫힐 때 fire-and-forget
+    ev("exit_app", { last_screen: lastScreen },
+      { screen: lastScreen, action: "exit_app" });
+  },
+
   /* ── 범용 — 임의 이벤트 직접 기록 ─────────── */
   custom(screen, action, meta) {
     if (meta && (meta.event || meta.params)) {
