@@ -126,9 +126,9 @@ function WaitlistModal({ beerName, onClose }) {
             <form onSubmit={handleSubmit} className="waitlist-form">
               <input
                 className="waitlist-input"
-                type={isEmail ? "email" : "tel"}
-                inputMode={isEmail ? "email" : "tel"}
-                placeholder={isEmail ? "example@email.com" : "010-1234-5678"}
+                type={isEmail ? "email" : "text"}
+                inputMode={isEmail ? "email" : "numeric"}
+                placeholder={isEmail ? "이메일 주소를 입력해주세요" : "전화번호를 입력해주세요"}
                 value={contact}
                 onChange={(e) => setContact(e.target.value)}
                 autoFocus

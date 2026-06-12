@@ -37,7 +37,7 @@ function RadarIllustration() {
         <span className="onboard-legend-item"><em className="onboard-dot-my" />내 평가</span>
         <span className="onboard-legend-item"><em className="onboard-dot-avg" />전체 평균</span>
       </div>
-      <svg viewBox="0 0 240 224" style={{ width: "100%", display: "block" }}>
+      <svg viewBox="0 0 240 224" style={{ width: "100%", display: "block", maxHeight: 200 }}>
         {[0.2, 0.4, 0.6, 0.8, 1].map((s) => (
           <polygon key={s} points={gridPoly(s)} fill="none" stroke="#E2DDD8" strokeWidth="1" />
         ))}
