@@ -264,15 +264,21 @@ export default function ResultPage({ beer, profile, selected, starRating, onHome
         <div className="result-section">
           <p className="result-section-label">재구매 의사</p>
           <div className="result-star-row">
-            {[1,2,3,4,5].map((s) => (
-              <span key={s} className={s <= starRating ? "result-star filled" : "result-star"}>★</span>
-            ))}
+            {[1,2,3,4,5].map((s) => {
+              const filled = starRating >= s;
+              const half   = !filled && starRating >= s - 0.5;
+              return (
+                <span key={s} className={`result-star${filled ? " filled" : half ? " half" : ""}`}>★</span>
+              );
+            })}
             <span className="result-star-text">
-              {starRating === 1 && "다시 마시고 싶지 않아요"}
-              {starRating === 2 && "별로였어요"}
-              {starRating === 3 && "그저 그랬어요"}
-              {starRating === 4 && "또 마시고 싶어요"}
-              {starRating === 5 && "꼭 다시 마실 거예요 🍺"}
+              {{
+                0.5: "정말 별로였어요", 1: "다시 마시고 싶지 않아요",
+                1.5: "별로였어요",      2: "그냥 그랬어요",
+                2.5: "나쁘지 않아요",  3: "무난했어요",
+                3.5: "꽤 맛있었어요",  4: "또 마시고 싶어요",
+                4.5: "거의 완벽했어요",5: "꼭 다시 마실 거예요 🍺",
+              }[starRating]}
             </span>
           </div>
         </div>
