@@ -4,20 +4,16 @@ import LevelJourneyModal from "../components/LevelJourneyModal";
 import NewsSlider from "../components/NewsSlider";
 import NewsDetailPage from "./NewsDetailPage";
 import NewsListPage from "./NewsListPage";
-import LoginPage from "./LoginPage";
 import { getPersonalizedRecommendations, getTrendingBeers } from "../utils/recommend";
 import { filterBeers } from "../utils/search";
 import { useNotification } from "../contexts/NotificationContext";
-import { useAuth } from "../contexts/AuthContext";
 import { track } from "../utils/analytics";
 import { useScreenTime } from "../hooks/useScreenTime";
 
 export default function HomePage({ beers = [], onSelectBeer, ratedCount = 0, onGoExplore }) {
   const { openCenter, addToast } = useNotification();
-  const { user } = useAuth();
   const [query, setQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
   const [selectedNews, setSelectedNews] = useState(null);
   const [showNewsList, setShowNewsList] = useState(false);
   const [showJourney, setShowJourney] = useState(false);
@@ -53,11 +49,6 @@ export default function HomePage({ beers = [], onSelectBeer, ratedCount = 0, onG
         <div className="appbar">
           <span className="appbar-logo">오늘의 맥주</span>
           <div className="appbar-actions">
-            {!user && (
-              <button className="appbar-login-btn" onClick={() => setShowLogin(true)}>
-                로그인
-              </button>
-            )}
             <button className="appbar-icon" onClick={() => setShowSearch((v) => !v)}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
                 <circle cx="10.5" cy="10.5" r="6.5"/>
@@ -233,8 +224,6 @@ export default function HomePage({ beers = [], onSelectBeer, ratedCount = 0, onG
 
         <div style={{ height: 100 }} />
       </div>
-
-      {showLogin && <LoginPage onClose={() => setShowLogin(false)} />}
     </div>
   );
 }
