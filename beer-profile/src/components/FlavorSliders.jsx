@@ -1,69 +1,25 @@
-import { useState } from "react";
-
 export default function FlavorSliders({ profile, onChange, axes }) {
-  const [editing, setEditing] = useState(null);
-  const [draft, setDraft] = useState("");
-
-  function handleValueClick(axis) {
-    setEditing(axis);
-    setDraft(profile[axis].toFixed(1));
-  }
-
-  function handleInputChange(e) {
-    setDraft(e.target.value);
-  }
-
-  function commitEdit(axis) {
-    const parsed = parseFloat(draft);
-    if (!isNaN(parsed)) {
-      onChange(axis, Math.min(5, Math.max(0, parsed)));
-    }
-    setEditing(null);
-  }
-
-  function handleKeyDown(e, axis) {
-    if (e.key === "Enter") commitEdit(axis);
-    if (e.key === "Escape") setEditing(null);
-  }
-
   return (
     <div className="sliders-section">
-      {axes.map((axis) => (
-        <div key={axis} className="slider-row">
-          <span className="slider-label">{axis}</span>
-          <input
-            type="range"
-            min={0}
-            max={5}
-            step={0.1}
-            value={profile[axis]}
-            onChange={(e) => onChange(axis, parseFloat(e.target.value))}
-            className="slider"
-          />
-          {editing === axis ? (
+      {axes.map((axis) => {
+        const raw = profile[axis] ?? 0;
+        const snapped = Math.round(raw * 2) / 2;
+        return (
+          <div key={axis} className="slider-row">
+            <span className="slider-label">{axis}</span>
             <input
-              type="number"
+              type="range"
               min={0}
               max={5}
-              step={0.1}
-              value={draft}
-              onChange={handleInputChange}
-              onBlur={() => commitEdit(axis)}
-              onKeyDown={(e) => handleKeyDown(e, axis)}
-              className="slider-value slider-value-input"
-              autoFocus
+              step={0.5}
+              value={snapped}
+              onChange={(e) => onChange(axis, parseFloat(e.target.value))}
+              className="slider"
             />
-          ) : (
-            <span
-              className="slider-value"
-              onClick={() => handleValueClick(axis)}
-              title="눌러서 수정"
-            >
-              {profile[axis].toFixed(1)}
-            </span>
-          )}
-        </div>
-      ))}
+            <span className="slider-value">{snapped.toFixed(1)}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }

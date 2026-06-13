@@ -1,5 +1,14 @@
 import { REVIEWS } from "../data/reviewsData";
-import { HASHTAG_MAP, TRENDING_OVERRIDES } from "../data/beerData";
+import { HASHTAG_MAP, TRENDING_OVERRIDES, PROFILE_AXES } from "../data/beerData";
+
+// 스타일별 축 중요도 가중치 — 피드백 기반 (multicollinearity 완화)
+const STYLE_AXIS_WEIGHTS = {
+  IPA:    { 쓴맛: 1.8, 아로마: 1.5, 단맛: 0.7, 신맛: 0.9, 부드러움: 1.0 },
+  라거:   { 단맛: 1.2, 몰티함: 1.4, 쓴맛: 0.8, 신맛: 0.9, 아로마: 1.0 },
+  스타우트: { 몰티함: 1.5, 탄맛: 1.6, 바디감: 1.4, 단맛: 1.0, 아로마: 0.9 },
+  사워:   { 신맛: 1.8, 단맛: 0.8, 쓴맛: 0.9, 아로마: 1.1, 부드러움: 1.0 },
+  에일:   { 아로마: 1.3, 부드러움: 1.2, 단맛: 1.0, 신맛: 1.0, 쓴맛: 1.0 },
+};
 
 /** isMe 리뷰 전체 수집 */
 export function getMyReviews() {
@@ -57,9 +66,10 @@ export function getPersonalizedRecommendations(beerList = [], count = 3) {
   // ── 취향 가중치 계산 (해시태그 + 카테고리 기반) ──────
   const hashtagWeight  = {};
   const categoryWeight = {};
+  // 카테고리별 평균 프로파일 (스타일 가중치 유사도용)
+  const categoryProfiles = {};
 
-  myReviews.forEach(({ hashtags, star, beerId }) => {
-    // 리뷰의 beerId와 beer.id가 일치하는 맥주 찾기
+  myReviews.forEach(({ hashtags, star, beerId, profile }) => {
     const beer = beerList.find((b) => String(b.id) === String(beerId));
 
     (hashtags ?? []).forEach((tag) => {
@@ -68,7 +78,28 @@ export function getPersonalizedRecommendations(beerList = [], count = 3) {
     if (beer) {
       categoryWeight[beer.category] =
         (categoryWeight[beer.category] || 0) + (star ?? 3);
+
+      // 프로파일 누적 (평균 계산용)
+      if (profile) {
+        if (!categoryProfiles[beer.category]) {
+          categoryProfiles[beer.category] = { sum: {}, count: 0 };
+        }
+        const bucket = categoryProfiles[beer.category];
+        bucket.count += 1;
+        Object.entries(profile).forEach(([axis, val]) => {
+          bucket.sum[axis] = (bucket.sum[axis] || 0) + val;
+        });
+      }
     }
+  });
+
+  // 카테고리별 평균 프로파일 산출
+  const avgProfile = {};
+  Object.entries(categoryProfiles).forEach(([cat, { sum, count }]) => {
+    avgProfile[cat] = {};
+    Object.entries(sum).forEach(([axis, total]) => {
+      avgProfile[cat][axis] = total / count;
+    });
   });
 
   const ratedIds = new Set(myReviews.map((r) => String(r.beerId)));
@@ -88,6 +119,25 @@ export function getPersonalizedRecommendations(beerList = [], count = 3) {
       }
     });
     score += categoryWeight[beer.category] || 0;
+
+    // ── 스타일 가중치 프로파일 유사도 ────────────────────
+    const myAvg = avgProfile[beer.category];
+    if (myAvg && beer.profile) {
+      const axes = PROFILE_AXES[beer.category] || [];
+      const weights = STYLE_AXIS_WEIGHTS[beer.category] || {};
+      let weightedDistSq = 0;
+      let totalWeight = 0;
+      axes.forEach((axis) => {
+        const w = weights[axis] ?? 1.0;
+        const diff = (myAvg[axis] ?? 2.5) - (beer.profile[axis] ?? 2.5);
+        weightedDistSq += w * diff * diff;
+        totalWeight += w;
+      });
+      const normalizedDist = totalWeight > 0 ? Math.sqrt(weightedDistSq / totalWeight) : 0;
+      // 거리를 유사도 점수로 변환 (최대 5점 범위 기준)
+      const similarityScore = Math.max(0, 10 * (1 - normalizedDist / 5));
+      score += similarityScore;
+    }
 
     let reason;
     if (matchedTags.length > 0) {
