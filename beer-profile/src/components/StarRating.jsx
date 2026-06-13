@@ -1,3 +1,5 @@
+import { useRef } from "react";
+
 const DESCS = {
   0:   "별점을 선택해주세요",
   0.5: "정말 별로였어요",
@@ -13,27 +15,50 @@ const DESCS = {
 };
 
 export default function StarRating({ value, onChange }) {
+  const starsRef = useRef(null);
+  const dragging = useRef(false);
+
+  function valueFromX(clientX) {
+    const rect = starsRef.current?.getBoundingClientRect();
+    if (!rect) return null;
+    const x = Math.max(0, Math.min(clientX - rect.left, rect.width - 0.1));
+    const raw = (x / rect.width) * 5;          // 0 ~ 5
+    return Math.max(0.5, Math.round(raw * 2) / 2); // 0.5 단위 스냅
+  }
+
+  function handlePointerDown(e) {
+    dragging.current = true;
+    starsRef.current?.setPointerCapture(e.pointerId); // 영역 밖 이탈해도 추적
+    const val = valueFromX(e.clientX);
+    if (val !== null) onChange(val);
+  }
+
+  function handlePointerMove(e) {
+    if (!dragging.current) return;
+    const val = valueFromX(e.clientX);
+    if (val !== null && val !== value) onChange(val);
+  }
+
+  function handlePointerUp() {
+    dragging.current = false;
+  }
+
   return (
     <div className="star-rating-wrap">
       <p className="star-rating-label">재구매 의사</p>
-      <div className="star-rating-stars">
+      <div
+        ref={starsRef}
+        className="star-rating-stars"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        style={{ touchAction: "none", cursor: "pointer" }}
+      >
         {[1, 2, 3, 4, 5].map((star) => {
           const filled = value >= star;
           const half   = !filled && value >= star - 0.5;
           return (
             <div key={star} className="star-btn-wrap">
-              {/* 왼쪽 절반 클릭 → 0.5점 단위 */}
-              <button
-                className="star-half-zone star-half-zone--left"
-                onClick={() => onChange(value === star - 0.5 ? 0 : star - 0.5)}
-                aria-label={`${star - 0.5}점`}
-              />
-              {/* 오른쪽 절반 클릭 → 정수 */}
-              <button
-                className="star-half-zone star-half-zone--right"
-                onClick={() => onChange(value === star ? 0 : star)}
-                aria-label={`${star}점`}
-              />
               <span className={`star-icon${filled ? " filled" : half ? " half" : ""}`}>★</span>
             </div>
           );
