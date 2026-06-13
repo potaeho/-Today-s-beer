@@ -18,7 +18,6 @@ import { NotificationProvider } from "./contexts/NotificationContext";
 import ToastContainer from "./components/ToastContainer";
 import NotificationCenter from "./components/NotificationCenter";
 import { track } from "./utils/analytics";
-import OnboardingPopup, { ONBOARD_KEY } from "./components/OnboardingPopup";
 import { supabase } from "./lib/supabase";
 import "./App.css";
 
@@ -52,7 +51,6 @@ function AppShell({ beers, loadingBeers }) {
   const [selectedTags, setSelectedTags] = useState([]);
   const [starRating, setStarRating] = useState(0);
   const [ratedCount, setRatedCount] = useState(() => getMyRatedCount());
-  const [showOnboarding, setShowOnboarding] = useState(() => !localStorage.getItem(ONBOARD_KEY));
 
   // 앱 최초 진입 + 초기 화면 기록
   useEffect(() => {
@@ -79,7 +77,6 @@ function AppShell({ beers, loadingBeers }) {
 
   // 온보딩 팝업 노출 기록
   useEffect(() => {
-    if (showOnboarding) track.screenView("OnboardingPopup");
   }, [showOnboarding]);
 
   // 로그인 시 DB reviews 카운트로 동기화
@@ -298,9 +295,6 @@ function AppShell({ beers, loadingBeers }) {
       <NotificationCenter />
       <ToastContainer />
 
-      {showOnboarding && (
-        <OnboardingPopup onClose={() => setShowOnboarding(false)} />
-      )}
     </div>
   );
 }
