@@ -75,9 +75,6 @@ function AppShell({ beers, loadingBeers }) {
     };
   }, [screen, activeTab]);
 
-  // 온보딩 팝업 노출 기록
-  useEffect(() => {
-  }, [showOnboarding]);
 
   // 로그인 시 DB reviews 카운트로 동기화
   useEffect(() => {
