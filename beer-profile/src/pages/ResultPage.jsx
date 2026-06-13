@@ -3,6 +3,7 @@ import FlavorRadar from "../components/FlavorRadar";
 import { HASHTAG_MAP, AXES, PROFILE_AXES } from "../data/beerData";
 import { supabase } from "../lib/supabase";
 import { logEvent, trackIds } from "../lib/track";
+import { isValidEmail, isValidPhone } from "../lib/sanitize";
 import { useScreenTime } from "../hooks/useScreenTime";
 
 const TAG_PREFIX = {
@@ -39,9 +40,13 @@ function WaitlistModal({ beerName, onClose }) {
     setStage("input");
   }
 
+  const isContactValid = contactType === "email"
+    ? isValidEmail(contact)
+    : isValidPhone(contact);
+
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!contact.trim() || !agreed) return;
+    if (!contact.trim() || !agreed || !isContactValid) return;
     setStatus("loading");
     logEvent("download_popup", "submit", { meta: { contact_type: contactType, beer_name: beerName } });
 
@@ -154,11 +159,16 @@ function WaitlistModal({ beerName, onClose }) {
                 <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
                 <span>출시 알림 목적으로만 사용하고 즉시 삭제합니다.</span>
               </label>
+              {contact.trim() && !isContactValid && (
+                <p className="waitlist-error">
+                  {contactType === "email" ? "올바른 이메일 형식이 아니에요." : "올바른 전화번호 형식이 아니에요. (예: 010-1234-5678)"}
+                </p>
+              )}
               {status === "error" && <p className="waitlist-error">오류가 발생했어요. 다시 시도해주세요.</p>}
               <button
                 type="submit"
                 className="waitlist-submit"
-                disabled={!contact.trim() || !agreed || status === "loading"}
+                disabled={!contact.trim() || !agreed || !isContactValid || status === "loading"}
               >
                 {status === "loading" ? "저장 중..." : "알림 신청하기"}
               </button>

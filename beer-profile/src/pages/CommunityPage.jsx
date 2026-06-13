@@ -3,6 +3,7 @@ import { POSTS } from "../data/communityData";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
 import { track } from "../utils/analytics";
+import { sanitizeText } from "../lib/sanitize";
 
 function relativeTime(iso) {
   const diff = Date.now() - new Date(iso).getTime();
@@ -616,7 +617,7 @@ export default function CommunityPage({ beers = [], composeBeer, onComposeClear 
     if (isDbMode && user && supabase) {
       const { data, error } = await supabase
         .from("posts")
-        .insert({ user_id: user.id, content: newPost.content, beer_id: isUUID ? beer.id : null })
+        .insert({ user_id: user.id, content: sanitizeText(newPost.content, 280), beer_id: isUUID ? beer.id : null })
         .select(`
           id, content, beer_id, likes_count, comments_count, reposts_count, created_at, user_id,
           users:user_id ( username, handle, avatar_url ),
