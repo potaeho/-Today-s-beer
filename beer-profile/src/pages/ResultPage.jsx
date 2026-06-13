@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import FlavorRadar from "../components/FlavorRadar";
 import { HASHTAG_MAP, AXES, PROFILE_AXES } from "../data/beerData";
 import { supabase } from "../lib/supabase";
-import { logEvent } from "../lib/track";
+import { logEvent, trackIds } from "../lib/track";
 import { useScreenTime } from "../hooks/useScreenTime";
 
 const TAG_PREFIX = {
@@ -55,7 +55,12 @@ function WaitlistModal({ beerName, onClose }) {
     try {
       const { error } = await supabase
         .from("waitlist")
-        .insert({ contact: contact.trim(), contact_type: contactType, beer_name: beerName });
+        .insert({
+          contact: contact.trim(),
+          contact_type: contactType,
+          beer_name: beerName,
+          visitor_id: trackIds.getVisitorId(),
+        });
       if (error) {
         console.error("[waitlist] insert 실패:", error.message);
         setStatus("error");
@@ -73,6 +78,18 @@ function WaitlistModal({ beerName, onClose }) {
 
   function goDownload() {
     logEvent("download_popup", "download_click", { meta: { beer_name: beerName } });
+
+    // 다운로드 버튼 클릭 — 별도 테이블에 수집
+    if (supabase) {
+      supabase.from("download_clicks").insert({
+        visitor_id: trackIds.getVisitorId(),
+        session_id: trackIds.getSessionId(),
+        beer_name: beerName,
+      }).then(({ error }) => {
+        if (error) console.warn("[download_clicks] insert:", error.message);
+      });
+    }
+
     setStage("choose");
   }
 
@@ -288,10 +305,10 @@ export default function ResultPage({ beer, profile, selected, starRating, onHome
       {/* 하단 고정 버튼 */}
       <div className="result-bottom-bar">
         <button className="result-save-btn result-recommend-btn" onClick={openRecommend}>
-          ✨ 추천 맥주 보기
+          ✨ 내 취향 추천 맥주 받기
         </button>
-        <button className="result-home-btn" onClick={onHome}>
-          홈으로 돌아가기
+        <button className="result-home-link" onClick={onHome}>
+          다음에 볼게요
         </button>
       </div>
 
