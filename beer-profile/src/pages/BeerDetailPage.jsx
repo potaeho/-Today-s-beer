@@ -143,7 +143,7 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
                     <div className="beer-detail-star-col">
                       <span className="beer-detail-star-label">내 평점</span>
                       <button className="beer-detail-star-rate-btn" onClick={onRate}>
-                        + 평가하기
+                        내 취향 확인하기
                       </button>
                     </div>
                     <div className="beer-detail-star-divider" />
@@ -265,7 +265,7 @@ export default function BeerDetailPage({ beer, onBack, onRate }) {
       {/* 하단 평가하기 버튼 */}
       <div className="beer-detail-footer">
         <button className="beer-detail-rate-btn" onClick={onRate}>
-          🍺 나도 평가하기
+          🍺 이 맥주, 마셔보니 어땠나요?
         </button>
       </div>
 

@@ -19,8 +19,6 @@ export default function BeerRecommendSlider({ items = [], onSelect }) {
   const featured = items[current];
   const others = items.filter((_, i) => i !== current).slice(0, 2);
 
-  const maxScore = Math.max(...items.map((i) => i.score || 0), 1);
-  const getPct = (score) => Math.min(99, Math.round(72 + ((score || 0) / maxScore) * 25));
 
   return (
     <div className="rec-wrap">
@@ -31,7 +29,7 @@ export default function BeerRecommendSlider({ items = [], onSelect }) {
         onClick={() => onSelect(featured.beer)}
       >
         {featured.reason && (
-          <p className="rec-featured-reason">✨ {featured.reason}</p>
+          <p className="rec-featured-reason">{featured.reason}</p>
         )}
         <div className="rec-featured-body">
           <div className="rec-featured-img" style={{ background: featured.beer.srmColor + "33" }}>
@@ -71,7 +69,6 @@ export default function BeerRecommendSlider({ items = [], onSelect }) {
             <p className="rec-list-name">{beer.name}</p>
             <p className="rec-list-sub">{beer.category} · ABV {beer.abv}</p>
           </div>
-          <span className="rec-list-pct">{getPct(score)}% 일치</span>
         </div>
       ))}
 

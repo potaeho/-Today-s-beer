@@ -70,7 +70,7 @@ function RecommendIllustration() {
     <div className="onboard-visual-card onboard-rec-wrap">
       <div className="onboard-rec-header">
         <span className="onboard-rec-user">홈덕후 님을 위한 추천</span>
-        <span className="onboard-rec-badge">AI 맞춤</span>
+        <span className="onboard-rec-badge">취향 추천</span>
       </div>
       <div className="onboard-rec-beer-card">
         <div className="onboard-rec-hint">✨ 시트러스 · 솔잎 취향과 잘 맞아요</div>

@@ -115,8 +115,20 @@ function AppShell({ beers, loadingBeers }) {
     );
   }
 
+  function handleQuickSave(reactionLabel, tags = []) {
+    const starMap = { "좋아요": 4, "보통이에요": 3, "별로예요": 2 };
+    const star = starMap[reactionLabel] ?? 3;
+    setStarRating(star);
+    setSelectedTags(tags);
+    setRatedCount((c) => c + 1);
+    setScreen("result");
+    track.ratingStepEnter("result", selectedBeer);
+    track.ratingComplete(selectedBeer, star, tags);
+  }
+
   function handleSave() {
     setRatedCount((c) => c + 1);
+    setAutoWaitlist(false);
     setScreen("result");
     track.ratingStepEnter("result", selectedBeer);
     track.ratingComplete(selectedBeer, starRating, selectedTags);
@@ -209,7 +221,7 @@ function AppShell({ beers, loadingBeers }) {
             beer={selectedBeer || { name: "새 맥주 평가", type: "-", abv: "-", image: null }}
             profile={profile}
             onProfileChange={handleProfileChange}
-            onConfirm={() => setScreen("detail")}
+            onConfirm={handleQuickSave}
             onBack={() => selectedBeer ? setScreen("beer-detail") : setScreen(null)}
             starRating={starRating}
             onStarChange={setStarRating}

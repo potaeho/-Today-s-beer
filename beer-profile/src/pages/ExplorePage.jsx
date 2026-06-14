@@ -109,7 +109,7 @@ export default function ExplorePage({ beers = [], onSelectBeer, userName = "사�
                   <h2 className="home-section-title">
                     <span className="rec-username">{userName}</span>님을 위한 추천
                   </h2>
-                  <span className="rec-badge rec-badge--personal">AI 맞춤</span>
+                  <span className="rec-badge rec-badge--personal">취향 추천</span>
                 </div>
               ) : (
                 <div className="rec-header-md">
