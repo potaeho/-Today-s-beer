@@ -58,6 +58,8 @@ export default function InputPage({ beer, profile, onProfileChange, onConfirm, o
   }, []);
 
   function toggleTag(id) {
+    const willSelect = !selectedTags.includes(id);
+    track.ratingHashtagToggle(beer, id, willSelect); // 어떤 해시태그를 선택/해제했나
     setSelectedTags((prev) => {
       const next = prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id];
       setNeedsReanalysis(next.length > 0);
@@ -65,9 +67,25 @@ export default function InputPage({ beer, profile, onProfileChange, onConfirm, o
     });
   }
 
+  function toggleHashtagSection() {
+    const next = !hashtagOpen;
+    track.ratingHashtagSection(beer, next);
+    setHashtagOpen(next);
+  }
+
+  function toggleSlidersSection() {
+    const next = !slidersOpen;
+    track.ratingFlavorSection(beer, next);
+    setSlidersOpen(next);
+  }
+
   function handleProfileChangeWithFlag(axis, value) {
     onProfileChange(axis, value);
     setNeedsReanalysis(true);
+    if (!flavorEngagedRef.current) {
+      flavorEngagedRef.current = true;
+      track.ratingFlavorAdjust(beer, axis, value); // 맛 강도를 "실제로 조작"한 사람 집계
+    }
   }
 
   function handleReanalyze() {
@@ -159,7 +177,7 @@ export default function InputPage({ beer, profile, onProfileChange, onConfirm, o
           {/* 해시태그 토글 */}
           <button
             className="sliders-toggle-btn"
-            onClick={() => setHashtagOpen((o) => !o)}
+            onClick={toggleHashtagSection}
           >
             <span>
               {HASHTAG_QUESTION[reaction?.label] ?? "어떤 느낌이었나요?"}
@@ -199,7 +217,7 @@ export default function InputPage({ beer, profile, onProfileChange, onConfirm, o
           {/* 맛 강도 토글 */}
           <button
             className="sliders-toggle-btn"
-            onClick={() => setSlidersOpen((o) => !o)}
+            onClick={toggleSlidersSection}
           >
             <span>맛 강도 직접 입력</span>
             <span className="sliders-toggle-right">
