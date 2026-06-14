@@ -32,6 +32,7 @@ export default function InputPage({ beer, profile, onProfileChange, onConfirm, o
   const timerRef = useRef(null);
   const readyTimerRef = useRef(null);
   const statusRef = useRef(null);
+  const flavorEngagedRef = useRef(false); // 맛 강도 슬라이더 첫 조작 1회만 기록
   useScreenTime("rating-input", { beer_id: beer?.id, beer_name: beer?.name });
 
   function handleReaction(r) {
@@ -42,7 +43,9 @@ export default function InputPage({ beer, profile, onProfileChange, onConfirm, o
     setNeedsReanalysis(false);
     setReanalyzing(false);
     setAnalysisReady(false);
+    flavorEngagedRef.current = false;
     onStarChange(r.star);
+    track.ratingReaction(beer, r);          // 어떤 반응(좋아요/보통/별로)을 눌렀나
     track.ratingStepEnter("analyzing", beer);
     setStage("analyzing");
     clearTimeout(readyTimerRef.current);

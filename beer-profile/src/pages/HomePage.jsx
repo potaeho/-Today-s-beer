@@ -17,14 +17,10 @@ export default function HomePage({ beers = [], onSelectBeer, ratedCount = 0, onG
   const [selectedNews, setSelectedNews] = useState(null);
   const [showNewsList, setShowNewsList] = useState(false);
   const [showJourney, setShowJourney] = useState(false);
-  // 탐색 탭을 한 번도 안 거친 신규 사용자에게만 웰컴 CTA 노출
-  const [showWelcome, setShowWelcome] = useState(() => !localStorage.getItem("omac_explore_seen"));
 
   useScreenTime("home");
 
   function goExplore() {
-    localStorage.setItem("omac_explore_seen", "1");
-    setShowWelcome(false);
     track.tapMoreBtn();
     onGoExplore();
   }
@@ -154,22 +150,20 @@ export default function HomePage({ beers = [], onSelectBeer, ratedCount = 0, onG
 
       <div className="home-scroll-body" style={{ display: showSearch && q ? "none" : undefined }}>
 
-        {/* 신규 사용자 — 탐색 탭 유도 웰컴 배너 */}
-        {showWelcome && (
-          <div className="home-section">
-            <button
-              className="home-welcome-cta"
-              onClick={goExplore}
-            >
-              <span className="home-welcome-cta-emoji">🍺</span>
-              <span className="home-welcome-cta-text">
-                <span className="home-welcome-cta-title">어떤 맥주부터 마셔볼까요?</span>
-                <span className="home-welcome-cta-sub">취향에 맞는 맥주를 탐색해보세요</span>
-              </span>
-              <span className="home-welcome-cta-arrow">›</span>
-            </button>
-          </div>
-        )}
+        {/* 탐색 탭 유도 웰컴 배너 — 항상 노출 */}
+        <div className="home-section">
+          <button
+            className="home-welcome-cta"
+            onClick={goExplore}
+          >
+            <span className="home-welcome-cta-emoji">🍺</span>
+            <span className="home-welcome-cta-text">
+              <span className="home-welcome-cta-title">어떤 맥주부터 마셔볼까요?</span>
+              <span className="home-welcome-cta-sub">취향에 맞는 맥주를 탐색해보세요</span>
+            </span>
+            <span className="home-welcome-cta-arrow">›</span>
+          </button>
+        </div>
 
         {/* 게이미피케이션 레벨 카드 */}
         <div className="home-section">

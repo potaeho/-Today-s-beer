@@ -128,6 +128,38 @@ export const track = {
       { screen: "rating", action: "complete", targetId: beer?.id, targetType: "beer", meta: { name: beer?.name, star_rating: starRating, hashtag_count: hashtags?.length ?? 0 } });
   },
 
+  /* ── 평가 입력 — 세부 인터랙션 (user_events 집계용) ─────
+     · tap_reaction      : 좋아요/보통이에요/별로예요 중 무엇을 눌렀나
+     · open_hashtag_section / toggle_hashtag : "어떤 점이 좋았나요?" 해시태그 선택
+     · open_flavor_section  / adjust_flavor  : "맛 강도 직접 입력" 사용 여부      */
+  ratingReaction(beer, reaction) {
+    ev("rating_reaction",
+      { beer_id: beer?.id, beer_name: beer?.name, reaction: reaction?.label, star: reaction?.star },
+      { screen: "rating-input", action: "tap_reaction", targetId: beer?.id, targetType: "beer",
+        meta: { name: beer?.name, reaction: reaction?.label, emoji: reaction?.emoji, star: reaction?.star } });
+  },
+  ratingHashtagSection(beer, open) {
+    ev("rating_hashtag_section", { beer_id: beer?.id, open },
+      { screen: "rating-input", action: "open_hashtag_section", targetId: beer?.id, targetType: "beer",
+        meta: { name: beer?.name, open } });
+  },
+  ratingHashtagToggle(beer, tagId, selected) {
+    ev("rating_hashtag_toggle", { beer_id: beer?.id, tag_id: tagId, selected },
+      { screen: "rating-input", action: "toggle_hashtag", targetId: beer?.id, targetType: "beer",
+        meta: { name: beer?.name, tag_id: tagId, selected } });
+  },
+  ratingFlavorSection(beer, open) {
+    ev("rating_flavor_section", { beer_id: beer?.id, open },
+      { screen: "rating-input", action: "open_flavor_section", targetId: beer?.id, targetType: "beer",
+        meta: { name: beer?.name, open } });
+  },
+  ratingFlavorAdjust(beer, axis, value) {
+    // 슬라이더 드래그마다가 아니라 "처음 한 번"만 호출 (InputPage에서 가드)
+    ev("rating_flavor_adjust", { beer_id: beer?.id, axis, value },
+      { screen: "rating-input", action: "adjust_flavor", targetId: beer?.id, targetType: "beer",
+        meta: { name: beer?.name, axis, value } });
+  },
+
   /* ── 커뮤니티 ─────────────────────────────── */
   tapLikePost(postId) {
     ev("tap_like_post", { post_id: postId },
